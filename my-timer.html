@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マイ・タイマー - 篠ノ井乗務区</title>
+<style>
+body { background-color: #f5f5f5; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
+.container { border: 3px solid #004d40; padding: 40px 20px; max-width: 600px; margin: 40px auto; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+h1 { color: #004d40; border-bottom: 2px solid #004d40; display: inline-block; padding: 0 10px; }
+.timer { font-size: 3em; font-weight: bold; color: #004d40; margin: 30px 0; }
+.input-section { background: #f0f4f2; padding: 25px; border-radius: 8px; margin-top: 20px; }
+input { padding: 12px; font-size: 1.1em; border: 1px solid #ccc; font-family: "serif"; border-radius: 4px; }
+.back-link { display: block; margin-top: 30px; color: #d32f2f; text-decoration: none; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>マイ・タイマー</h1>
+    <p>仕事納め、帰省、あなただけの「出発時刻」を刻みます。</p>
+    <div id="user-countdown" class="timer">時刻を設定してください</div>
+    <div class="input-section">
+        <p>目標の日時を指定してください</p>
+        <input type="datetime-local" id="target-time" onchange="initTimer()">
+    </div>
+    <a href="index.html" class="back-link">← 本会場へ戻る</a>
+</div>
+<script>
+let userTarget = null;
+function initTimer() {
+    const val = document.getElementById('target-time').value;
+    if (val) userTarget = new Date(val);
+}
+function update() {
+    if (!userTarget) return;
+    const now = new Date();
+    const diff = userTarget - now;
+    if (diff <= 0) {
+        document.getElementById('user-countdown').innerText = "出発進行！";
+        return;
+    }
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+    const m = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+    const s = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+    document.getElementById('user-countdown').innerText = `${d}日 ${h}:${m}:${s}`;
+}
+setInterval(update, 1000);
+</script>
+</body>
+</html>
