@@ -7,17 +7,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root { --red: #d32f2f; --bg: #fcfaf2; --gold: #d4af37; --blue: #1da1f2; --green: #24b500; }
-body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; }
+body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; -webkit-text-size-adjust: 100%; }
 
-/* 保存対象のカード */
-#screenshot-target { background: #fff; border: 3px solid var(--red); border-radius: 20px; padding: 30px 20px; max-width: 450px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; }
+#screenshot-target { background: #fff; border: 3px solid var(--red); border-radius: 20px; padding: 30px 20px; max-width: 450px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 .unsei { font-size: 1.1rem; color: #666; margin-bottom: 5px; }
 .rank { font-size: 3.8rem; font-weight: bold; color: var(--red); margin: 0; letter-spacing: 2px; }
 .train-name { font-size: 1.4rem; font-weight: bold; color: #333; margin: 20px 0; padding: 12px; border-top: 2px dashed #eee; border-bottom: 2px dashed #eee; background: #fffcf0; }
 .message { font-size: 0.95rem; line-height: 1.7; color: #444; text-align: left; padding: 0 10px; min-height: 80px; }
 .site-url { font-size: 0.7rem; color: #ccc; margin-top: 15px; display: block; }
 
-/* ボタン類 */
 .btn-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 450px; margin: 20px auto; }
 .btn { display: flex; align-items: center; justify-content: center; padding: 15px 5px; color: #fff; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 0.9rem; border: none; cursor: pointer; transition: 0.2s; }
 .btn:active { transform: scale(0.95); }
@@ -33,7 +31,7 @@ footer { margin-top: 40px; font-size: 0.7rem; color: #999; }
 <body>
 
 <div id="screenshot-target">
-    <div class="unsei">2026年 本日の運勢</div>
+    <div class="unsei">2026年 本日の鉄道運勢</div>
     <p id="rank-display" class="rank">...</p>
     <div id="train-display" class="train-name">...</div>
     <div id="msg-display" class="message"></div>
@@ -41,10 +39,10 @@ footer { margin-top: 40px; font-size: 0.7rem; color: #999; }
 </div>
 
 <div class="btn-container">
-    <button class="btn btn-save" onclick="saveImage()">画像を保存してシェアする</button>
+    <button class="btn btn-save" onclick="saveImage()">画像を保存してシェア</button>
     <button class="btn btn-tw" onclick="shareX()">Xでシェア</button>
     <button class="btn btn-line" onclick="shareLine()">LINEで送る</button>
-    <a href="index.html" class="btn btn-retry">もう一度引く</a>
+    <a href="index.html" class="btn btn-retry">トップへ戻る</a>
 </div>
 
 <footer>
@@ -61,33 +59,43 @@ const results = [
     { rank: "末吉", train: "DE10形 ディーゼル機関車", msg: "縁の下の力持ち。目立たない場所での努力が、後できっと大きな力になって返ってきます。" }
 ];
 
-const res = results[Math.floor(Math.random() * results.length)];
-document.getElementById('rank-display').innerText = res.rank;
-document.getElementById('train-display').innerText = res.train;
-document.getElementById('msg-display').innerText = res.msg;
+// 1日1回制限
+const today = new Date().toLocaleDateString();
+const lastDate = localStorage.getItem('last_draw_rail');
+let currentRes;
 
-// 画像として保存する機能
+if (lastDate === today) {
+    currentRes = JSON.parse(localStorage.getItem('saved_res_rail'));
+    alert("おみくじは1日1回までです。本日の結果を表示します。");
+} else {
+    currentRes = results[Math.floor(Math.random() * results.length)];
+    localStorage.setItem('last_draw_rail', today);
+    localStorage.setItem('saved_res_rail', JSON.stringify(currentRes));
+}
+
+document.getElementById('rank-display').innerText = currentRes.rank;
+document.getElementById('train-display').innerText = currentRes.train;
+document.getElementById('msg-display').innerText = currentRes.msg;
+
 function saveImage() {
     const target = document.getElementById("screenshot-target");
     html2canvas(target, { backgroundColor: "#fcfaf2", scale: 2 }).then(canvas => {
         const link = document.createElement("a");
         link.href = canvas.toDataURL("image/png");
-        link.download = `shinorail_kuji_${res.rank}.png`;
+        link.download = `shinorail_railkuji_${currentRes.rank}.png`;
         link.click();
-        alert("おみくじ画像を保存しました！SNSに貼り付けてシェアしてください。");
+        alert("画像を保存しました！");
     });
 }
 
-// X (Twitter) シェア
 function shareX() {
-    const text = `篠ノ井乗務区 鉄道おみくじの結果は【${res.rank}】でした！\nラッキー車両：${res.train}\n#篠ノ井乗務区 #鉄道おみくじ\n`;
+    const text = `篠ノ井乗務区 鉄道おみくじ結果は【${currentRes.rank}】！\nラッキー車両：${currentRes.train}\n#篠ノ井乗務区 #鉄道おみくじ\n`;
     const url = "https://shinorail.github.io/shinonoi-2026/";
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
 }
 
-// LINE シェア
 function shareLine() {
-    const text = `篠ノ井乗務区 鉄道おみくじの結果は【${res.rank}】！ ラッキー車両は ${res.train} でした。 https://shinorail.github.io/shinonoi-2026/`;
+    const text = `篠ノ井乗務区 鉄道おみくじ結果は【${currentRes.rank}】！ 車両：${currentRes.train} https://shinorail.github.io/shinonoi-2026/`;
     window.open(`https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 </script>
