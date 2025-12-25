@@ -21,7 +21,6 @@ h1 { color: #d32f2f; font-size: 1.8em; margin: 10px 0; letter-spacing: 0.1em; cu
 .menu-btn:hover { background: #00695c; transform: translateY(-1px); }
 .omikuji-btn { background: #d32f2f; box-shadow: 0 3px 0 #8b1d1d; }
 .hidden { display: none; }
-/* 開発者モード用 */
 .dev-mode { border: 2px solid #ffcc00 !important; background: #fff5cc !important; }
 </style>
 </head>
@@ -53,14 +52,14 @@ const translations = {
     ja: {
         titlePre: "歳末準備", titleNew: "謹賀新年",
         prep: "篠ノ井乗務区 特設会場へようこそ。ただいま新年の運行に向けて準備中です。",
-        newYear: "新年あけましておめでとうございます。本年も皆様の人生という名の列車が快走できる一年になりますようお祈り申し上げます。",
+        newYear: "新年あけましておめでとうございます。本年もよろしくお願い申し上げます。",
         about: "このサイトについて", mytimer: "マイ・タイマー設定", omikuji: "鉄道みくじを引く", label: "2026年 始発列車まで",
         news: "お知らせ / News", msg: "運営からのメッセージ詳細は...", finish: "閉場しました。"
     },
     en: {
         titlePre: "Preparation", titleNew: "Happy New Year",
         prep: "Welcome to Shinonoi Depot. Preparing for 2026.",
-        newYear: "Happy New Year 2026! We wish you a safe and smooth journey on the tracks of your life.",
+        newYear: "Happy New Year 2026!",
         about: "About This Site", mytimer: "My Personal Timer", omikuji: "Draw a Fortune", label: "Countdown to 2026",
         news: "News", msg: "Full message detail...", finish: "Closed."
     }
@@ -69,13 +68,20 @@ const translations = {
 let lang = 'ja';
 let clickCount = 0;
 
-// 開発者用隠しルート
+// 開発者用パスワード設定
+const DEV_PASS = "2026shinonoi"; // ここを好きなパスワードに変えてください
+
 function devAccess() {
     clickCount++;
     if (clickCount >= 3) {
-        alert("【裏口検修線】に進入します。先行おみくじを許可します。");
-        document.getElementById("ui-omikuji").classList.remove("hidden");
-        document.getElementById("main-content").classList.add("dev-mode");
+        const pass = prompt("【裏口検修線】進入承認コードを入力してください：");
+        if (pass === DEV_PASS) {
+            alert("承認されました。先行おみくじを許可します。");
+            document.getElementById("ui-omikuji").classList.remove("hidden");
+            document.getElementById("main-content").classList.add("dev-mode");
+        } else {
+            alert("コードが違います。進入は許可されません。");
+        }
         clickCount = 0;
     }
 }
