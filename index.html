@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>篠ノ井乗務区 謹賀新年特設会場</title>
+<title>篠ノ井乗務区 特設会場</title>
 <style>
 @keyframes sakura-fall { 0% { transform: translateY(-10%) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 body { background-color: #fcfaf2; color: #333; font-family: "Hiragino Mincho ProN", "serif"; text-align: center; margin: 0; padding: 20px; overflow-x: hidden; }
@@ -22,28 +22,29 @@ h1 { color: #d32f2f; font-size: 2.2em; letter-spacing: 0.3em; margin: 0; }
 </head>
 <body>
 <div class="container" id="main-content">
-    <h1>謹賀新年</h1>
+    <h1 id="main-title">歳末準備</h1>
     <p>篠ノ井乗務区 特設会場</p>
-    <div class="greeting-section">
-        新年あけましておめでとうございます。<br>
-        鉄道を愛する皆様、そして日々鉄路を支える皆様へ。<br>
-        旧年中はSNS等を通じ、温かい交流をありがとうございました。<br>
-        本年も皆様の人生という名の列車が、素晴らしい目的地へ向かって快走できる一年になりますよう、心よりお祈り申し上げます。
-    </div>
+
+    <div id="greeting" class="greeting-section">
+        </div>
+
     <div id="timer-section" class="status-box">
-        <p>新春始発列車 運行開始まで</p>
+        <p id="timer-label">2026年 始発列車まで</p>
         <div id="countdown" class="timer">--日 --:--:--</div>
     </div>
+
     <div id="omikuji-section" class="hidden">
         <p>【令和八年 運勢点検】</p>
         <div class="btn-group">
             <button onclick="location.href='result.html?type=train'">鉄道みくじを引く</button>
         </div>
     </div>
+
     <div class="nav-links">
         <a href="my-timer.html">≫ 自分専用のカウントダウンを設定する</a>
     </div>
 </div>
+
 <script>
 function createSakura() {
     const sakura = document.createElement('div');
@@ -54,19 +55,34 @@ function createSakura() {
     setTimeout(() => { sakura.remove(); }, 7000);
 }
 setInterval(createSakura, 500);
+
 const startDate = new Date("2026/01/01 00:00:00");
 const endDate = new Date("2026/01/16 00:00:00");
+
 function update() {
     const now = new Date();
+    const greetingDiv = document.getElementById("greeting");
+    const titleH1 = document.getElementById("main-title");
+
+    // 1. 期間終了後
     if (now >= endDate) {
         document.getElementById("main-content").innerHTML = "<h1>運行終了</h1><div class='greeting-section'>本年の特設会場は閉場いたしました。また来年お会いしましょう。</div><p>篠ノ井乗務区</p>";
         return;
     }
+
+    // 2. お正月期間中
     if (now >= startDate) {
+        titleH1.innerText = "謹賀新年";
+        greetingDiv.innerHTML = `新年あけましておめでとうございます。<br>鉄道を愛する皆様、そして日々鉄路を支える皆様へ。<br>本年も皆様の人生という名の列車が、素晴らしい目的地へ向かって快走できる一年になりますよう、心よりお祈り申し上げます。`;
         document.getElementById("timer-section").classList.add("hidden");
         document.getElementById("omikuji-section").classList.remove("hidden");
         return;
     }
+
+    // 3. 12月（準備期間中）
+    titleH1.innerText = "歳末準備";
+    greetingDiv.innerHTML = `篠ノ井乗務区 特設会場へようこそ。<br>ただいま2026年の運行開始に向けて、会場の準備を行っております。<br>新しい年、新しいダイヤでの出発まで、今しばらくお待ちください。<br>本年も残りわずか。皆様どうぞ安全に、良いお年をお迎えください。`;
+
     const diff = startDate - now;
     const d = Math.floor(diff / (1000 * 60 * 60 * 24));
     const h = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
@@ -74,6 +90,7 @@ function update() {
     const s = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
     document.getElementById("countdown").innerText = `${d}日 ${h}:${m}:${s}`;
 }
+
 setInterval(update, 1000);
 update();
 </script>
