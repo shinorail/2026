@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鉄道運勢点検 - 篠ノ井乗務区</title>
+<style>
+@keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+body { background: #fcfaf2; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
+.result-card { border: 4px solid #004d40; padding: 30px; max-width: 450px; margin: 20px auto; background: #fff; animation: zoomIn 0.5s ease-out; border-radius: 20px; }
+h1 { font-size: 3em; margin: 10px 0; color: #004d40; border-bottom: 4px solid #004d40; display: inline-block; padding: 0 15px; }
+.msg { text-align: left; line-height: 2; margin: 20px 0; font-size: 0.95em; background: #e8f5e9; padding: 20px; border-radius: 10px; color: #1b5e20; white-space: pre-wrap; }
+.btn-group { display: flex; flex-direction: column; gap: 10px; }
+.menu-btn { display: block; padding: 15px; text-decoration: none; font-weight: bold; border-radius: 30px; color: #fff; transition: 0.3s; }
+.share-x { background: #000; }
+.back-btn { background: #004d40; }
+</style>
+</head>
+<body>
+<div class="result-card">
+    <p>鉄道運勢点検結果</p>
+    <h1 id="rank"></h1>
+    <div id="msg" class="msg"></div>
+    <div class="btn-group">
+        <a id="share-x" class="menu-btn share-x" target="_blank">Xで報告する</a>
+        <a href="index.html" class="menu-btn back-btn">起点へ戻る</a>
+    </div>
+</div>
+<script>
+const data = [
+    { rank: "超特急", msg: "【全体】全線オールグリーン！最高速度で進行可能です。\n【心得】時刻表通りの正確な行動が、さらなる福を呼び込みます。\n【ラッキーアイテム】懐中時計" },
+    { rank: "特急", msg: "【全体】出力良好。難所の急勾配も力強く登り切れます。\n【心得】車窓を楽しむ余裕が、新たな発見に繋がります。\n【ラッキーアイテム】クロスシート" },
+    { rank: "各停", msg: "【全体】一駅ずつ着実に。丁寧な歩みが確実な成果に結びつきます。\n【心得】指差し呼称で安全確認。焦らず進めば吉。\n【ラッキーアイテム】入場券" },
+    { rank: "回送", msg: "【全体】次なる運行への準備期間。無理な運転は厳禁です。\n【心得】車両点検（休息）を優先。エネルギーを再充填して。\n【ラッキーアイテム】車両基地" }
+];
+const res = data[Math.floor(Math.random() * data.length)];
+document.getElementById('rank').innerText = res.rank;
+document.getElementById('msg').innerText = res.msg;
+const shareText = `篠ノ井乗務区 鉄道みくじ：【${res.rank}】\n${res.msg}\n#篠ノ井乗務区`;
+document.getElementById('share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(window.location.href)}`;
+</script>
+</body>
+</html>
