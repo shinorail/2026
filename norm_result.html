@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新春おみくじ - 篠ノ井乗務区</title>
+<style>
+@keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+body { background: #fcfaf2; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
+.result-card { border: 4px solid #d32f2f; padding: 30px; max-width: 450px; margin: 20px auto; background: #fff; animation: zoomIn 0.5s ease-out; border-radius: 20px; }
+h1 { font-size: 3em; margin: 10px 0; color: #d32f2f; border-bottom: 4px solid #d32f2f; display: inline-block; padding: 0 15px; }
+.msg { text-align: left; line-height: 2; margin: 20px 0; font-size: 0.95em; background: #fffaf0; padding: 20px; border-radius: 10px; color: #b71c1c; white-space: pre-wrap; }
+.btn-group { display: flex; flex-direction: column; gap: 10px; }
+.menu-btn { display: block; padding: 15px; text-decoration: none; font-weight: bold; border-radius: 30px; color: #fff; }
+.share-x { background: #000; }
+.back-btn { background: #d32f2f; }
+</style>
+</head>
+<body>
+<div class="result-card">
+    <p>新春運勢点検</p>
+    <h1 id="rank"></h1>
+    <div id="msg" class="msg"></div>
+    <div class="btn-group">
+        <a id="share-x" class="menu-btn share-x" target="_blank">Xで報告する</a>
+        <a href="index.html" class="menu-btn back-btn">戻る</a>
+    </div>
+</div>
+<script>
+const data = [
+    { rank: "大吉", msg: "【願望】思うがままに叶うでしょう。\n【待人】驚くような形で現れます。\n【一言】感謝の気持ちを忘れねば、更なる幸運が訪れます。" },
+    { rank: "中吉", msg: "【願望】急がず待てば叶います。\n【待人】来るでしょう。便りがあります。\n【一言】足元を固めて進むのが良い一年になります。" },
+    { rank: "小吉", msg: "【願望】少しずつ形になります。\n【待人】遅れますが来ます。\n【一言】日々の積み重ねを大切に。努力は裏切りません。" },
+    { rank: "末吉", msg: "【願望】辛抱強く待てば開けます。\n【待人】来ないでしょう。自ら動きなさい。\n【一言】今は力を蓄える時期。春はもうすぐそこです。" }
+];
+const res = data[Math.floor(Math.random() * data.length)];
+document.getElementById('rank').innerText = res.rank;
+document.getElementById('msg').innerText = res.msg;
+const shareText = `篠ノ井乗務区 おみくじ：【${res.rank}】\n${res.msg}\n#篠ノ井乗務区`;
+document.getElementById('share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(window.location.href)}`;
+</script>
+</body>
+</html>
