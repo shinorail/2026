@@ -8,52 +8,59 @@
 :root { --main: #ff9800; --bg: #fff9e6; }
 body { background: var(--bg); font-family: sans-serif; text-align: center; margin: 0; padding: 0; touch-action: manipulation; overflow-x: hidden; }
 
-/* ポイント表示 */
-#score-board { font-size: 2.5rem; font-weight: bold; color: var(--main); margin: 10px 0; }
+/* スコア表示エリア */
+.score-area { display: flex; justify-content: space-around; background: #fff; padding: 10px; border-bottom: 3px solid var(--main); }
+.score-box { font-weight: bold; }
+.score-label { font-size: 0.8rem; color: #666; display: block; }
+.score-val { font-size: 1.5rem; color: var(--main); }
 
-.btn { display: block; width: 90%; margin: 10px auto; padding: 20px 0; background: var(--main); color: #fff; text-decoration: none; border-radius: 50px; font-size: 1.5rem; font-weight: bold; border: 5px solid #fff; box-shadow: 0 5px 0 #e68a00; cursor: pointer; }
-.btn:disabled { background: #ccc; box-shadow: 0 5px 0 #999; }
+.btn { display: block; width: 90%; margin: 10px auto; padding: 18px 0; background: var(--main); color: #fff; text-decoration: none; border-radius: 50px; font-size: 1.4rem; font-weight: bold; border: 5px solid #fff; box-shadow: 0 5px 0 #e68a00; cursor: pointer; }
 
-#game-area { position: relative; width: 95vw; height: 95vw; max-width: 500px; max-height: 500px; margin: 10px auto; background: #000; border: 8px solid var(--main); border-radius: 20px; box-sizing: border-box; }
+#game-area { position: relative; width: 95vw; height: 95vw; max-width: 450px; max-height: 450px; margin: 10px auto; background: #000; border: 8px solid var(--main); border-radius: 20px; box-sizing: border-box; }
 canvas { width: 100%; height: 100%; display: block; }
 
-/* 巨大ポップアップ */
+/* ポップアップ */
 .result-popup { 
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-    color: #fff; background: rgba(0,0,0,0.9); width: 100%; padding: 40px 0; 
-    display: none; z-index: 100; border: 5px solid #fff;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    color: #fff; background: rgba(0,0,0,0.95);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 100; border-radius: 12px;
 }
-.result-score { font-size: 4rem; color: #ffeb3b; display: block; margin: 20px 0; }
+.result-rank { font-size: 2rem; color: #00e676; font-weight: bold; border: 2px solid #00e676; padding: 5px 20px; margin-top: 10px; }
 
-.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 90%; max-width: 400px; margin: 20px auto; }
+/* 操作ボタン */
+.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 90%; max-width: 360px; margin: 15px auto; }
 .p-btn { aspect-ratio: 1/1; background: #fff; border: 4px solid var(--main); border-radius: 20px; font-size: 2.5rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; }
 
-footer { padding: 20px 0; font-weight: bold; font-size: 0.8rem; border-top: 1px solid #ddd; margin-top: 30px; }
+footer { padding: 20px 0; font-weight: bold; font-size: 0.8rem; border-top: 1px solid #ddd; margin-top: 20px; }
 </style>
 </head>
 <body>
 
-<h1 style="color:var(--main); margin:10px 0; font-size:2rem;">キッズページ</h1>
-
-<div id="score-board">てんすう：0</div>
+<div class="score-area">
+    <div class="score-box"><span class="score-label">ハイスコア</span><span id="hi-score" class="score-val">0</span></div>
+    <div class="score-box"><span class="score-label">いまのてんすう</span><span id="now-score" class="score-val">0</span></div>
+</div>
 
 <div id="game-area">
     <canvas id="snakeGame" width="400" height="400"></canvas>
     
-    <div id="result-popup" class="result-popup">
-        <span style="font-size: 2rem;">ざんねん！</span>
-        <span class="result-score" id="final-score">0</span>
-        <span style="font-size: 1.5rem;">てん でした！</span>
+    <div id="result-popup" class="result-popup" style="display:none;">
+        <div id="mode-title" style="font-size: 1.2rem; color: #ff9800;">1にんプレイ</div>
+        <div style="font-size: 2rem;" id="res-msg">おわり！</div>
+        <div style="font-size: 4rem; color: #ffeb3b;" id="final-score">0</div>
+        <div class="result-rank" id="final-rank">みならい</div>
     </div>
 
-    <div id="start-screen" class="result-popup" style="display:block; background:rgba(255,152,0,0.9);">
-        <span style="font-size: 2rem;">あそぶボタンを<br>おしてね！</span>
+    <div id="start-screen" class="result-popup" style="background:rgba(255,152,0,0.9);">
+        <span style="font-size: 2rem; margin-bottom: 20px;">あそびかたを えらんでね</span>
+        <button class="btn" style="width:80%;" onclick="initGame('solo')">1にんで あそぶ</button>
+        <button class="btn" style="width:80%; background:#2196f3; box-shadow:0 5px 0 #1976d2;" onclick="initGame('vs')">2にんで たいせん</button>
     </div>
 </div>
 
-<div id="ui">
-    <button id="start-btn" class="btn" style="background:#4caf50; box-shadow:0 5px 0 #388e3c;" onclick="startGame()">あそぶ！(スタート)</button>
-    <button id="retry-btn" class="btn" style="background:#2196f3; box-shadow:0 5px 0 #1976d2; display:none;" onclick="startGame()">もういっかい！</button>
+<div id="ui" style="display:none;">
+    <button id="retry-btn" class="btn" style="background:#4caf50; box-shadow:0 5px 0 #388e3c;" onclick="location.reload()">もういっかい！</button>
 </div>
 
 <div class="pad">
@@ -63,18 +70,27 @@ footer { padding: 20px 0; font-weight: bold; font-size: 0.8rem; border-top: 1px 
     <div class="p-btn" onclick="setD('R')">→</div>
 </div>
 
-<a href="index.html" class="btn" style="background:#666; font-size:1.2rem; margin-top:40px;">← もどる</a>
+<a href="index.html" class="btn" style="background:#666; font-size:1.2rem; box-shadow:0 5px 0 #444;">← もどる</a>
 
 <footer>
-    製造元：GitHub / 制作・著作：篠ノ井乗務区<br>
-    5分おきに自動更新されます
+    製造元：GitHub / 制作・著作：篠ノ井乗務区
 </footer>
 
 <script>
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
 const box = 25;
-let snake, food, dir, gameInterval, score;
+let snake, food, dir, gameInterval, score, hiScore, mode, p1Score;
+
+// 保存されたハイスコアをよみこむ
+hiScore = localStorage.getItem('shinonoi_hi_score') || 0;
+document.getElementById('hi-score').innerText = hiScore;
+
+function initGame(m) {
+    mode = m;
+    p1Score = null;
+    startGame();
+}
 
 function startGame() {
     score = 0;
@@ -84,14 +100,20 @@ function startGame() {
     dir = "R";
     document.getElementById("result-popup").style.display = "none";
     document.getElementById("start-screen").style.display = "none";
-    document.getElementById("start-btn").style.display = "none";
-    document.getElementById("retry-btn").style.display = "none";
+    document.getElementById("ui").style.display = "none";
     if(gameInterval) clearInterval(gameInterval);
     gameInterval = setInterval(draw, 250);
 }
 
 function updateScore() {
-    document.getElementById("score-board").innerText = "てんすう：" + score;
+    document.getElementById("now-score").innerText = score;
+}
+
+function getRank(s) {
+    if (s >= 150) return "でんせつ";
+    if (s >= 100) return "すご腕";
+    if (s >= 40) return "一人前";
+    return "がんばり屋";
 }
 
 function setD(d) {
@@ -103,13 +125,11 @@ function setD(d) {
 
 function draw() {
     ctx.fillStyle = "#000"; ctx.fillRect(0,0,400,400);
-    for(let i=0; i<snake.length; i++) {
+    snake.forEach((s, i) => {
         ctx.fillStyle = (i==0) ? "#ffeb3b" : "#ff9800";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-        ctx.strokeRect(snake[i].x, snake[i].y, box, box);
-    }
-    ctx.fillStyle = "#f44336";
-    ctx.fillRect(food.x, food.y, box, box);
+        ctx.fillRect(s.x, s.y, box, box);
+    });
+    ctx.fillStyle = "#f44336"; ctx.fillRect(food.x, food.y, box, box);
 
     let hX = snake[0].x; let hY = snake[0].y;
     if(dir=="L") hX -= box; if(dir=="U") hY -= box;
@@ -123,19 +143,50 @@ function draw() {
 
     let nH = {x: hX, y: hY};
     if(hX<0 || hX>=400 || hY<0 || hY>=400 || snake.some(s => s.x==nH.x && s.y==nH.y)) {
-        clearInterval(gameInterval);
-        document.getElementById("final-score").innerText = score;
-        document.getElementById("result-popup").style.display = "block";
-        document.getElementById("retry-btn").style.display = "block";
+        endGame();
         return;
     }
     snake.unshift(nH);
 }
 
-const start = new Date("2026/01/01 00:00:00");
-function check() {
-    const ready = new Date() >= start;
-    const ids = ['k-rail', 'k-norm']; // 必要に応じておみくじボタンIDを復活させてください
+function endGame() {
+    clearInterval(gameInterval);
+    const pop = document.getElementById("result-popup");
+    const fScore = document.getElementById("final-score");
+    const fRank = document.getElementById("final-rank");
+    const mTitle = document.getElementById("mode-title");
+    pop.style.display = "flex";
+
+    if (mode === 'solo') {
+        mTitle.innerText = "1にんプレイ";
+        fScore.innerText = score;
+        fRank.innerText = getRank(score);
+        if (score > hiScore) {
+            hiScore = score;
+            localStorage.setItem('shinonoi_hi_score', hiScore);
+            document.getElementById('hi-score').innerText = hiScore;
+            fRank.innerText = "新きろく！";
+        }
+        document.getElementById("ui").style.display = "block";
+    } else {
+        if (p1Score === null) {
+            p1Score = score;
+            mTitle.innerText = "1ばんめの ひと おわり";
+            fScore.innerText = score;
+            fRank.innerText = "つぎの ひと じゅんび！";
+            setTimeout(() => {
+                alert("つぎは 2ばんめの ひとの ばんです！");
+                startGame();
+            }, 2000);
+        } else {
+            mTitle.innerText = "たいせん けっか";
+            let res = (score > p1Score) ? "2ばんめの 勝ち！" : (score < p1Score) ? "1ばんめの 勝ち！" : "ひきわけ！";
+            fScore.innerText = p1Score + " vs " + score;
+            document.getElementById("res-msg").innerText = res;
+            fRank.innerText = "なかよく あそぼう";
+            document.getElementById("ui").style.display = "block";
+        }
+    }
 }
 setTimeout(() => location.reload(), 300000);
 </script>
