@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Message - 篠ノ井乗務区</title>
+<style>
+body { background-color: #fcfaf2; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
+.container { border: 3px solid #d32f2f; padding: 40px; max-width: 600px; margin: auto; background: #fff; text-align: left; box-shadow: 0 5px 25px rgba(0,0,0,0.1); border-radius: 2px; }
+.lang-switcher { margin-bottom: 25px; display: flex; justify-content: center; gap: 10px; }
+.lang-switcher button { background: #eee; border: 1px solid #ccc; padding: 6px 15px; cursor: pointer; font-size: 12px; border-radius: 4px; }
+.lang-switcher button.active { background: #d32f2f; color: white; }
+h1 { color: #d32f2f; font-size: 1.8em; text-align: center; border-bottom: 2px solid #d32f2f; padding-bottom: 15px; margin-top: 0; letter-spacing: 0.2em; }
+.main-text { line-height: 2.6; font-size: 1em; margin: 30px 0; white-space: pre-wrap; color: #1a1a1a; text-align: justify; }
+.signature { text-align: right; margin-top: 50px; font-weight: bold; line-height: 2; color: #1a1a1a; border-top: 2px solid #d32f2f; padding-top: 25px; font-size: 1.1em; }
+.menu-btn { display: block; background: #004d40; color: #fff; padding: 18px; text-align: center; text-decoration: none; font-weight: bold; border-radius: 4px; margin-top: 30px; box-shadow: 0 4px 0 #002d20; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="lang-switcher">
+        <button onclick="setLang('ja')" id="btn-ja" class="active">日本語</button>
+        <button onclick="setLang('en')" id="btn-en">English</button>
+    </div>
+    <h1 id="ui-title">新年のご挨拶</h1>
+    <div id="ui-content" class="main-text"></div>
+    <div class="signature" id="ui-sig"></div>
+    <a href="index.html" class="menu-btn" id="ui-back">戻る / Back</a>
+</div>
+<script>
+const trans = {
+    ja: {
+        title: "新年の特別寄稿",
+        back: "トップページへ戻る",
+        text: "鉄道を愛するすべての皆様へ。\n\n令和八年の輝かしい新春を迎え、謹んで新年のご挨拶を申し上げます。\n\n「篠ノ井乗務区」という名を掲げ、一人のファンとして情報の受発信を始めてから、早いもので今年の六月で二周年という節目を迎えることとなりました。この二年間という歳月は、私にとって単なる月日の流れではありませんでした。画面越しに交わされる皆様との情熱的な交流、駅のホームで感じる凛とした空気、そして鉄路が描き出す無限の曲線美。そのすべてが、私の活動を支える確かな「軌跡」となりました。\n\n私たちが愛してやまない「鉄道」という存在は、単なる移動手段ではありません。それは、人々の想い、歴史、そして未来への希望を繋ぐ一本の巨大なバトンです。激動する社会情勢の中で、時にはダイヤが乱れ、先行きの見えないトンネルに差し掛かることもあるかもしれません。しかし、保線作業員が深夜に泥にまみれながら枕木を整え、運転士が信号の一つひとつに魂を込めて「喚呼」するように、どんな困難も現場の執念と日々の積み重ねによって乗り越えていけると、私は強く信じています。\n\nこの二年間、皆様からいただいた「いいね」や温かいリプライの数々は、私にとって何よりの「閉塞信号」であり、常に前へ進むための勇気を与えてくれました。六月の二周年に向けて、そしてその先の未来に向けて、私はこれからも鉄道への変わらぬ愛を叫び続け、皆様と共に走り続けたいと願っております。\n\n人生という名の列車に、終着駅はありません。あるのは、今日という日の「通過」と、明日という名の「始発」だけです。本年も皆様の人生という名の名列車が、定時運行の誇りを胸に、誰よりも輝かしい景色の中を駆け抜けることを切に願っております。",
+        sig: "篠ノ井乗務区\n2026/1/1\n本年もよろしくお願いします\n（今年の６月で２周年）"
+    },
+    en: {
+        title: "Special New Year Message",
+        back: "Back to Top",
+        text: "To all railfans around the world.\n\nAs we welcome the bright dawn of 2026, I would like to express my heartiest New Year greetings.\n\nSince I started my journey as 'Shinonoi Depot,' it has been nearly two years. This coming June marks our 2nd anniversary. For me, these two years haven't been just a passage of time; they have been a collection of passionate interactions with you, the crisp air on station platforms, and the endless beauty of the rails. Every single moment has become the 'track' that supports my activities.\n\nThe railways we love are more than just a means of transport. They are a massive baton connecting people's feelings, history, and hope for the future. In a rapidly changing world, our schedules may sometimes be disrupted, and we may enter dark tunnels with no clear end in sight. However, just as maintenance workers align sleepers in the mud late at night and drivers pour their souls into every signal call, I firmly believe that any difficulty can be overcome with persistence and daily effort.\n\nOver the past two years, every 'like' and warm reply from you has served as my 'block signal,' giving me the courage to always move forward. Heading toward our 2nd anniversary in June and the future beyond, I promise to continue sharing my unchanging love for railways and hope to keep running alongside all of you.\n\nThere is no final destination on the train of life. There is only the 'passing' of today and the 'first departure' of tomorrow. I sincerely hope that your life's train runs on time with pride, dashing through scenery more brilliant than anyone else's.",
+        sig: "Shinonoi Depot\n2026/1/1\nLooking forward to another great year.\n(Celebrating our 2nd Anniversary this June)"
+    }
+};
+function setLang(l) {
+    const t = trans[l];
+    document.getElementById("ui-title").innerText = t.title;
+    document.getElementById("ui-content").innerText = t.text;
+    document.getElementById("ui-sig").innerText = t.sig;
+    document.getElementById("ui-back").innerText = t.back;
+    document.querySelectorAll('.lang-switcher button').forEach(b=>b.classList.remove('active'));
+    document.getElementById('btn-'+l).classList.add('active');
+}
+setLang('ja');
+</script>
+</body>
+</html>
