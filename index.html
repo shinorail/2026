@@ -12,7 +12,7 @@ body { background-color: #fcfaf2; color: #333; font-family: "serif"; text-align:
 .lang-switcher { margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; }
 .lang-switcher button { background: #eee; border: 1px solid #ccc; padding: 6px 15px; cursor: pointer; font-size: 12px; border-radius: 4px; font-weight: bold; }
 .lang-switcher button.active { background: #004d40; color: white; border-color: #004d40; }
-h1 { color: #d32f2f; font-size: 1.8em; margin: 10px 0; letter-spacing: 0.1em; }
+h1 { color: #d32f2f; font-size: 1.8em; margin: 10px 0; letter-spacing: 0.1em; cursor: pointer; user-select: none; }
 .greeting { border-top: 1px solid #d32f2f; border-bottom: 1px solid #d32f2f; padding: 15px; margin: 15px 0; line-height: 1.8; text-align: left; font-size: 0.9em; min-height: 80px; color: #004d40; }
 .status-box { background: #fffaf0; padding: 20px; border: 1px dashed #d32f2f; margin: 15px 0; }
 .timer { font-size: 2.5em; font-weight: bold; color: #d32f2f; margin: 10px 0; }
@@ -21,6 +21,8 @@ h1 { color: #d32f2f; font-size: 1.8em; margin: 10px 0; letter-spacing: 0.1em; }
 .menu-btn:hover { background: #00695c; transform: translateY(-1px); }
 .omikuji-btn { background: #d32f2f; box-shadow: 0 3px 0 #8b1d1d; }
 .hidden { display: none; }
+/* 開発者モード用 */
+.dev-mode { border: 2px solid #ffcc00 !important; background: #fff5cc !important; }
 </style>
 </head>
 <body>
@@ -29,7 +31,9 @@ h1 { color: #d32f2f; font-size: 1.8em; margin: 10px 0; letter-spacing: 0.1em; }
         <button onclick="setLang('ja')" id="btn-ja" class="active">日本語</button>
         <button onclick="setLang('en')" id="btn-en">English</button>
     </div>
-    <h1 id="ui-title">歳末準備</h1>
+    
+    <h1 id="ui-title" onclick="devAccess()">歳末準備</h1>
+    
     <p>篠ノ井乗務区 特設会場</p>
     <div id="greeting" class="greeting"></div>
     <div id="timer-section" class="status-box">
@@ -48,25 +52,41 @@ h1 { color: #d32f2f; font-size: 1.8em; margin: 10px 0; letter-spacing: 0.1em; }
 const translations = {
     ja: {
         titlePre: "歳末準備", titleNew: "謹賀新年",
-        prep: "篠ノ井乗務区 特設会場へようこそ。ただいま新年の運行に向けて準備中です。詳細は下記のメッセージボタンよりご覧ください。",
+        prep: "篠ノ井乗務区 特設会場へようこそ。ただいま新年の運行に向けて準備中です。",
         newYear: "新年あけましておめでとうございます。本年も皆様の人生という名の列車が快走できる一年になりますようお祈り申し上げます。",
         about: "このサイトについて", mytimer: "マイ・タイマー設定", omikuji: "鉄道みくじを引く", label: "2026年 始発列車まで",
         news: "お知らせ / News", msg: "運営からのメッセージ詳細は...", finish: "閉場しました。"
     },
     en: {
         titlePre: "Preparation", titleNew: "Happy New Year",
-        prep: "Welcome to Shinonoi Depot. Preparing for 2026. Please check the message detail below.",
+        prep: "Welcome to Shinonoi Depot. Preparing for 2026.",
         newYear: "Happy New Year 2026! We wish you a safe and smooth journey on the tracks of your life.",
         about: "About This Site", mytimer: "My Personal Timer", omikuji: "Draw a Fortune", label: "Countdown to 2026",
         news: "News", msg: "Full message detail...", finish: "Closed."
     }
 };
+
 let lang = 'ja';
+let clickCount = 0;
+
+// 開発者用隠しルート
+function devAccess() {
+    clickCount++;
+    if (clickCount >= 3) {
+        alert("【裏口検修線】に進入します。先行おみくじを許可します。");
+        document.getElementById("ui-omikuji").classList.remove("hidden");
+        document.getElementById("main-content").classList.add("dev-mode");
+        clickCount = 0;
+    }
+}
+
 function setLang(l) { lang = l; document.querySelectorAll('.lang-switcher button').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + l).classList.add('active'); update(); }
 function createSakura() { const s = document.createElement('div'); s.innerHTML = '🌸'; s.className = 'sakura'; s.style.left = Math.random() * 100 + 'vw'; s.style.animationDuration = Math.random() * 3 + 4 + 's'; document.body.appendChild(s); setTimeout(() => s.remove(), 7000); }
 setInterval(createSakura, 500);
+
 const start = new Date("2026/01/01 00:00:00");
 const end = new Date("2026/01/16 00:00:00");
+
 function update() {
     const now = new Date(); const t = translations[lang];
     document.getElementById("ui-about").innerText = t.about;
