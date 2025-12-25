@@ -3,54 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>篠ノ井乗務区 特設会場</title>
+<title>篠ノ井乗務区 - Shinonoi Depot</title>
 <style>
 @keyframes sakura-fall { 0% { transform: translateY(-10%) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
-body { background-color: #fcfaf2; color: #333; font-family: "Hiragino Mincho ProN", "serif"; text-align: center; margin: 0; padding: 20px; overflow-x: hidden; }
+body { background-color: #fcfaf2; color: #333; font-family: "serif"; text-align: center; margin: 0; padding: 20px; overflow-x: hidden; }
 .sakura { position: fixed; top: -10%; color: #ffb7c5; font-size: 20px; z-index: 999; pointer-events: none; animation: sakura-fall linear infinite; }
-.container { border: 3px solid #d32f2f; padding: 40px 20px; max-width: 600px; margin: 20px auto; background: rgba(255,255,255,0.95); position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-
-/* 多言語切替スイッチ */
-.lang-switcher { margin-bottom: 20px; display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
-.lang-switcher button { background: #eee; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; font-size: 12px; border-radius: 3px; }
+.container { border: 3px solid #d32f2f; padding: 30px 20px; max-width: 500px; margin: 10px auto; background: rgba(255,255,255,0.95); box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; }
+.lang-switcher { margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; }
+.lang-switcher button { background: #eee; border: 1px solid #ccc; padding: 6px 15px; cursor: pointer; font-size: 12px; border-radius: 4px; font-weight: bold; }
 .lang-switcher button.active { background: #004d40; color: white; border-color: #004d40; }
-
-h1 { color: #d32f2f; font-size: 2.2em; letter-spacing: 0.2em; margin: 10px 0; }
-.greeting-section { border-top: 1px solid #d32f2f; border-bottom: 1px solid #d32f2f; padding: 20px; margin: 20px 0; line-height: 1.8; text-align: left; color: #004d40; font-size: 0.9em; min-height: 100px; }
-.status-box { background: #fffaf0; padding: 25px; border: 1px dashed #d32f2f; margin: 20px 0; }
-.timer { font-size: 2.8em; font-weight: bold; color: #d32f2f; letter-spacing: 1px; }
-
-/* ボタンメニュー */
+h1 { color: #d32f2f; font-size: 1.8em; margin: 10px 0; letter-spacing: 0.1em; }
+.greeting { border-top: 1px solid #d32f2f; border-bottom: 1px solid #d32f2f; padding: 15px; margin: 15px 0; line-height: 1.8; text-align: left; font-size: 0.9em; min-height: 80px; color: #004d40; }
+.status-box { background: #fffaf0; padding: 20px; border: 1px dashed #d32f2f; margin: 15px 0; }
+.timer { font-size: 2.5em; font-weight: bold; color: #d32f2f; margin: 10px 0; }
 .menu-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-.menu-btn { background-color: #004d40; color: #fff; border: none; padding: 15px; font-size: 1em; cursor: pointer; border-radius: 4px; text-decoration: none; font-weight: bold; transition: 0.3s; display: block; box-shadow: 0 3px 0 #002d20; }
-.menu-btn:hover { background-color: #00695c; transform: translateY(-2px); }
-.omikuji-btn { background-color: #d32f2f; box-shadow: 0 3px 0 #8b1d1d; }
-.omikuji-btn:hover { background-color: #e53935; }
-
+.menu-btn { background: #004d40; color: #fff; padding: 15px; font-size: 1em; cursor: pointer; border-radius: 4px; text-decoration: none; font-weight: bold; box-shadow: 0 3px 0 #002d20; display: block; }
+.menu-btn:hover { background: #00695c; transform: translateY(-1px); }
+.omikuji-btn { background: #d32f2f; box-shadow: 0 3px 0 #8b1d1d; }
+.omikuji-btn:hover { background: #e53935; }
 .hidden { display: none; }
 </style>
 </head>
 <body>
 <div class="container" id="main-content">
     <div class="lang-switcher">
-        <button onclick="setLang('ja')" id="lang-ja" class="active">日本語</button>
-        <button onclick="setLang('en')" id="lang-en">English</button>
-        <button onclick="setLang('zh')" id="lang-zh">简体中文</button>
-        <button onclick="setLang('ko')" id="lang-ko">한국어</button>
+        <button onclick="setLang('ja')" id="btn-ja" class="active">日本語</button>
+        <button onclick="setLang('en')" id="btn-en">English</button>
     </div>
 
     <h1 id="ui-title">歳末準備</h1>
     <p>篠ノ井乗務区 特設会場</p>
 
-    <div id="greeting" class="greeting-section"></div>
+    <div id="greeting" class="greeting"></div>
 
     <div id="timer-section" class="status-box">
-        <p id="ui-timer-label">2026年 始発列車まで</p>
-        <div id="countdown" class="timer">--日 --:--:--</div>
+        <p id="ui-label">2026年 始発列車まで</p>
+        <div id="countdown" class="timer">--d --:--:--</div>
     </div>
 
     <div class="menu-group">
-        <a href="result.html?type=train" id="ui-omikuji" class="menu-btn omikuji-btn hidden">鉄道みくじを引く</a>
+        <a href="result.html" id="ui-omikuji" class="menu-btn omikuji-btn hidden">鉄道みくじを引く</a>
+        <a href="news.html" id="ui-news" class="menu-btn">お知らせ / News</a>
         <a href="about.html" id="ui-about" class="menu-btn">このサイトについて</a>
         <a href="my-timer.html" id="ui-mytimer" class="menu-btn">マイ・タイマー設定</a>
     </div>
@@ -62,47 +55,33 @@ const translations = {
         titlePre: "歳末準備", titleNew: "謹賀新年",
         prep: "篠ノ井乗務区 特設会場へようこそ。ただいま新年の運行に向けて準備中です。皆様どうぞ安全に、良いお年をお迎えください。",
         newYear: "新年あけましておめでとうございます。本年も皆様の人生という名の列車が快走できる一年になりますようお祈り申し上げます。",
-        timerLabel: "2026年 始発列車まで", about: "このサイトについて", mytimer: "マイ・タイマー設定", omikuji: "鉄道みくじを引く",
-        finish: "本年の公開は終了しました。"
+        about: "このサイトについて", mytimer: "マイ・タイマー設定", omikuji: "鉄道みくじを引く", label: "2026年 始発列車まで",
+        news: "お知らせ / News", finish: "本年の公開は終了しました。"
     },
     en: {
         titlePre: "Preparation", titleNew: "Happy New Year",
-        prep: "Welcome to Shinonoi Depot. We are currently preparing for the New Year's operation. Have a safe and happy year-end!",
-        newYear: "Happy New Year! We wish you a safe and smooth journey on the tracks of your life in 2026.",
-        timerLabel: "Countdown to 2026", about: "About This Site", mytimer: "My Personal Timer", omikuji: "Fortune (Omikuji)",
-        finish: "Closed for this year."
-    },
-    zh: {
-        titlePre: "岁末准备", titleNew: "新年快乐",
-        prep: "欢迎来到篠之井乘务区。我们正在为新年的运行做准备。祝您度过一个安全愉快的一年！",
-        newYear: "新年快乐！祝愿您在2026年的生活轨道上，一切顺利，安全运行。",
-        timerLabel: "距离2026年开车还有", about: "关于本站", mytimer: "个人计时器", omikuji: "抽取铁道占卜",
-        finish: "今年已结束。"
-    },
-    ko: {
-        titlePre: "연말 준비", titleNew: "근賀新年",
-        prep: "시노노이 승무구 특설 회장에 오신 것을 환영합니다. 현재 새해 운행을 준비 중입니다. 모두 안전하고 행복한 연말 되세요.",
-        newYear: "새해 복 많이 받으세요! 2026년 한 해도 귀하의 인생이라는 열차가 활기차게 달릴 수 있기를 기원합니다.",
-        timerLabel: "2026년 첫 열차까지", about: "사이트 소개", mytimer: "마이 타이머 설정", omikuji: "철도 운세 뽑기",
-        finish: "올해의 공개는 종료되었습니다."
+        prep: "Welcome to Shinonoi Depot. We are preparing for 2026. Have a safe and happy year-end!",
+        newYear: "Happy New Year 2026! We wish you a safe and smooth journey on the tracks of your life.",
+        about: "About This Site", mytimer: "My Personal Timer", omikuji: "Draw a Fortune", label: "Countdown to 2026",
+        news: "News", finish: "Closed for this year."
     }
 };
 
-let currentLang = 'ja';
-function setLang(lang) {
-    currentLang = lang;
+let lang = 'ja';
+function setLang(l) {
+    lang = l;
     document.querySelectorAll('.lang-switcher button').forEach(b => b.classList.remove('active'));
-    document.getElementById('lang-' + lang).classList.add('active');
+    document.getElementById('btn-' + l).classList.add('active');
     update();
 }
 
 function createSakura() {
-    const sakura = document.createElement('div');
-    sakura.innerHTML = '🌸'; sakura.className = 'sakura';
-    sakura.style.left = Math.random() * 100 + 'vw';
-    sakura.style.animationDuration = Math.random() * 3 + 4 + 's';
-    document.body.appendChild(sakura);
-    setTimeout(() => sakura.remove(), 7000);
+    const s = document.createElement('div');
+    s.innerHTML = '🌸'; s.className = 'sakura';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.animationDuration = Math.random() * 3 + 4 + 's';
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 7000);
 }
 setInterval(createSakura, 500);
 
@@ -111,13 +90,13 @@ const endDate = new Date("2026/01/16 00:00:00");
 
 function update() {
     const now = new Date();
-    const t = translations[currentLang];
+    const t = translations[lang];
     
-    // UIのテキスト更新
     document.getElementById("ui-about").innerText = t.about;
     document.getElementById("ui-mytimer").innerText = t.mytimer;
     document.getElementById("ui-omikuji").innerText = t.omikuji;
-    document.getElementById("ui-timer-label").innerText = t.timerLabel;
+    document.getElementById("ui-news").innerText = t.news;
+    document.getElementById("ui-label").innerText = t.label;
 
     if (now >= endDate) {
         document.getElementById("main-content").innerHTML = `<h1>Finish</h1><p>${t.finish}</p>`;
@@ -140,6 +119,7 @@ function update() {
         document.getElementById("countdown").innerText = `${d}d ${h}:${m}:${s}`;
     }
 }
+
 setInterval(update, 1000);
 update();
 </script>
