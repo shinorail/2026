@@ -8,20 +8,25 @@
 :root { --main: #ff9800; --bg: #fff9e6; }
 body { background: var(--bg); font-family: sans-serif; text-align: center; margin: 0; padding: 0; touch-action: manipulation; overflow-x: hidden; }
 
-/* ページ全体のボタン */
+/* ポイント表示 */
+#score-board { font-size: 2.5rem; font-weight: bold; color: var(--main); margin: 10px 0; }
+
 .btn { display: block; width: 90%; margin: 10px auto; padding: 20px 0; background: var(--main); color: #fff; text-decoration: none; border-radius: 50px; font-size: 1.5rem; font-weight: bold; border: 5px solid #fff; box-shadow: 0 5px 0 #e68a00; cursor: pointer; }
 .btn:disabled { background: #ccc; box-shadow: 0 5px 0 #999; }
 
-/* ゲーム画面：全画面に近く大きく */
 #game-area { position: relative; width: 95vw; height: 95vw; max-width: 500px; max-height: 500px; margin: 10px auto; background: #000; border: 8px solid var(--main); border-radius: 20px; box-sizing: border-box; }
-canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+canvas { width: 100%; height: 100%; display: block; }
 
-/* タッチ操作ボタンを押しやすく巨大化 */
+/* 巨大ポップアップ */
+.result-popup { 
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+    color: #fff; background: rgba(0,0,0,0.9); width: 100%; padding: 40px 0; 
+    display: none; z-index: 100; border: 5px solid #fff;
+}
+.result-score { font-size: 4rem; color: #ffeb3b; display: block; margin: 20px 0; }
+
 .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 90%; max-width: 400px; margin: 20px auto; }
-.p-btn { aspect-ratio: 1/1; background: #fff; border: 4px solid var(--main); border-radius: 20px; font-size: 2.5rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; -webkit-tap-highlight-color: transparent; }
-.p-btn:active { background: var(--main); color: #fff; }
-
-.status-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 2.5rem; font-weight: bold; background: rgba(0,0,0,0.8); width: 100%; padding: 20px 0; display: none; }
+.p-btn { aspect-ratio: 1/1; background: #fff; border: 4px solid var(--main); border-radius: 20px; font-size: 2.5rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; }
 
 footer { padding: 20px 0; font-weight: bold; font-size: 0.8rem; border-top: 1px solid #ddd; margin-top: 30px; }
 </style>
@@ -30,13 +35,20 @@ footer { padding: 20px 0; font-weight: bold; font-size: 0.8rem; border-top: 1px 
 
 <h1 style="color:var(--main); margin:10px 0; font-size:2rem;">キッズページ</h1>
 
-<button id="k-rail" class="btn" onclick="location.href='rail_result.html'" disabled>てつどう おみくじ</button>
-<button id="k-norm" class="btn" onclick="location.href='norm_result.html'" disabled style="background:#f44336; box-shadow:0 5px 0 #d32f2f;">ふつうの おみくじ</button>
+<div id="score-board">てんすう：0</div>
 
 <div id="game-area">
     <canvas id="snakeGame" width="400" height="400"></canvas>
-    <div id="msg" class="status-msg">ざんねん！</div>
-    <div id="start-screen" class="status-msg" style="display:block; background:rgba(255,152,0,0.9);">あそぶボタンを<br>おしてね！</div>
+    
+    <div id="result-popup" class="result-popup">
+        <span style="font-size: 2rem;">ざんねん！</span>
+        <span class="result-score" id="final-score">0</span>
+        <span style="font-size: 1.5rem;">てん でした！</span>
+    </div>
+
+    <div id="start-screen" class="result-popup" style="display:block; background:rgba(255,152,0,0.9);">
+        <span style="font-size: 2rem;">あそぶボタンを<br>おしてね！</span>
+    </div>
 </div>
 
 <div id="ui">
@@ -51,7 +63,7 @@ footer { padding: 20px 0; font-weight: bold; font-size: 0.8rem; border-top: 1px 
     <div class="p-btn" onclick="setD('R')">→</div>
 </div>
 
-<a href="index.html" class="btn" style="background:#666; box-shadow:0 5px 0 #444; font-size:1.2rem;">← もどる</a>
+<a href="index.html" class="btn" style="background:#666; font-size:1.2rem; margin-top:40px;">← もどる</a>
 
 <footer>
     製造元：GitHub / 制作・著作：篠ノ井乗務区<br>
@@ -61,21 +73,25 @@ footer { padding: 20px 0; font-weight: bold; font-size: 0.8rem; border-top: 1px 
 <script>
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
-/* ブロックを大きく（20pxから25pxへ） */
 const box = 25;
-let snake, food, dir, gameInterval;
+let snake, food, dir, gameInterval, score;
 
 function startGame() {
+    score = 0;
+    updateScore();
     snake = [{x: 8 * box, y: 8 * box}];
     food = { x: Math.floor(Math.random()*15)*box, y: Math.floor(Math.random()*15)*box };
     dir = "R";
-    document.getElementById("msg").style.display = "none";
+    document.getElementById("result-popup").style.display = "none";
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("start-btn").style.display = "none";
     document.getElementById("retry-btn").style.display = "none";
     if(gameInterval) clearInterval(gameInterval);
-    /* スピードをゆっくり（120msから250msへ：2倍以上ゆっくり） */
     gameInterval = setInterval(draw, 250);
+}
+
+function updateScore() {
+    document.getElementById("score-board").innerText = "てんすう：" + score;
 }
 
 function setD(d) {
@@ -87,14 +103,11 @@ function setD(d) {
 
 function draw() {
     ctx.fillStyle = "#000"; ctx.fillRect(0,0,400,400);
-    /* 巨大ヘビを描画 */
     for(let i=0; i<snake.length; i++) {
         ctx.fillStyle = (i==0) ? "#ffeb3b" : "#ff9800";
-        ctx.strokeStyle = "#fff";
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
     }
-    /* 巨大エサ */
     ctx.fillStyle = "#f44336";
     ctx.fillRect(food.x, food.y, box, box);
 
@@ -103,14 +116,16 @@ function draw() {
     if(dir=="R") hX += box; if(dir=="D") hY += box;
 
     if(hX == food.x && hY == food.y) {
+        score += 10;
+        updateScore();
         food = { x: Math.floor(Math.random()*15)*box, y: Math.floor(Math.random()*15)*box };
     } else { snake.pop(); }
 
     let nH = {x: hX, y: hY};
-    /* あたったらおわり */
     if(hX<0 || hX>=400 || hY<0 || hY>=400 || snake.some(s => s.x==nH.x && s.y==nH.y)) {
         clearInterval(gameInterval);
-        document.getElementById("msg").style.display = "block";
+        document.getElementById("final-score").innerText = score;
+        document.getElementById("result-popup").style.display = "block";
         document.getElementById("retry-btn").style.display = "block";
         return;
     }
@@ -118,12 +133,10 @@ function draw() {
 }
 
 const start = new Date("2026/01/01 00:00:00");
-function updateKuji() {
+function check() {
     const ready = new Date() >= start;
-    document.getElementById('k-rail').disabled = !ready;
-    document.getElementById('k-norm').disabled = !ready;
+    const ids = ['k-rail', 'k-norm']; // 必要に応じておみくじボタンIDを復活させてください
 }
-setInterval(updateKuji, 1000); updateKuji();
 setTimeout(() => location.reload(), 300000);
 </script>
 </body>
