@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>年末年始の休止案内 - 篠ノ井乗務区</title>
+<style>
+:root { --red: #d32f2f; --bg: #fcfaf2; --font: "BIZ UDPGothic", sans-serif; }
+body { background: var(--bg); font-family: var(--font); margin: 0; padding: 20px; color: #333; line-height: 1.8; -webkit-text-size-adjust: 100%; }
+
+/* カード型コンテナ */
+.container { max-width: 600px; margin: 20px auto; background: #fff; padding: 40px 25px; border-radius: 25px; border: 1px solid #ddd; box-shadow: 0 10px 30px rgba(0,0,0,0.05); box-sizing: border-box; text-align: center; }
+
+h1 { color: var(--red); font-size: 1.5rem; margin-bottom: 30px; border-bottom: 2px solid var(--red); padding-bottom: 10px; display: inline-block; }
+
+/* 期間を強調するボックス */
+.holiday-box { background: #fff5f5; border: 2px dashed var(--red); padding: 30px 20px; border-radius: 20px; margin: 25px 0; }
+.label { font-weight: bold; font-size: 1rem; color: #666; display: block; margin-bottom: 10px; }
+.date-range { font-size: 1.8rem; font-weight: bold; color: var(--red); display: block; letter-spacing: 1px; }
+
+.info-list { text-align: left; background: #f9f9f9; padding: 20px; border-radius: 15px; margin-top: 30px; }
+.info-item { margin-bottom: 15px; }
+.info-item strong { color: var(--red); display: block; margin-bottom: 5px; }
+
+/* 戻るボタン */
+.btn-back { display: block; width: 100%; max-width: 280px; margin: 40px auto 0; padding: 18px; background: var(--red); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 0 #8e1b1b; transition: 0.2s; }
+.btn-back:active { transform: translateY(2px); box-shadow: 0 2px 0 #8e1b1b; }
+
+footer { margin-top: 50px; font-size: 0.8rem; color: #999; text-align: center; }
+
+/* 絵文字が降る演出（indexと統一） */
+.falling-item { position: fixed; top: -50px; z-index: 9999; pointer-events: none; animation: fall linear forwards; font-size: 1.8rem; }
+@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>年末年始の休止案内</h1>
+    
+    <p>日頃より篠ノ井乗務区をご利用いただきありがとうございます。<br>誠に勝手ながら、期間中は運営をお休みさせていただきます。</p>
+
+    <div class="holiday-box">
+        <span class="label">【休止期間】</span>
+        <span class="date-range">12月28日(日) 〜 1月4日(日)</span>
+    </div>
+
+    <div class="info-list">
+        <div class="info-item">
+            <strong>■ お問い合わせへの回答について</strong>
+            休止期間中にフォームより送信いただいた内容は、<span>1月5日(月)</span>より順次回答させていただきます。
+        </div>
+        <div class="info-item">
+            <strong>■ おみくじ・サイトの更新</strong>
+            2026年1月1日の「おみくじ公開」は自動プログラムにより実施されますが、期間中の不具合対応やメンテナンスは1月5日以降となります。
+        </div>
+    </div>
+
+    <p style="margin-top: 30px; font-weight: bold;">2026年も、篠ノ井乗務区をよろしくお願いいたします。</p>
+
+    <a href="index.html" class="btn-back">トップページへ戻る</a>
+</div>
+
+<footer>
+    製造元：GitHub / 制作・著作：篠ノ井乗務区
+</footer>
+
+<script>
+// 絵文字を降らせる
+function spawn() {
+    const items = ['🎍','🗻','🌅','🧧'];
+    const e = document.createElement('div');
+    e.className = 'falling-item';
+    e.innerText = items[Math.floor(Math.random()*items.length)];
+    e.style.left = Math.random()*100+'vw';
+    e.style.animationDuration = (Math.random()*3 + 4)+'s';
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 7000);
+}
+setInterval(spawn, 800);
+
+// 5分更新
+setTimeout(() => location.reload(), 300000);
+</script>
+
+</body>
+</html>
