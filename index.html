@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>篠ノ井乗務区 - 特設サイト</title>
+<title>篠ノ井乗務区 - 2周年特設サイト</title>
 <style>
 :root { --bg: #fcfaf2; --red: #d32f2f; --font: "BIZ UDPGothic", sans-serif; --gold: #d4af37; --teal: #00796b; }
 body { background: var(--bg); font-family: var(--font); text-align: center; margin: 0; padding: 20px; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
 
-.falling-item { position: fixed; top: -50px; z-index: 9999; pointer-events: none; animation: fall linear forwards; }
-@keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+/* 絵文字が降るアニメーション */
+.falling-item { position: fixed; top: -50px; z-index: 9999; pointer-events: none; animation: fall linear forwards; font-size: 2rem; }
+@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
 .timer-card { background: #000; color: var(--gold); border: 3px solid var(--gold); border-radius: 15px; padding: 15px; margin-bottom: 20px; max-width: 450px; margin-left: auto; margin-right: auto; }
 #timer { font-size: 1.8rem; font-weight: bold; font-family: monospace; }
@@ -22,15 +23,8 @@ body { background: var(--bg); font-family: var(--font); text-align: center; marg
 .main-btn:disabled { background: #ccc !important; cursor: not-allowed; opacity: 0.7; box-shadow: none; }
 
 .kids-btn { background: #ff9800; font-size: 1.5rem; padding: 25px; box-shadow: 0 4px 0 #e68a00; }
-.news-btn { background: #e3f2fd; color: #1565c0; box-shadow: 0 4px 0 #bbdefb; }
 .contact-btn { background: var(--teal); color: #fff; box-shadow: 0 4px 0 #004d40; }
-
-.ad-space { max-width: 450px; margin: 20px auto; background: #eee; border: 2px dashed #999; border-radius: 10px; padding: 30px 0; color: #666; font-size: 0.9rem; }
-.parent-lock { margin-top: 30px; padding: 15px; border: 1px dashed #999; border-radius: 10px; font-size: 0.8rem; max-width: 450px; margin: auto; }
 .hidden { display: none !important; }
-
-/* 解除リンクのスタイル */
-.forget-pass { display: block; margin-top: 15px; color: #999; font-size: 0.8rem; text-decoration: underline; cursor: pointer; }
 
 footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.8rem; line-height: 1.6; }
 </style>
@@ -40,113 +34,100 @@ footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-s
 <div id="normal-menu">
     <div class="timer-card">
         <div style="font-size: 0.7rem; margin-bottom: 5px;">2026年まで あと</div>
-        <div id="timer">00d 00h 00m 00s</div>
+        <div id="timer">計算中...</div>
     </div>
 
     <a href="holiday.html" class="holiday-banner">
         <strong style="color: var(--red);">【重要】年末年始の休止案内</strong><br>
-        <span style="font-size: 0.9rem;">12月28日 〜 1月4日はお休みです</span><br>
-        <span style="font-size: 0.7rem; color: #666;">詳細はこちらをタップ</span>
+        <span style="font-size: 0.9rem;">12月28日 〜 1月4日はお休みです</span>
     </a>
 
     <div class="btn-group">
         <button id="rail-kuji" class="main-btn" onclick="location.href='rail_result.html'" disabled>【点検中】鉄道おみくじ</button>
-        <button id="norm-kuji" class="main-btn" disabled style="background:#b71c1c;">【点検中】一般おみくじ</button>
-        <a href="news.html" class="main-btn news-btn">最新ニュース (News)</a>
+        <button id="norm-kuji" class="main-btn" onclick="location.href='norm_result.html'" disabled style="background:#b71c1c;">【点検中】一般おみくじ</button>
         <a href="kids.html" class="main-btn kids-btn">たのしいキッズサイト</a>
         <a href="contact.html" class="main-btn contact-btn">お問い合わせフォーム</a>
         <a href="policy.html" class="main-btn" style="background:#444;">運営規程（12条）</a>
-    </div>
-
-    <div class="ad-space">広告掲載枠（スポンサー募集中）</div>
-
-    <div class="parent-lock">
-        <p>保護者設定：お子様に渡す前にボタンを押してください</p>
-        <button onclick="lockKidsMode()">キッズ固定モードを有効にする</button>
     </div>
 </div>
 
 <div id="locked-menu" class="hidden">
     <h1 style="color:#ff9800; font-size:2.5rem;">キッズ専用</h1>
-    <div class="btn-group">
-        <a href="kids.html" class="main-btn kids-btn">あそびにいく！</a>
-    </div>
-    
-    <div style="margin-top: 100px;">
-        <button onclick="handleUnlockClick()" style="background:none; border:none; color:#ccc; font-size: 1rem; cursor:pointer;">解除（保護者用）</button>
-        <a href="policy.html" class="forget-pass">パスワードを忘れたときは？</a>
-    </div>
+    <a href="kids.html" class="main-btn kids-btn">あそびにいく！</a>
+    <button onclick="handleUnlockClick()" style="margin-top:100px; background:none; border:none; color:#ccc; cursor:pointer;">解除（保護者用）</button>
 </div>
 
 <footer>
-    製造元：GitHub / 制作・著作：篠ノ井乗務区<br>
-    ※5分ごとに自動更新されます
+    製造元：GitHub / 制作・著作：篠ノ井乗務区
 </footer>
 
 <script>
-let resetCount = 0;
 const target = new Date("2026/01/01 00:00:00").getTime();
+let isOpened = false;
 
 function update() {
-    const diff = target - new Date().getTime();
-    const ready = diff <= 0;
-    if (!ready) {
+    const now = new Date().getTime();
+    const diff = target - now;
+    
+    if (diff <= 0) {
+        document.getElementById("timer").innerText = "00d 00h 00m 00s";
+        document.getElementById("rail-kuji").disabled = false;
+        document.getElementById("rail-kuji").innerText = "鉄道おみくじ";
+        document.getElementById("norm-kuji").disabled = false;
+        document.getElementById("norm-kuji").innerText = "一般おみくじ";
+        
+        // 0秒になった瞬間に一度だけ自動リロードして公開状態を確定させる
+        if(!isOpened) {
+            isOpened = true;
+            setTimeout(() => location.reload(), 1000);
+        }
+    } else {
         const d = Math.floor(diff / 864e5);
         const h = Math.floor((diff % 864e5) / 36e5);
         const m = Math.floor((diff % 36e5) / 6e4);
         const s = Math.floor((diff % 6e4) / 1e3);
-        document.getElementById("timer").innerText = `${d}d ${h}h ${m}s`;
-    } else {
-        document.getElementById("timer").innerText = "公開中！";
+        document.getElementById("timer").innerText = 
+            `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
     }
-    const btns = ['rail-kuji', 'norm-kuji'];
-    btns.forEach(id => {
-        const b = document.getElementById(id);
-        if(b) { 
-            b.disabled = !ready; 
-            if(ready && b.innerText.includes("【")) b.innerText = id.includes('rail') ? "鉄道おみくじ" : "一般おみくじ"; 
-        }
-    });
 }
-setInterval(update, 1000); update();
+setInterval(update, 1000);
+update();
 
-function lockKidsMode() {
-    const p = prompt("解除パスワード（数字）を決めてください");
-    if(p) { localStorage.setItem('k_pass', p); localStorage.setItem('k_active', 'true'); apply(); }
+function spawn() {
+    const items = ['🎍','🗻','🌅','🧧'];
+    const e = document.createElement('div');
+    e.className = 'falling-item';
+    e.innerText = items[Math.floor(Math.random()*items.length)];
+    e.style.left = Math.random()*100+'vw';
+    e.style.animationDuration = (Math.random()*3 + 4)+'s';
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 7000);
 }
+setInterval(spawn, 600);
 
+// キッズモード解除ロジック
+let resetCount = 0;
 function handleUnlockClick() {
     resetCount++;
     if (resetCount >= 3) {
-        if(confirm("【パスワード救済】パスワードを忘れたため強制リセットしますか？")) {
-            localStorage.setItem('k_active', 'false'); resetCount = 0; apply();
-            alert("リセットが完了しました。");
+        if(confirm("パスワードを忘れたためリセットしますか？")) {
+            localStorage.setItem('k_active', 'false');
+            location.reload();
         }
     } else {
         const p = prompt("パスワードを入力");
-        if(p === localStorage.getItem('k_pass')) { 
-            localStorage.setItem('k_active', 'false'); resetCount = 0; apply(); 
-        } else if (p !== null) {
-            alert("ちがうよ！あと " + (3 - resetCount) + " 回連続クリックでリセット可能です。");
+        if(p === localStorage.getItem('k_pass')) {
+            localStorage.setItem('k_active', 'false');
+            location.reload();
         }
     }
 }
-
 function apply() {
     const a = localStorage.getItem('k_active') === 'true';
     document.getElementById('normal-menu').classList.toggle('hidden', a);
     document.getElementById('locked-menu').classList.toggle('hidden', !a);
 }
 apply();
-
-function spawn() {
-    const e = document.createElement('div'); e.className = 'falling-item';
-    e.innerText = ['🎍','🗻','🌅','🧧'][Math.floor(Math.random()*4)];
-    e.style.left = Math.random()*100+'vw'; e.style.animationDuration = '6s';
-    document.body.appendChild(e); setTimeout(() => e.remove(), 6000);
-}
-setInterval(spawn, 600);
-setTimeout(() => location.reload(), 300000);
 </script>
 </body>
 </html>
