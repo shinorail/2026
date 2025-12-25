@@ -8,7 +8,6 @@
 :root { --bg: #fcfaf2; --red: #d32f2f; --font: "BIZ UDPGothic", sans-serif; --gold: #d4af37; --teal: #00796b; }
 body { background: var(--bg); font-family: var(--font); text-align: center; margin: 0; padding: 20px; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
 
-/* 絵文字が降るアニメーション */
 .falling-item { position: fixed; top: -50px; z-index: 9999; pointer-events: none; animation: fall linear forwards; font-size: 2rem; }
 @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
@@ -20,7 +19,9 @@ body { background: var(--bg); font-family: var(--font); text-align: center; marg
 .btn-group { display: flex; flex-direction: column; gap: 12px; max-width: 450px; margin: 20px auto; }
 .main-btn { display: block; padding: 18px; background: var(--red); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; box-shadow: 0 4px 0 #8e1b1b; }
 .main-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #8e1b1b; }
-.main-btn:disabled { background: #ccc !important; cursor: not-allowed; opacity: 0.7; box-shadow: none; }
+
+/* 点検中（公開前）のボタンデザイン */
+.main-btn.waiting { background: #ccc !important; box-shadow: none; cursor: pointer; }
 
 .kids-btn { background: #ff9800; font-size: 1.5rem; padding: 25px; box-shadow: 0 4px 0 #e68a00; }
 .contact-btn { background: var(--teal); color: #fff; box-shadow: 0 4px 0 #004d40; }
@@ -43,8 +44,8 @@ footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-s
     </a>
 
     <div class="btn-group">
-        <button id="rail-kuji" class="main-btn" onclick="location.href='rail_result.html'" disabled>【点検中】鉄道おみくじ</button>
-        <button id="norm-kuji" class="main-btn" onclick="location.href='norm_result.html'" disabled style="background:#b71c1c;">【点検中】一般おみくじ</button>
+        <button id="rail-kuji" class="main-btn waiting" onclick="tryOpen('rail_result.html')">【点検中】鉄道おみくじ</button>
+        <button id="norm-kuji" class="main-btn waiting" onclick="tryOpen('norm_result.html')" style="background:#b71c1c;">【点検中】一般おみくじ</button>
         <a href="kids.html" class="main-btn kids-btn">たのしいキッズサイト</a>
         <a href="contact.html" class="main-btn contact-btn">お問い合わせフォーム</a>
         <a href="policy.html" class="main-btn" style="background:#444;">運営規程（12条）</a>
@@ -63,25 +64,34 @@ footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-s
 
 <script>
 const target = new Date("2026/01/01 00:00:00").getTime();
-let isOpened = false;
+let isReady = false;
+
+// ボタンクリック時の挙動
+function tryOpen(url) {
+    if (isReady) {
+        location.href = url;
+    } else {
+        alert("公開までカウントダウン終了までお待ちください。");
+    }
+}
 
 function update() {
     const now = new Date().getTime();
     const diff = target - now;
     
     if (diff <= 0) {
+        isReady = true;
         document.getElementById("timer").innerText = "00d 00h 00m 00s";
-        document.getElementById("rail-kuji").disabled = false;
-        document.getElementById("rail-kuji").innerText = "鉄道おみくじ";
-        document.getElementById("norm-kuji").disabled = false;
-        document.getElementById("norm-kuji").innerText = "一般おみくじ";
         
-        // 0秒になった瞬間に一度だけ自動リロードして公開状態を確定させる
-        if(!isOpened) {
-            isOpened = true;
-            setTimeout(() => location.reload(), 1000);
-        }
+        const rBtn = document.getElementById("rail-kuji");
+        rBtn.classList.remove("waiting");
+        rBtn.innerText = "鉄道おみくじ";
+        
+        const nBtn = document.getElementById("norm-kuji");
+        nBtn.classList.remove("waiting");
+        nBtn.innerText = "一般おみくじ";
     } else {
+        isReady = false;
         const d = Math.floor(diff / 864e5);
         const h = Math.floor((diff % 864e5) / 36e5);
         const m = Math.floor((diff % 36e5) / 6e4);
