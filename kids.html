@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>キッズページ - 篠ノ井乗務区</title>
+<style>
+:root { --orange: #ff9800; --bg: #fff9e6; }
+body { background: var(--bg); font-family: sans-serif; text-align: center; margin: 0; padding: 20px; touch-action: manipulation; }
+h1 { font-size: 2.5rem; color: var(--orange); margin-bottom: 10px; }
+
+/* 巨大ボタン */
+.big-btn { 
+    display: block; width: 95%; margin: 15px auto; padding: 30px 10px; 
+    background: var(--orange); color: #fff; text-decoration: none; 
+    border-radius: 50px; font-size: 1.8rem; font-weight: bold; 
+    border: 8px solid #fff; box-shadow: 0 8px 0 #e68a00; cursor: pointer;
+}
+.big-btn:disabled { background: #ccc; box-shadow: 0 8px 0 #999; cursor: not-allowed; }
+
+/* ゲームエリア */
+#game-container { position: relative; display: inline-block; margin-top: 10px; }
+canvas { background: #000; border: 5px solid var(--orange); border-radius: 10px; max-width: 100%; height: auto; }
+
+/* 十字ボタン（スマホ用） */
+.controls { display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(2, 80px); gap: 10px; justify-content: center; margin-top: 20px; }
+.ctrl-btn { 
+    width: 80px; height: 80px; background: #fff; border: 4px solid var(--orange); 
+    border-radius: 15px; font-size: 2rem; font-weight: bold; color: var(--orange);
+    display: flex; align-items: center; justify-content: center; user-select: none;
+}
+.ctrl-btn:active { background: var(--orange); color: #fff; }
+.up { grid-column: 2; }
+.left { grid-column: 1; grid-row: 2; }
+.down { grid-column: 2; grid-row: 2; }
+.right { grid-column: 3; grid-row: 2; }
+
+footer { margin-top: 40px; border-top: 2px solid #ddd; padding-top: 20px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>キッズページ</h1>
+
+<button id="k-btn" class="big-btn" disabled>おみくじ じゅんび中</button>
+
+<div id="game-container">
+    <h2 style="font-size:1.5rem; margin:5px;">🐍 ヘビゲーム (ボタンで うごかしてね)</h2>
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
+    
+    <div class="controls">
+        <div class="ctrl-btn up" onclick="setDir('UP')">↑</div>
+        <div class="ctrl-btn left" onclick="setDir('LEFT')">←</div>
+        <div class="ctrl-btn down" onclick="setDir('DOWN')">↓</div>
+        <div class="ctrl-btn right" onclick="setDir('RIGHT')">→</div>
+    </div>
+</div>
+
+<a href="index.html" class="big-btn" style="background:#666; font-size:1.2rem; padding:15px; margin-top:40px;">← もどる</a>
+
+<footer>
+    製造元：GitHub / 制作・著作：篠ノ井乗務区
+</footer>
+
+<script>
+// おみくじロック（2026年まで）
+const start = new Date("2026/01/01 00:00:00");
+function checkKuji() {
+    if (new Date() >= start) {
+        const b = document.getElementById('k-btn');
+        b.disabled = false; b.innerText = "おみくじを ひく！";
+        b.onclick = () => location.href='norm_result.html';
+    }
+}
+setInterval(checkKuji, 1000); checkKuji();
+
+// ヘビゲーム
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+let box = 15, snake = [{x: 10*box, y: 10*box}], food = {x: 5*box, y: 5*box}, dir = "RIGHT";
+
+function setDir(newDir) {
+    if(newDir=="LEFT" && dir!="RIGHT") dir="LEFT";
+    else if(newDir=="UP" && dir!="DOWN") dir="UP";
+    else if(newDir=="RIGHT" && dir!="LEFT") dir="RIGHT";
+    else if(newDir=="DOWN" && dir!="UP") dir="DOWN";
+}
+
+document.addEventListener("keydown", e => {
+    if(e.keyCode==37) setDir("LEFT");
+    if(e.keyCode==38) setDir("UP");
+    if(e.keyCode==39) setDir("RIGHT");
+    if(e.keyCode==40) setDir("DOWN");
+});
+
+function draw() {
+    ctx.fillStyle = "black"; ctx.fillRect(0,0,300,300);
+    for(let i=0; i<snake.length; i++){
+        ctx.fillStyle = (i==0) ? "#ff9800" : "#ffcc80";
+        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+    }
+    ctx.fillStyle = "red"; ctx.fillRect(food.x, food.y, box, box);
+
+    let headX = snake[0].x, headY = snake[0].y;
+    if(dir=="LEFT") headX -= box; if(dir=="UP") headY -= box;
+    if(dir=="RIGHT") headX += box; if(dir=="DOWN") headY += box;
+
+    if(headX==food.x && headY==food.y) {
+        food = {x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box};
+    } else { snake.pop(); }
+
+    let newHead = {x: headX, y: headY};
+    if(headX<0 || headX>=300 || headY<0 || headY>=300 || snake.some(s => s.x==newHead.x && s.y==newHead.y)) {
+        snake = [{x: 10*box, y: 10*box}]; dir = "RIGHT"; // ぶつかったら最初から
+    }
+    snake.unshift(newHead);
+}
+let game = setInterval(draw, 150);
+
+// 5分自動更新
+setTimeout(() => location.reload(), 300000);
+</script>
+</body>
+</html>
