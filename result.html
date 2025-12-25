@@ -7,34 +7,99 @@
 <style>
 @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 body { background: #fcfaf2; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
-.result-card { border: 2px solid #d32f2f; padding: 40px; max-width: 450px; margin: 30px auto; background: #fff; animation: zoomIn 0.5s ease-out; }
-h1 { font-size: 3.5em; margin: 10px 0; color: #000; border-bottom: 4px solid #d32f2f; display: inline-block; }
-.msg { text-align: left; line-height: 2.2; margin: 25px 0; font-size: 1.1em; background: #fffaf0; padding: 20px; border-radius: 5px; }
-.share-btn { display: inline-block; padding: 12px 25px; margin: 10px; color: #fff; text-decoration: none; border-radius: 25px; font-weight: bold; background: #000; }
-.back { display: block; margin-top: 30px; color: #d32f2f; text-decoration: none; font-weight: bold; }
+.result-card { border: 3px solid #d32f2f; padding: 30px; max-width: 450px; margin: 20px auto; background: #fff; animation: zoomIn 0.5s ease-out; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+.lang-switcher { margin-bottom: 20px; display: flex; justify-content: center; gap: 5px; }
+.lang-switcher button { background: #eee; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; font-size: 11px; border-radius: 3px; }
+.lang-switcher button.active { background: #004d40; color: white; }
+h2 { font-size: 1em; color: #666; margin: 0; }
+h1 { font-size: 3em; margin: 10px 0; color: #d32f2f; border-bottom: 4px solid #d32f2f; display: inline-block; padding: 0 15px; }
+.msg { text-align: left; line-height: 1.8; margin: 20px 0; font-size: 0.95em; background: #fffaf0; padding: 15px; border-radius: 5px; min-height: 100px; color: #1a1a1a; white-space: pre-wrap; }
+.btn-group { display: flex; flex-direction: column; gap: 10px; }
+.menu-btn { display: flex; align-items: center; justify-content: center; padding: 12px; text-decoration: none; font-weight: bold; border-radius: 4px; color: #fff; transition: 0.3s; font-size: 0.9em; }
+.share-x { background: #000; }
+.share-line { background: #06C755; }
+.share-copy { background: #607D8B; }
+.back-btn { background: #004d40; margin-top: 10px; }
+.menu-btn:hover { opacity: 0.8; }
 </style>
 </head>
 <body>
 <div class="result-card">
-    <p>運勢点検の結果…</p>
+    <div class="lang-switcher">
+        <button onclick="changeLang('ja')" id="btn-ja" class="active">日本語</button>
+        <button onclick="changeLang('en')" id="btn-en">English</button>
+    </div>
+    <h2 id="ui-subtitle">運勢点検の結果…</h2>
     <h1 id="rank"></h1>
     <div id="msg" class="msg"></div>
-    <div class="sns-share">
-        <a id="share-x" class="share-btn" target="_blank">Xに投稿して報告</a>
+    
+    <div class="btn-group">
+        <a id="share-x" class="menu-btn share-x" target="_blank">X (Twitter) でシェア</a>
+        <a id="share-line" class="menu-btn share-line" target="_blank">LINE で送る</a>
+        <button onclick="copyResult()" id="ui-copy" class="menu-btn share-copy">結果をコピー (Insta等へ)</button>
+        <a href="index.html" id="ui-back" class="menu-btn back-btn">会場入口へ戻る</a>
     </div>
-    <a href="index.html" class="back">← 戻る</a>
 </div>
+
 <script>
-const trainResults = [
-    { rank: "超特急", msg: "【全体】オールグリーン！最高速度で突き進めます。<br>【心得】信号よし、前方よし！定時運行で福が来ます。" },
-    { rank: "特急", msg: "【全体】出力良好。急勾配も力強く登り切れます。<br>【心得】車窓の景色を楽しむ余裕が運気を上げます。" },
-    { rank: "各停", msg: "【全体】一駅ずつ着実に。丁寧な歩みが実を結びます。<br>【心得】指差し呼称で安全確認を。一歩ずつが吉。" }
+const results = [
+    { rank: { ja: "超特急", en: "Super Exp." }, msg: { ja: "【全体】オールグリーン！最高速度で突き進めます。\n【心得】前方よし！定時運行で大きな福が来ます。", en: "All green! You can go at maximum speed.\nTip: Stay focused and success will arrive on time." } },
+    { rank: { ja: "特急", en: "Limited Exp." }, msg: { ja: "【全体】出力良好。急勾配も力強く登り切れます。\n【心得】車窓の景色を楽しむ余裕が運気を上げます。", en: "Good power output. You can climb steep slopes easily.\nTip: Enjoying the view will boost your luck." } },
+    { rank: { ja: "快速", en: "Rapid" }, msg: { ja: "【全体】軽快な走り。主要な目標を次々と通過できます。\n【心得】停車駅（休息）を忘れずに。安定走行が吉。", en: "Smooth running. You will pass your goals one by one.\nTip: Don't forget to stop and rest for stability." } },
+    { rank: { ja: "各停", en: "Local" }, msg: { ja: "【全体】一駅ずつ着実に。丁寧な歩みが実を結びます。\n【心得】指差し呼称で安全確認を。一歩ずつが吉。", en: "Steady progress station by station. Honesty is key.\nTip: Check everything twice. Step by step is best." } },
+    { rank: { ja: "回送", en: "Out of Svc." }, msg: { ja: "【全体】次なる運行への準備期間。無理は禁物です。\n【心得】車両点検（休息）を優先。エネルギーを充電して。", en: "Preparation period for the next run. Don't overwork.\nTip: Prioritize maintenance and recharge your energy." } },
+    { rank: { ja: "臨時", en: "Special" }, msg: { ja: "【全体】思いがけない幸運な出会いや出来事があるかも。\n【心得】柔軟なダイヤ改正が吉。変化を楽しんで。", en: "Unexpected lucky encounters or events may occur.\nTip: Be flexible with your schedule and enjoy changes." } }
 ];
-const res = trainResults[Math.floor(Math.random() * trainResults.length)];
-document.getElementById('rank').innerText = res.rank;
-document.getElementById('msg').innerHTML = res.msg;
-const shareText = `篠ノ井乗務区 新春みくじ：【${res.rank}】\n${res.msg.replace(/<br>/g, '\n')}\n`;
-document.getElementById('share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(window.location.href.split('?')[0].replace('result.html', 'index.html'))}`;
+
+let currentLang = 'ja';
+let currentRes = results[Math.floor(Math.random() * results.length)];
+
+function changeLang(l) {
+    currentLang = l;
+    document.querySelectorAll('.lang-switcher button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + l).classList.add('active');
+    render();
+}
+
+function render() {
+    const r = currentRes;
+    const l = currentLang;
+    document.getElementById('rank').innerText = r.rank[l];
+    document.getElementById('msg').innerText = r.msg[l];
+    
+    const ui = {
+        ja: { sub: "運勢点検の結果…", back: "会場入口へ戻る", copy: "結果をコピー (Insta等へ)", copied: "コピーしました！" },
+        en: { sub: "Inspection Result...", back: "Back to Home", copy: "Copy Result (for Insta etc.)", copied: "Copied!" }
+    };
+    
+    document.getElementById('ui-subtitle').innerText = ui[l].sub;
+    document.getElementById('ui-back').innerText = ui[l].back;
+    document.getElementById('ui-copy').innerText = ui[l].copy;
+
+    const shareText = `篠ノ井乗務区 運勢点検：【${r.rank[l]}】\n${r.msg[l]}\n#篠ノ井乗務区 #鉄道みくじ`;
+    const shareUrl = window.location.href.split('result.html')[0] + 'index.html';
+
+    // X
+    document.getElementById('share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    // LINE
+    document.getElementById('share-line').href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+}
+
+function copyResult() {
+    const r = currentRes;
+    const l = currentLang;
+    const shareUrl = window.location.href.split('result.html')[0] + 'index.html';
+    const fullText = `篠ノ井乗務区 運勢点検：【${r.rank[l]}】\n${r.msg[l]}\n${shareUrl}\n#篠ノ井乗務区`;
+    
+    navigator.clipboard.writeText(fullText).then(() => {
+        const btn = document.getElementById('ui-copy');
+        const originalText = btn.innerText;
+        btn.innerText = currentLang === 'ja' ? "コピー完了！" : "Copied!";
+        setTimeout(() => btn.innerText = originalText, 2000);
+    });
+}
+
+render();
 </script>
 </body>
 </html>
