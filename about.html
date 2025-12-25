@@ -3,51 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About - 篠ノ井乗務区</title>
+<title>サイトの使い方 - 篠ノ井乗務区</title>
 <style>
-body { background-color: #fcfaf2; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
-.container { border: 3px solid #004d40; padding: 30px; max-width: 500px; margin: auto; background: #fff; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-.lang-switcher { margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; }
-.lang-switcher button { background: #eee; border: 1px solid #ccc; padding: 5px 15px; cursor: pointer; font-size: 12px; border-radius: 4px; }
-.lang-switcher button.active { background: #004d40; color: white; }
-h1 { color: #004d40; font-size: 1.5em; text-align: center; border-bottom: 2px solid #004d40; padding-bottom: 10px; }
-h2 { color: #d32f2f; font-size: 1.1em; margin-top: 25px; }
-p { line-height: 1.8; font-size: 0.9em; margin-bottom: 15px; }
-.menu-btn { display: block; background: #d32f2f; color: #fff; padding: 15px; text-align: center; text-decoration: none; font-weight: bold; border-radius: 4px; margin-top: 30px; box-shadow: 0 3px 0 #8b1d1d; }
+/* 前述のスタイルを継承 */
+.guide-step { text-align: left; margin-bottom: 30px; border-bottom: 1px solid #ddd; padding-bottom: 20px; }
+.step-num { background: var(--red); color: white; padding: 2px 10px; border-radius: 50%; margin-right: 10px; }
 </style>
 </head>
 <body>
-<div class="container">
-    <div class="lang-switcher">
-        <button onclick="setLang('ja')" id="btn-ja" class="active">日本語</button>
-        <button onclick="setLang('en')" id="btn-en">English</button>
+<div class="container" style="max-width: 700px; margin: auto; padding: 40px; background:#fff; border-radius:15px;">
+    <h1 style="text-align:center;">当サイトの楽しみ方</h1>
+    
+    <div class="guide-step">
+        <p><span class="step-num">1</span><strong>おみくじで運勢点検</strong></p>
+        <p>1月1日0時から、トップページに「おみくじ」ボタンが登場します。鉄道にちなんだ「鉄道みくじ」と、どなたでも楽しめる「一般みくじ」の2種類をご用意しています。</p>
     </div>
-    <h1 id="ui-title">About</h1>
-    <div id="ui-content">
-        <h2 id="ui-sub1">篠ノ井乗務区について</h2>
-        <p id="ui-p1">当サイトは、鉄道を愛する個人が運営するファンサイトです。名称は信州の鉄路を支える方々への敬意を込めています。実在の組織とは関係ありません。</p>
-        <h2 id="ui-sub2">2026年への願い</h2>
-        <p id="ui-p2">皆様の新しい一年が、安全第一で素晴らしい「定時運行」となりますように。</p>
+
+    <div class="guide-step">
+        <p><span class="step-num">2</span><strong>目に優しい表示に切り替え</strong></p>
+        <p>画面下の「高コントラスト設定切替」ボタンを押すと、文字が読みやすい黒背景のモードに変わります。お好みに合わせてご利用ください。</p>
     </div>
-    <a href="index.html" class="menu-btn" id="ui-back">会場入口へ戻る / Back</a>
+
+    <div class="guide-step">
+        <p><span class="step-num">3</span><strong>自動更新でお知らせ</strong></p>
+        <p>このサイトは5分ごとに自動で最新情報に更新されます。特別な操作をしなくても、新しいお知らせを逃さずチェックできます。</p>
+    </div>
+
+    <a href="index.html" style="display:block; text-align:center; color:var(--red); font-weight:bold;">起点（ホーム）へ戻る</a>
 </div>
-<script>
-const trans = {
-    ja: { title: "このサイトについて", sub1: "篠ノ井乗務区について", p1: "当サイトは、鉄道を愛する個人が運営するファンサイトです。名称は信州の鉄路を支える方々への敬意を込めています。実在の組織とは関係ありません。", sub2: "2026年への願い", p2: "皆様の新しい一年が、安全第一で素晴らしい「定時運行」となりますように。", back: "会場入口へ戻る" },
-    en: { title: "About Us", sub1: "About Shinonoi Depot", p1: "This is a fan site run by a railway enthusiast. The name is a tribute to the railway staff in Nagano. Not affiliated with any official organizations.", sub2: "Wishes for 2026", p2: "We wish your New Year to be a safe and wonderful 'on-time operation'.", back: "Back to Entrance" }
-};
-function setLang(l) {
-    const t = trans[l];
-    document.getElementById("ui-title").innerText = t.title;
-    document.getElementById("ui-sub1").innerText = t.sub1;
-    document.getElementById("ui-p1").innerText = t.p1;
-    document.getElementById("ui-sub2").innerText = t.sub2;
-    document.getElementById("ui-p2").innerText = t.p2;
-    document.getElementById("ui-back").innerText = t.back;
-    document.querySelectorAll('.lang-switcher button').forEach(b=>b.classList.remove('active'));
-    document.getElementById('btn-'+l).classList.add('active');
-}
-setLang('ja');
-</script>
 </body>
 </html>
