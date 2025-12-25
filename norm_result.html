@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root { --red: #b71c1c; --bg: #fdfcf0; --gold: #b8860b; --green: #24b500; }
-body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; }
+body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; -webkit-text-size-adjust: 100%; }
 
 #screenshot-target { background: #fff; border: 3px solid var(--red); border-radius: 20px; padding: 30px 20px; max-width: 450px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 .unsei { font-size: 1.1rem; color: #666; margin-bottom: 5px; }
@@ -58,30 +58,43 @@ const results = [
     { rank: "末吉", item: "ラッキー：整理整頓", msg: "身の回りを片付けることで運気が開けます。まずは机の上から綺麗にしてみましょう。" }
 ];
 
-const res = results[Math.floor(Math.random() * results.length)];
-document.getElementById('rank-display').innerText = res.rank;
-document.getElementById('item-display').innerText = res.item;
-document.getElementById('msg-display').innerText = res.msg;
+// 1日1回制限
+const today = new Date().toLocaleDateString();
+const lastDate = localStorage.getItem('last_draw_norm');
+let currentRes;
+
+if (lastDate === today) {
+    currentRes = JSON.parse(localStorage.getItem('saved_res_norm'));
+    alert("おみくじは1日1回までです。本日の結果を表示します。");
+} else {
+    currentRes = results[Math.floor(Math.random() * results.length)];
+    localStorage.setItem('last_draw_norm', today);
+    localStorage.setItem('saved_res_norm', JSON.stringify(currentRes));
+}
+
+document.getElementById('rank-display').innerText = currentRes.rank;
+document.getElementById('item-display').innerText = currentRes.item;
+document.getElementById('msg-display').innerText = currentRes.msg;
 
 function saveImage() {
     const target = document.getElementById("screenshot-target");
     html2canvas(target, { backgroundColor: "#fdfcf0", scale: 2 }).then(canvas => {
         const link = document.createElement("a");
         link.href = canvas.toDataURL("image/png");
-        link.download = `shinorail_omikuji_${res.rank}.png`;
+        link.download = `shinorail_omikuji_${currentRes.rank}.png`;
         link.click();
-        alert("おみくじ画像を保存しました！");
+        alert("画像を保存しました！");
     });
 }
 
 function shareX() {
-    const text = `篠ノ井乗務区 おみくじの結果は【${res.rank}】！\n${res.item}\n#篠ノ井乗務区 #おみくじ\n`;
+    const text = `篠ノ井乗務区 おみくじ結果は【${currentRes.rank}】！\n${currentRes.item}\n#篠ノ井乗務区 #おみくじ\n`;
     const url = "https://shinorail.github.io/shinonoi-2026/";
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
 }
 
 function shareLine() {
-    const text = `篠ノ井乗務区 おみくじの結果は【${res.rank}】！ ${res.item} https://shinorail.github.io/shinonoi-2026/`;
+    const text = `篠ノ井乗務区 おみくじ結果は【${currentRes.rank}】！ ${currentRes.item} https://shinorail.github.io/shinonoi-2026/`;
     window.open(`https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(text)}`, '_blank');
 }
 </script>
