@@ -2,113 +2,91 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>運営基本規程・ポリシー - 篠ノ井乗務区</title>
 <style>
-:root { --bg: #fcfaf2; --text: #1a1a1a; --red: #d32f2f; --font: "BIZ UDPGothic", sans-serif; }
-body { background: var(--bg); color: var(--text); font-family: var(--font); margin: 0; padding: 40px 20px; line-height: 2.2; overflow-x: hidden; }
-body.high-contrast { background: #000 !important; color: #fff !important; }
-.falling-item { position: fixed; top: -50px; z-index: 9999; user-select: none; pointer-events: none; animation: fall linear forwards; }
-@keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
-.container { max-width: 850px; margin: auto; background: rgba(255,255,255,0.9); padding: 50px; border: 1px solid #ccc; border-radius: 15px; }
-h1 { font-size: 1.8em; text-align: center; border-bottom: 3px double var(--red); padding-bottom: 15px; }
-.new-year-box { background: #fff5f5; border: 2px solid var(--red); padding: 25px; text-align: center; margin-bottom: 40px; border-radius: 10px; }
-h2 { font-size: 1.2em; background: #eee; padding: 10px 20px; border-left: 10px solid var(--red); margin-top: 50px; }
-body.high-contrast h2 { background: #333 !important; border-left-color: #fff; }
-.article-title { font-weight: bold; display: block; margin-top: 25px; border-bottom: 1px solid #ddd; }
-.cookie-info { background: #fdf2f2; border: 1px dashed var(--red); padding: 20px; margin-top: 10px; border-radius: 8px; font-size: 0.9em; line-height: 1.6; }
-.agree-btn { display: block; width: 100%; max-width: 300px; margin: 40px auto; padding: 20px; background: var(--red); color: white; border: none; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 0 #a12323; text-align: center; }
-.agree-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #a12323; }
-.back-to-top { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background: var(--red); color: white; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; display: none; }
-.footer-area { margin-top: 60px; text-align: center; font-size: 13px; border-top: 1px solid #ccc; padding-top: 30px; }
+:root { --bg: #fcfaf2; --red: #d32f2f; --text: #333; }
+body { background: var(--bg); color: var(--text); font-family: "BIZ UDPGothic", sans-serif; line-height: 1.8; margin: 0; padding: 20px; -webkit-text-size-adjust: 100%; }
+.container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px 30px; border-radius: 20px; border: 1px solid #ddd; box-shadow: 0 4px 15px rgba(0,0,0,0.05); box-sizing: border-box; }
+h1 { color: var(--red); border-bottom: 2px solid var(--red); padding-bottom: 10px; font-size: 1.6rem; text-align: center; }
+h2 { color: var(--red); font-size: 1.2rem; margin-top: 40px; border-left: 5px solid var(--red); padding-left: 10px; }
+h3 { font-size: 1.1rem; margin-top: 25px; color: #555; }
+p, li { font-size: 0.95rem; }
+.reset-box { background: #f9f9f9; border: 1px dashed #ccc; padding: 20px; border-radius: 10px; margin-top: 20px; }
+.btn-clear { display: inline-block; padding: 12px 24px; background: #444; color: #fff; text-decoration: none; border-radius: 50px; border: none; cursor: pointer; font-weight: bold; font-size: 0.9rem; margin-top: 10px; }
+.btn-back { display: block; width: fit-content; margin: 40px auto 0; padding: 15px 40px; background: var(--red); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; }
+footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #888; }
 </style>
 </head>
 <body>
-<button class="back-to-top" id="topBtn" onclick="scrollToTop()">↑</button>
 
 <div class="container">
-    <div class="new-year-box">
-        <div style="font-size: 1.5em; font-weight: bold; color: var(--red);">良いお年をお迎えください</div>
-        <p>2025年も残りわずか。皆様の支えに心より感謝申し上げます。</p>
-    </div>
-
     <h1>篠ノ井乗務区 運営基本規程</h1>
 
-    <h2>第1章 総則</h2>
-    <span class="article-title">第1条（規程の目的）</span>
-    <p>本規程は、篠ノ井乗務区（以下「当区」）が提供するウェブサイトの適正な利用条件を定め、利用者（以下「旅客」）が安全にサイトを閲覧できる環境を維持することを目的とします。</p>
-    <span class="article-title">第2条（製造元の明示）</span>
-    <p>当サイトは、世界の開発者が利用する「GitHub」を基盤として管理・公開されています。透明性の高い運営を目指します。</p>
+    <section>
+        <h2>第1章 総則</h2>
+        <p><strong>第1条（規程の目的）</strong><br>本規程は、篠ノ井乗務区（以下「当区」）が提供するウェブサイトの利用条件を定め、旅客が安全に利用できる環境を維持することを目的とします。</p>
+        <p><strong>第2条（製造元の明示）</strong><br>当サイトは、GitHubを基盤として管理・公開されています。</p>
+    </section>
 
-    <h2>第2章 制作体制</h2>
-    <span class="article-title">第3条（AIとの共創）</span>
-    <p>当区は、新しい表現への挑戦として生成AI技術を制作パートナーとして導入しています。技術と個性を融合させたサイト作りを行います。</p>
-    <span class="article-title">第4条（内容の点検）</span>
-    <p>AIにより提案された全ての情報は、当区の責任者が必ず点検を行った上で公開しています。誤った情報が掲載されないよう細心の注意を払います。</p>
-    <span class="article-title">第5条（著作権の保護）</span>
-    <p>当サイト内のデザイン、文章、画像等の著作権は当区に帰属します。無断複写・転載を固く禁じます。</p>
+    <section>
+        <h2>第2章 制作体制</h2>
+        <p><strong>第3条（AIとの共創）</strong><br>当区は、生成AI技術を制作パートナーとして導入し、技術と個性を融合させたサイト作りを行います。</p>
+        <p><strong>第4条（内容の点検）</strong><br>AIにより提案された情報は、当区の責任者が必ず点検を行った上で公開します。</p>
+        <p><strong>第5条（著作権）</strong><br>当サイト内の著作権は当区に帰属します。無断転載を禁じます。</p>
+    </section>
 
-    <h2>第3章 ご利用にあたって</h2>
-    <span class="article-title">第6条（禁止事項）</span>
-    <p>サイトへの攻撃、データの盗用、嫌がらせ目的の利用など、運営を妨げるすべての行為を禁止します。</p>
-    <span class="article-title">第7条（情報の性質）</span>
-    <p>当サイトの「おみくじ」等は娯楽を目的としたものです。結果が将来を確定させるものではないことをご理解の上、お楽しみください。</p>
-    <span class="article-title">第8条（責任の範囲）</span>
-    <p>当サイトの利用により生じた直接的、間接的な損害について、当区は一切の責任を負いません。</p>
+    <section>
+        <h2>第3章 ご利用にあたって</h2>
+        <p><strong>第6条（禁止事項）</strong><br>運営を妨げる行為、データの盗用、嫌がらせ目的の利用を禁止します。</p>
+        <p><strong>第7条（情報の性質）</strong><br>「おみくじ」等は娯楽目的であり、結果を保証するものではありません。</p>
+        <p><strong>第8条（責任の範囲）</strong><br>当サイトの利用により生じた損害について、当区は一切の責任を負いません。</p>
+    </section>
 
-    <h2>第4章 運営の維持</h2>
-    <span class="article-title">第9条（誰にでも使いやすく）</span>
-    <p>当区はユニバーサルデザインの視点を大切にし、誰もが読みやすく、使いやすいデザインの改善を継続的に行います。</p>
-    <span class="article-title">第10条（規程の変更）</span>
-    <p>本規程は、法律の改正や運営上の必要に応じて改定されることがあります。最新の内容は本ページにて常時公開します。</p>
+    <section>
+        <h2>第4章 運営の維持</h2>
+        <p><strong>第9条（アクセシビリティ）</strong><br>誰もが使いやすいユニバーサルデザインの改善を継続的に行います。</p>
+        <p><strong>第10条（規程の変更）</strong><br>本規程は、必要に応じて予告なく改定されることがあります。</p>
+    </section>
 
-    <h2>第5章 Cookie ポリシー</h2>
-    <span class="article-title">第11条（Cookie の使用と同意）</span>
-    <p>当サイトではサービス提供のために必須 Cookie を使用します。本規程への同意をもって Cookie の利用を承諾したものとみなします。</p>
-    <div class="cookie-info">
-        <strong>プロバイダー：Cloudflare Inc.</strong><br>
-        セキュリティとパフォーマンス向上のため CDN を提供します。<br>
-        Cookie名：__cfruid (セッション), __cf_bm (30分), __cf_clearance (30分)
-    </div>
+    <section>
+        <h2>第5章 Cookieポリシー</h2>
+        <p><strong>第11条（Cookieの使用）</strong><br>サービス向上のため、Cloudflare等の必須Cookieを使用します。閲覧をもってこれに同意したものとみなします。</p>
+    </section>
 
-    <button class="agree-btn" onclick="handleAgree()">規程に同意して戻る</button>
+    <section>
+        <h2>第6章 救済措置</h2>
+        <p><strong>第12条（パスワード忘れとデータ消去）</strong><br>
+        キッズモードのパスワードを忘れた場合、および端末内のサイト設定をリセットしたい場合は、以下の手順を実施してください。</p>
+        
+        <div class="reset-box">
+            <strong>■ パスワードを忘れた方</strong><br>
+            解除ボタンを3回連続でタップすると、リセット確認画面が表示されます。<br><br>
+            <strong>■ 設定を今すぐ消去したい方</strong><br>
+            下のボタンを押すと、この端末に保存されたパスワードや設定（Cookie/LocalStorage）がリセットされます。<br>
+            <button class="btn-clear" onclick="clearSiteData()">サイトの設定データを消去する</button>
+        </div>
+    </section>
 
-    <div style="text-align: right; margin-top: 60px;">
-        篠ノ井乗務区長 拝<br>令和七年十二月二十五日 制定
-    </div>
-    <a href="index.html" style="display:block; text-align:center; margin-top:40px; color:var(--red); font-weight:bold; text-decoration:none;">起点（ホーム）へ戻る</a>
+    <a href="index.html" class="btn-back">規程に同意して戻る</a>
 </div>
 
-<footer class="footer-area">
-    <div style="font-size:11px; color:#666; margin-bottom:10px;">※5分毎に自動更新します</div>
-    <div style="font-weight:bold; line-height:1.6; margin-bottom:20px;">製造元：GitHub<br>制作・著作：篠ノ井乗務区</div>
-    <button onclick="toggleHC()" style="cursor:pointer; background:none; border:1px solid #999; padding:10px 20px; border-radius:20px; color:inherit;">高コントラスト設定切替</button>
+<footer>
+    令和七年十二月二十五日 制定<br>
+    製造元：GitHub / 制作・著作：篠ノ井乗務区
 </footer>
 
 <script>
-function handleAgree() {
-    localStorage.setItem('shinonoi_cookie_agree', 'true');
-    alert('規程およびポリシーに同意しました。');
-    location.href = 'index.html';
+function clearSiteData() {
+    if(confirm("保存されているパスワードや設定をすべて消去しますか？")) {
+        localStorage.clear();
+        alert("消去が完了しました。トップページに戻ります。");
+        location.href = 'index.html';
+    }
 }
-setTimeout(() => { location.reload(); }, 300000);
-const items = ['🎍', '🗻', '🌅', '❄️', '🧧', '🎊'];
-function createFallingItem() {
-    const item = document.createElement('div');
-    item.className = 'falling-item';
-    item.innerText = items[Math.floor(Math.random() * items.length)];
-    item.style.left = Math.random() * 100 + 'vw';
-    item.style.fontSize = Math.random() * 20 + 20 + 'px';
-    item.style.animationDuration = Math.random() * 4 + 6 + 's';
-    document.body.appendChild(item);
-    setTimeout(() => { item.remove(); }, 10000);
-}
-setInterval(createFallingItem, 600);
-window.onscroll = function() { document.getElementById("topBtn").style.display = (document.documentElement.scrollTop > 100) ? "block" : "none"; };
-function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
-function applyHC(){ document.body.classList.toggle('high-contrast', localStorage.getItem('shinonoi_contrast')==='on'); }
-function toggleHC(){ localStorage.setItem('shinonoi_contrast', localStorage.getItem('shinonoi_contrast')==='on'?'off':'on'); applyHC(); }
-applyHC();
+// 5分自動更新
+setTimeout(() => location.reload(), 300000);
 </script>
+
 </body>
 </html>
