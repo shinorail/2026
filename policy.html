@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>運営基本規程 - 篠ノ井乗務区</title>
+<title>運営基本規程・ポリシー - 篠ノ井乗務区</title>
 <style>
 :root { --bg: #fcfaf2; --text: #1a1a1a; --red: #d32f2f; --font: "BIZ UDPGothic", sans-serif; }
 body { background: var(--bg); color: var(--text); font-family: var(--font); margin: 0; padding: 40px 20px; line-height: 2.2; overflow-x: hidden; }
@@ -16,12 +16,16 @@ h1 { font-size: 1.8em; text-align: center; border-bottom: 3px double var(--red);
 h2 { font-size: 1.2em; background: #eee; padding: 10px 20px; border-left: 10px solid var(--red); margin-top: 50px; }
 body.high-contrast h2 { background: #333 !important; border-left-color: #fff; }
 .article-title { font-weight: bold; display: block; margin-top: 25px; border-bottom: 1px solid #ddd; }
+.cookie-info { background: #fdf2f2; border: 1px dashed var(--red); padding: 20px; margin-top: 10px; border-radius: 8px; font-size: 0.9em; line-height: 1.6; }
+.agree-btn { display: block; width: 100%; max-width: 300px; margin: 40px auto; padding: 20px; background: var(--red); color: white; border: none; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 0 #a12323; text-align: center; }
+.agree-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #a12323; }
 .back-to-top { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background: var(--red); color: white; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; display: none; }
 .footer-area { margin-top: 60px; text-align: center; font-size: 13px; border-top: 1px solid #ccc; padding-top: 30px; }
 </style>
 </head>
 <body>
 <button class="back-to-top" id="topBtn" onclick="scrollToTop()">↑</button>
+
 <div class="container">
     <div class="new-year-box">
         <div style="font-size: 1.5em; font-weight: bold; color: var(--red);">良いお年をお迎えください</div>
@@ -40,9 +44,9 @@ body.high-contrast h2 { background: #333 !important; border-left-color: #fff; }
     <span class="article-title">第3条（AIとの共創）</span>
     <p>当区は、新しい表現への挑戦として生成AI技術を制作パートナーとして導入しています。技術と個性を融合させたサイト作りを行います。</p>
     <span class="article-title">第4条（内容の点検）</span>
-    <p>AIにより提案された全ての情報は、当区の責任者が必ず点検（内容確認と修正）を行った上で公開しています。誤った情報が掲載されないよう細心の注意を払います。</p>
+    <p>AIにより提案された全ての情報は、当区の責任者が必ず点検を行った上で公開しています。誤った情報が掲載されないよう細心の注意を払います。</p>
     <span class="article-title">第5条（著作権の保護）</span>
-    <p>当サイト内のデザイン、文章、画像等の著作権は当区に帰属します。私的使用の範囲を超えた無断複写・転載を固く禁じます。</p>
+    <p>当サイト内のデザイン、文章、画像等の著作権は当区に帰属します。無断複写・転載を固く禁じます。</p>
 
     <h2>第3章 ご利用にあたって</h2>
     <span class="article-title">第6条（禁止事項）</span>
@@ -50,13 +54,24 @@ body.high-contrast h2 { background: #333 !important; border-left-color: #fff; }
     <span class="article-title">第7条（情報の性質）</span>
     <p>当サイトの「おみくじ」等は娯楽を目的としたものです。結果が将来を確定させるものではないことをご理解の上、お楽しみください。</p>
     <span class="article-title">第8条（責任の範囲）</span>
-    <p>当サイトの利用により生じた直接的、間接的な損害（通信費、端末の不調等）について、当区は一切の責任を負いません。</p>
+    <p>当サイトの利用により生じた直接的、間接的な損害について、当区は一切の責任を負いません。</p>
 
     <h2>第4章 運営の維持</h2>
     <span class="article-title">第9条（誰にでも使いやすく）</span>
     <p>当区はユニバーサルデザインの視点を大切にし、誰もが読みやすく、使いやすいデザインの改善を継続的に行います。</p>
     <span class="article-title">第10条（規程の変更）</span>
     <p>本規程は、法律の改正や運営上の必要に応じて改定されることがあります。最新の内容は本ページにて常時公開します。</p>
+
+    <h2>第5章 Cookie ポリシー</h2>
+    <span class="article-title">第11条（Cookie の使用と同意）</span>
+    <p>当サイトではサービス提供のために必須 Cookie を使用します。本規程への同意をもって Cookie の利用を承諾したものとみなします。</p>
+    <div class="cookie-info">
+        <strong>プロバイダー：Cloudflare Inc.</strong><br>
+        セキュリティとパフォーマンス向上のため CDN を提供します。<br>
+        Cookie名：__cfruid (セッション), __cf_bm (30分), __cf_clearance (30分)
+    </div>
+
+    <button class="agree-btn" onclick="handleAgree()">規程に同意して戻る</button>
 
     <div style="text-align: right; margin-top: 60px;">
         篠ノ井乗務区長 拝<br>令和七年十二月二十五日 制定
@@ -65,12 +80,17 @@ body.high-contrast h2 { background: #333 !important; border-left-color: #fff; }
 </div>
 
 <footer class="footer-area">
-    <div style="font-size:11px; color:#666; margin-bottom:10px;">※5分毎に最新の状態へ自動更新します</div>
+    <div style="font-size:11px; color:#666; margin-bottom:10px;">※5分毎に自動更新します</div>
     <div style="font-weight:bold; line-height:1.6; margin-bottom:20px;">製造元：GitHub<br>制作・著作：篠ノ井乗務区</div>
     <button onclick="toggleHC()" style="cursor:pointer; background:none; border:1px solid #999; padding:10px 20px; border-radius:20px; color:inherit;">高コントラスト設定切替</button>
 </footer>
 
 <script>
+function handleAgree() {
+    localStorage.setItem('shinonoi_cookie_agree', 'true');
+    alert('規程およびポリシーに同意しました。');
+    location.href = 'index.html';
+}
 setTimeout(() => { location.reload(); }, 300000);
 const items = ['🎍', '🗻', '🌅', '❄️', '🧧', '🎊'];
 function createFallingItem() {
