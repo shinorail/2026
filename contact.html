@@ -5,106 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>お問い合わせ - 篠ノ井乗務区</title>
 <style>
-:root { --red: #d32f2f; --bg: #fcfaf2; --input-bg: #ffffff; }
-body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; margin: 0; padding: 20px; color: #333; -webkit-text-size-adjust: 100%; }
+:root { --red: #d32f2f; --bg: #fcfaf2; }
+body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
 
-/* コンテナ設定（タブレットやPCでは幅を制限、スマホでは横幅いっぱい） */
-.form-card { max-width: 600px; margin: 10px auto; background: #fff; padding: 30px 20px; border-radius: 20px; border: 1px solid #ddd; box-shadow: 0 4px 15px rgba(0,0,0,0.1); box-sizing: border-box; }
+.container { max-width: 800px; margin: 20px auto; padding: 10px; box-sizing: border-box; }
 
-h1 { color: var(--red); font-size: 1.4rem; text-align: center; margin-top: 0; margin-bottom: 25px; }
+.header-card { background: #fff; border: 1px solid #ddd; border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+h1 { color: var(--red); font-size: 1.4rem; margin: 0; }
 
-.field { margin-bottom: 20px; text-align: left; }
-label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.95rem; }
+.form-wrapper { position: relative; width: 100%; height: 1000px; border-radius: 15px; overflow: hidden; border: 1px solid #ddd; background: #fff; }
+iframe { width: 100%; height: 100%; border: none; }
 
-/* 入力欄のスマホ最適化（タップしやすく、ズームを防ぐフォントサイズ） */
-input, textarea { 
-    width: 100%; 
-    padding: 14px; 
-    border: 2px solid #eee; 
-    border-radius: 12px; 
-    box-sizing: border-box; 
-    font-size: 16px; /* iOSのズーム防止のため16px以上を推奨 */
-    background: var(--input-bg);
-    transition: border-color 0.3s;
-}
-input:focus, textarea:focus { border-color: var(--red); outline: none; }
-textarea { height: 150px; resize: none; }
+.back-link { display: block; text-align: center; margin: 30px 0; color: #666; text-decoration: none; font-weight: bold; }
 
-/* 指で押しやすい巨大ボタン */
-.submit-btn { 
-    width: 100%; 
-    padding: 18px; 
-    background: var(--red); 
-    color: #fff; 
-    border: none; 
-    border-radius: 50px; 
-    font-weight: bold; 
-    font-size: 1.1rem; 
-    cursor: pointer; 
-    box-shadow: 0 4px 0 #8e1b1b;
-    -webkit-tap-highlight-color: transparent;
-}
-.submit-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #8e1b1b; }
-
-.note { font-size: 0.85rem; color: #666; margin-top: 20px; line-height: 1.6; background: #f9f9f9; padding: 15px; border-radius: 10px; }
-
-.back-link { display: block; text-align: center; margin-top: 30px; color: #666; text-decoration: none; font-size: 0.95rem; font-weight: bold; }
-
-/* タブレット・PC向けの微調整 */
-@media (min-width: 768px) {
-    .form-card { padding: 40px; margin: 40px auto; }
-    h1 { font-size: 1.8rem; }
+@media (max-width: 600px) {
+    .form-wrapper { height: 1200px; }
 }
 </style>
 </head>
 <body>
 
-<div class="form-card">
-    <h1>お問い合わせフォーム</h1>
-    
-    <div class="field">
-        <label>お名前（ニックネーム可）</label>
-        <input type="text" id="name" placeholder="例：篠ノ井 太郎">
+<div class="container">
+    <div class="header-card">
+        <h1>篠ノ井乗務区 お問い合わせ窓口</h1>
+        <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">
+            12/28〜1/4の受付分は1月5日より順次回答いたします。
+        </p>
     </div>
 
-    <div class="field">
-        <label>件名</label>
-        <input type="text" id="subject" placeholder="例：鉄道おみくじの感想">
+    <div class="form-wrapper">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdOEcjWR8z8yNfkKKCaT_n5g3YI96hsCCMQu4KAqRNEjyQCSA/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">読み込んでいます…</iframe>
     </div>
 
-    <div class="field">
-        <label>お問い合わせ内容</label>
-        <textarea id="message" placeholder="こちらに内容を入力してください"></textarea>
-    </div>
-
-    <button class="submit-btn" onclick="sendEmail()">メールを作成する</button>
-
-    <div class="note">
-        <strong>【ご案内】</strong><br>
-        ・ボタンを押すとメールソフトが起動します。<br>
-        ・12/28〜1/4にいただいた内容は1月5日より順次回答いたします。
-    </div>
+    <a href="index.html" class="back-link">← トップページへ戻る</a>
 </div>
 
-<a href="index.html" class="back-link">← トップページへ戻る</a>
+<footer style="text-align: center; padding: 20px; font-size: 0.7rem; color: #999;">
+    製造元：GitHub / 制作・著作：篠ノ井乗務区
+</footer>
 
 <script>
-function sendEmail() {
-    const name = document.getElementById('name').value;
-    const sub = document.getElementById('subject').value;
-    const msg = document.getElementById('message').value;
-    const email = "shinorail@gmail.com";
-
-    if(!name || !sub || !msg) {
-        alert("未入力の項目があります。");
-        return;
-    }
-
-    const body = `【お名前】\n${name}\n\n【内容】\n${msg}`;
-    const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`;
-    
-    location.href = mailtoUrl;
-}
 setTimeout(() => location.reload(), 300000);
 </script>
 
