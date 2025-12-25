@@ -2,42 +2,95 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鉄道運勢点検 - 篠ノ井乗務区</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>鉄道おみくじ結果 - 篠ノ井乗務区</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-@keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-body { background: #fcfaf2; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
-.result-card { border: 4px solid #004d40; padding: 30px; max-width: 450px; margin: 20px auto; background: #fff; animation: zoomIn 0.5s ease-out; border-radius: 20px; }
-h1 { font-size: 3em; margin: 10px 0; color: #004d40; border-bottom: 4px solid #004d40; display: inline-block; padding: 0 15px; }
-.msg { text-align: left; line-height: 2; margin: 20px 0; font-size: 0.95em; background: #e8f5e9; padding: 20px; border-radius: 10px; color: #1b5e20; white-space: pre-wrap; }
-.btn-group { display: flex; flex-direction: column; gap: 10px; }
-.menu-btn { display: block; padding: 15px; text-decoration: none; font-weight: bold; border-radius: 30px; color: #fff; transition: 0.3s; }
-.share-x { background: #000; }
-.back-btn { background: #004d40; }
+:root { --red: #d32f2f; --bg: #fcfaf2; --gold: #d4af37; --blue: #1da1f2; --green: #24b500; }
+body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; }
+
+/* 保存対象のカード */
+#screenshot-target { background: #fff; border: 3px solid var(--red); border-radius: 20px; padding: 30px 20px; max-width: 450px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; }
+.unsei { font-size: 1.1rem; color: #666; margin-bottom: 5px; }
+.rank { font-size: 3.8rem; font-weight: bold; color: var(--red); margin: 0; letter-spacing: 2px; }
+.train-name { font-size: 1.4rem; font-weight: bold; color: #333; margin: 20px 0; padding: 12px; border-top: 2px dashed #eee; border-bottom: 2px dashed #eee; background: #fffcf0; }
+.message { font-size: 0.95rem; line-height: 1.7; color: #444; text-align: left; padding: 0 10px; min-height: 80px; }
+.site-url { font-size: 0.7rem; color: #ccc; margin-top: 15px; display: block; }
+
+/* ボタン類 */
+.btn-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 450px; margin: 20px auto; }
+.btn { display: flex; align-items: center; justify-content: center; padding: 15px 5px; color: #fff; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 0.9rem; border: none; cursor: pointer; transition: 0.2s; }
+.btn:active { transform: scale(0.95); }
+
+.btn-save { background: var(--gold); grid-column: span 2; font-size: 1.1rem; }
+.btn-tw { background: #000; }
+.btn-line { background: var(--green); }
+.btn-retry { background: var(--red); grid-column: span 2; margin-top: 10px; }
+
+footer { margin-top: 40px; font-size: 0.7rem; color: #999; }
 </style>
 </head>
 <body>
-<div class="result-card">
-    <p>鉄道運勢点検結果</p>
-    <h1 id="rank"></h1>
-    <div id="msg" class="msg"></div>
-    <div class="btn-group">
-        <a id="share-x" class="menu-btn share-x" target="_blank">Xで報告する</a>
-        <a href="index.html" class="menu-btn back-btn">起点へ戻る</a>
-    </div>
+
+<div id="screenshot-target">
+    <div class="unsei">2026年 本日の運勢</div>
+    <p id="rank-display" class="rank">...</p>
+    <div id="train-display" class="train-name">...</div>
+    <div id="msg-display" class="message"></div>
+    <span class="site-url">篠ノ井乗務区 2周年特設サイト<br>https://shinorail.github.io/shinonoi-2026/</span>
 </div>
+
+<div class="btn-container">
+    <button class="btn btn-save" onclick="saveImage()">画像を保存してシェアする</button>
+    <button class="btn btn-tw" onclick="shareX()">Xでシェア</button>
+    <button class="btn btn-line" onclick="shareLine()">LINEで送る</button>
+    <a href="index.html" class="btn btn-retry">もう一度引く</a>
+</div>
+
+<footer>
+    製造元：GitHub / 制作・著作：篠ノ井乗務区
+</footer>
+
 <script>
-const data = [
-    { rank: "超特急", msg: "【全体】全線オールグリーン！最高速度で進行可能です。\n【心得】時刻表通りの正確な行動が、さらなる福を呼び込みます。\n【ラッキーアイテム】懐中時計" },
-    { rank: "特急", msg: "【全体】出力良好。難所の急勾配も力強く登り切れます。\n【心得】車窓を楽しむ余裕が、新たな発見に繋がります。\n【ラッキーアイテム】クロスシート" },
-    { rank: "各停", msg: "【全体】一駅ずつ着実に。丁寧な歩みが確実な成果に結びつきます。\n【心得】指差し呼称で安全確認。焦らず進めば吉。\n【ラッキーアイテム】入場券" },
-    { rank: "回送", msg: "【全体】次なる運行への準備期間。無理な運転は厳禁です。\n【心得】車両点検（休息）を優先。エネルギーを再充填して。\n【ラッキーアイテム】車両基地" }
+const results = [
+    { rank: "特大吉", train: "383系 特急しなの", msg: "最高の出発進行！振り子のように軽快に、どんな困難なカーブも鮮やかに乗り越えていける輝かしい一年になるでしょう。" },
+    { rank: "大吉", train: "E353系 特急あずさ", msg: "スピード感あふれる一年！目標に向かって全速前進。快適な旅のような素晴らしい日々があなたを待っています。" },
+    { rank: "中吉", train: "E127系 篠ノ井線", msg: "地域に愛される存在に。一歩ずつ着実に進むことで、大きな成果が得られる堅実で温かい運勢です。" },
+    { rank: "吉", train: "211系 長野色", msg: "安定感抜群！信州のベテランのような落ち着きを持って過ごせば、周囲からの信頼もより一層高まります。" },
+    { rank: "小吉", train: "HB-E300系 リゾートビューふるさと", msg: "景色を楽しみながらゆっくりと。焦らず自分のペースを大切にすることで、新しい発見があるでしょう。" },
+    { rank: "末吉", train: "DE10形 ディーゼル機関車", msg: "縁の下の力持ち。目立たない場所での努力が、後できっと大きな力になって返ってきます。" }
 ];
-const res = data[Math.floor(Math.random() * data.length)];
-document.getElementById('rank').innerText = res.rank;
-document.getElementById('msg').innerText = res.msg;
-const shareText = `篠ノ井乗務区 鉄道みくじ：【${res.rank}】\n${res.msg}\n#篠ノ井乗務区`;
-document.getElementById('share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(window.location.href)}`;
+
+const res = results[Math.floor(Math.random() * results.length)];
+document.getElementById('rank-display').innerText = res.rank;
+document.getElementById('train-display').innerText = res.train;
+document.getElementById('msg-display').innerText = res.msg;
+
+// 画像として保存する機能
+function saveImage() {
+    const target = document.getElementById("screenshot-target");
+    html2canvas(target, { backgroundColor: "#fcfaf2", scale: 2 }).then(canvas => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = `shinorail_kuji_${res.rank}.png`;
+        link.click();
+        alert("おみくじ画像を保存しました！SNSに貼り付けてシェアしてください。");
+    });
+}
+
+// X (Twitter) シェア
+function shareX() {
+    const text = `篠ノ井乗務区 鉄道おみくじの結果は【${res.rank}】でした！\nラッキー車両：${res.train}\n#篠ノ井乗務区 #鉄道おみくじ\n`;
+    const url = "https://shinorail.github.io/shinonoi-2026/";
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+}
+
+// LINE シェア
+function shareLine() {
+    const text = `篠ノ井乗務区 鉄道おみくじの結果は【${res.rank}】！ ラッキー車両は ${res.train} でした。 https://shinorail.github.io/shinonoi-2026/`;
+    window.open(`https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(text)}`, '_blank');
+}
 </script>
+
 </body>
 </html>
