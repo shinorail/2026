@@ -5,13 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>篠ノ井乗務区 - 2周年特設サイト</title>
 <style>
-:root { --bg: #fcfaf2; --red: #d32f2f; --font: "BIZ UDPGothic", sans-serif; }
-body { background: var(--bg); font-family: var(--font); text-align: center; margin: 0; padding: 20px; }
+:root { --bg: #fcfaf2; --red: #d32f2f; --font: "BIZ UDPGothic", sans-serif; --gold: #d4af37; }
+body { background: var(--bg); font-family: var(--font); text-align: center; margin: 0; padding: 20px; overflow-x: hidden; }
+
+/* 縁起物アニメーション */
+.falling-item { position: fixed; top: -50px; z-index: 9999; user-select: none; pointer-events: none; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+
+/* カウントダウン表示 */
+.timer-card { background: #000; color: var(--gold); border: 3px solid var(--gold); border-radius: 15px; padding: 15px; margin-bottom: 20px; max-width: 450px; margin-left: auto; margin-right: auto; }
+#timer { font-size: 2rem; font-weight: bold; font-family: monospace; letter-spacing: 2px; }
+
 .btn-group { display: flex; flex-direction: column; gap: 15px; max-width: 450px; margin: 20px auto; }
-.main-btn { display: block; padding: 25px; background: var(--red); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 1.2rem; border: none; cursor: pointer; transition: 0.3s; }
-.main-btn:disabled { background: #ccc !important; cursor: not-allowed; opacity: 0.7; }
-.kids-btn { background: #ff9800; font-size: 1.8rem; padding: 40px; }
-.parent-lock { margin-top: 30px; padding: 15px; border: 1px dashed #999; border-radius: 10px; font-size: 0.9rem; }
+.main-btn { display: block; padding: 20px; background: var(--red); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; box-shadow: 0 4px 0 #8e1b1b; }
+.main-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #8e1b1b; }
+.main-btn:disabled { background: #ccc !important; cursor: not-allowed; opacity: 0.7; box-shadow: none; }
+
+.kids-btn { background: #ff9800; font-size: 1.6rem; padding: 30px; box-shadow: 0 4px 0 #e68a00; }
+.news-btn { background: #e3f2fd; color: #1565c0; box-shadow: 0 4px 0 #bbdefb; }
+
+/* 広告枠 */
+.ad-space { max-width: 450px; margin: 20px auto; background: #eee; border: 2px dashed #999; border-radius: 10px; padding: 30px 0; color: #666; font-weight: bold; }
+
+.parent-lock { margin-top: 30px; padding: 15px; border: 1px dashed #999; border-radius: 10px; font-size: 0.8rem; max-width: 450px; margin-left: auto; margin-right: auto; }
 .hidden { display: none !important; }
 footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.8rem; }
 </style>
@@ -19,18 +35,25 @@ footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-s
 <body>
 
 <div id="normal-menu">
-    <div style="background:#fff5f5; padding:20px; border:2px solid var(--red); border-radius:15px; margin-bottom:20px;">
-        <h2 style="color:var(--red); margin:0;">2026年 謹賀新年</h2>
-        <p>1月1日 0時より おみくじ公開中！</p>
+    <div class="timer-card">
+        <div style="font-size: 0.8rem; margin-bottom: 5px;">2026年1月1日まで あと</div>
+        <div id="timer">00d 00h 00m 00s</div>
+    </div>
+
+    <div style="background:#fff5f5; padding:20px; border:2px solid var(--red); border-radius:15px; margin-bottom:20px; max-width:450px; margin-left:auto; margin-right:auto;">
+        <h2 style="color:var(--red); margin:0;">篠ノ井乗務区 2周年</h2>
+        <p style="margin:5px 0 0 0;">1月1日 0時より おみくじ公開</p>
     </div>
 
     <div class="btn-group">
         <button id="rail-kuji" class="main-btn" onclick="location.href='rail_result.html'" disabled>【点検中】鉄道おみくじ</button>
-        <button id="norm-kuji" class="main-btn" onclick="location.href='norm_result.html'" disabled style="background:#b71c1c;">【準備中】一般おみくじ</button>
+        <button id="norm-kuji" class="main-btn" onclick="location.href='norm_result.html'" disabled style="background:#b71c1c;">【点検中】一般おみくじ</button>
+        <a href="news.html" class="main-btn news-btn">最新ニュース (News)</a>
         <a href="kids.html" class="main-btn kids-btn">たのしいキッズサイト</a>
-        <a href="about.html" class="main-btn" style="background:#666;">サイトの使い方</a>
-        <a href="policy.html" class="main-btn" style="background:#444;">運営のきまり（10条）</a>
+        <a href="policy.html" class="main-btn" style="background:#444;">運営規程・ポリシー（11条）</a>
     </div>
+
+    <div class="ad-space">広告掲載枠（スポンサー募集中）</div>
 
     <div class="parent-lock">
         <p>保護者設定：お子様に渡す前にボタンを押してください</p>
@@ -39,7 +62,7 @@ footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-s
 </div>
 
 <div id="locked-menu" class="hidden">
-    <h1 style="font-size:3rem; color:#ff9800;">キッズ専用モード</h1>
+    <h1 style="font-size:3rem; color:#ff9800;">キッズ専用</h1>
     <div class="btn-group">
         <a href="kids.html" class="main-btn kids-btn">あそびにいく！</a>
         <button id="k-rail-kuji" class="main-btn" onclick="location.href='rail_result.html'" disabled>おみくじ</button>
@@ -49,49 +72,78 @@ footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-s
 
 <footer>
     製造元：GitHub / 制作・著作：篠ノ井乗務区<br>
-    ※5分ごとに自動で最新情報に更新されます
+    ※5分ごとに自動更新されます
 </footer>
 
 <script>
-// おみくじ公開判定（全ページ共通・2026年元旦）
-const start = new Date("2026/01/01 00:00:00");
-function updateButtons() {
-    const isReady = new Date() >= start;
+const target = new Date("2026/01/01 00:00:00").getTime();
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const diff = target - now;
+    const isReady = diff <= 0;
+
+    // タイマー表示
+    if (!isReady) {
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById("timer").innerText = `${d}d ${h}h ${m}m ${s}s`;
+    } else {
+        document.getElementById("timer").innerText = "公開中！";
+    }
+
+    // ボタンの状態更新
     const ids = ['rail-kuji', 'norm-kuji', 'k-rail-kuji'];
     ids.forEach(id => {
         const btn = document.getElementById(id);
         if(btn) {
             btn.disabled = !isReady;
-            if(isReady) btn.innerText = btn.innerText.replace(/【.*】/, "運勢点検！");
+            if(isReady && btn.innerText.includes("【")) {
+                btn.innerText = (id === 'rail-kuji') ? "鉄道おみくじ" : (id === 'norm-kuji') ? "一般おみくじ" : "おみくじ";
+            }
         }
     });
 }
-setInterval(updateButtons, 1000); updateButtons();
+setInterval(updateCountdown, 1000); updateCountdown();
 
-// キッズ固定モードの処理
+// 縁起物降下
+const items = ['🎍', '🗻', '🌅', '🧧', '🎊', '🍊'];
+function createItem() {
+    const item = document.createElement('div');
+    item.className = 'falling-item';
+    item.innerText = items[Math.floor(Math.random() * items.length)];
+    item.style.left = Math.random() * 100 + 'vw';
+    item.style.fontSize = '25px';
+    item.style.animationDuration = '6s';
+    document.body.appendChild(item);
+    setTimeout(() => { item.remove(); }, 6000);
+}
+setInterval(createItem, 600);
+
+// キッズ固定
 function lockKidsMode() {
-    const pass = prompt("解除用のパスワード（数字4ケタ）を決めて入力してください");
+    const pass = prompt("解除パスワード（数字）を決めてください");
     if(pass) {
-        localStorage.setItem('kids_lock_pass', pass);
-        localStorage.setItem('kids_lock_active', 'true');
+        localStorage.setItem('k_pass', pass);
+        localStorage.setItem('k_active', 'true');
         applyLock();
     }
 }
 function unlockKidsMode() {
-    const pass = prompt("パスワードを入力してください");
-    if(pass === localStorage.getItem('kids_lock_pass')) {
-        localStorage.setItem('kids_lock_active', 'false');
+    if(prompt("パスワードを入力してください") === localStorage.getItem('k_pass')) {
+        localStorage.setItem('k_active', 'false');
         applyLock();
     } else { alert("ちがうよ！"); }
 }
 function applyLock() {
-    const active = localStorage.getItem('kids_lock_active') === 'true';
+    const active = localStorage.getItem('k_active') === 'true';
     document.getElementById('normal-menu').classList.toggle('hidden', active);
     document.getElementById('locked-menu').classList.toggle('hidden', !active);
 }
 applyLock();
 
-// 5分更新
 setTimeout(() => location.reload(), 300000);
 </script>
 </body>
