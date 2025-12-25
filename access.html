@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>先行リリース点検用 - 篠ノ井乗務区</title>
+<style>
+:root { --main: #d32f2f; --bg: #fcfaf2; --dark: #333; }
+body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 40px 20px; min-height: 100vh; overflow-x: hidden; }
+
+/* 縁起物アニメーション */
+.falling-emoji { position: fixed; top: -50px; z-index: 9999; pointer-events: none; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+.card { max-width: 500px; margin: auto; background: #fff; padding: 40px 20px; border: 3px double var(--dark); border-radius: 15px; box-shadow: 10px 10px 0 var(--dark); position: relative; z-index: 10; }
+h1 { color: var(--main); font-size: 1.5rem; border-bottom: 2px solid var(--main); padding-bottom: 10px; margin-bottom: 30px; }
+
+/* 入力・ボタンデザイン */
+input { width: 80%; padding: 15px; font-size: 1.2rem; border: 2px solid #ccc; border-radius: 10px; margin-bottom: 20px; text-align: center; box-sizing: border-box; }
+
+.ticket-btn { 
+    display: block; width: 100%; padding: 20px; background: var(--main); color: #fff; 
+    text-decoration: none; font-weight: bold; font-size: 1.2rem; border: none; 
+    border-radius: 10px; cursor: pointer; box-shadow: 0 5px 0 #8e1b1b;
+    margin-bottom: 15px; text-align: center; box-sizing: border-box;
+}
+.ticket-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #8e1b1b; }
+.ticket-btn:disabled { background: #999; box-shadow: 0 5px 0 #666; cursor: not-allowed; }
+
+.debug-menu { display: none; text-align: left; background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-top: 20px; }
+.debug-menu h2 { font-size: 1rem; color: #666; margin-top: 0; }
+
+footer { margin-top: 60px; font-size: 0.8rem; color: #666; border-top: 1px solid #ccc; padding-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h1>先行アクセス管理室</h1>
+    
+    <div id="auth-form">
+        <p>関係者専用の合言葉を入力してください</p>
+        <input type="password" id="passInput" placeholder="合言葉">
+        <button class="ticket-btn" onclick="verify()">入室を承認する</button>
+    </div>
+
+    <div id="debug-area" style="display:none;">
+        <p style="color: #2e7d32; font-weight: bold;">● 先行点検モード有効化</p>
+        
+        <div class="debug-menu">
+            <h2>点検用ショートカット</h2>
+            <button class="ticket-btn" style="background:#333; box-shadow:0 5px 0 #000;" onclick="location.href='rail_result.html?mode=debug'">鉄道おみくじ 点検</button>
+            <button class="ticket-btn" style="background:#00695c; box-shadow:0 5px 0 #004d40;" onclick="location.href='norm_result.html?mode=debug'">一般おみくじ 点検</button>
+            <button class="ticket-btn" style="background:#ff9800; box-shadow:0 5px 0 #e68a00;" onclick="location.href='kids.html'">キッズサイト 点検</button>
+            <button class="ticket-btn" style="background:#666; box-shadow:0 5px 0 #444;" onclick="location.href='about.html'">使い方ページ 点検</button>
+            <button class="ticket-btn" style="background:#444; box-shadow:0 5px 0 #222;" onclick="location.href='policy.html'">運営規程 点検</button>
+        </div>
+    </div>
+</div>
+
+<a href="index.html" style="display:inline-block; margin-top:30px; color:#666; text-decoration:none; font-weight:bold;">← 表紙（ホーム）へ戻る</a>
+
+<footer>
+    製造元：GitHub / 制作・著作：篠ノ井乗務区<br>
+    ※5分ごとに自動更新されます
+</footer>
+
+<script>
+// 合言葉の設定（任意に変更可能）
+const PASSCODE = "2025";
+
+function verify() {
+    const input = document.getElementById('passInput').value;
+    if(input === PASSCODE) {
+        document.getElementById('auth-form').style.display = 'none';
+        document.getElementById('debug-area').style.display = 'block';
+    } else {
+        alert("合言葉が正しくありません。");
+    }
+}
+
+// 絵文字が降るアニメーション
+function spawn() {
+    const emojis = ['🎍', '🗻', '🌅', '❄️', '🧧', '🎊'];
+    const div = document.createElement('div');
+    div.className = 'falling-emoji';
+    div.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+    div.style.left = Math.random() * 100 + 'vw';
+    div.style.fontSize = (Math.random() * 20 + 20) + 'px';
+    div.style.animationDuration = (Math.random() * 3 + 5) + 's';
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 8000);
+}
+setInterval(spawn, 500);
+
+// 5分自動更新
+setTimeout(() => location.reload(), 300000);
+</script>
+</body>
+</html>
