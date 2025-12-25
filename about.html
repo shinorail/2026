@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About - 篠ノ井乗務区</title>
+<style>
+body { background-color: #fcfaf2; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
+.container { border: 3px solid #004d40; padding: 30px; max-width: 500px; margin: auto; background: #fff; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.lang-switcher { margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; }
+.lang-switcher button { background: #eee; border: 1px solid #ccc; padding: 5px 15px; cursor: pointer; font-size: 12px; border-radius: 4px; }
+.lang-switcher button.active { background: #004d40; color: white; }
+h1 { color: #004d40; font-size: 1.5em; text-align: center; border-bottom: 2px solid #004d40; padding-bottom: 10px; }
+h2 { color: #d32f2f; font-size: 1.1em; margin-top: 25px; }
+p { line-height: 1.8; font-size: 0.9em; margin-bottom: 15px; }
+.menu-btn { display: block; background: #d32f2f; color: #fff; padding: 15px; text-align: center; text-decoration: none; font-weight: bold; border-radius: 4px; margin-top: 30px; box-shadow: 0 3px 0 #8b1d1d; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="lang-switcher">
+        <button onclick="setLang('ja')" id="btn-ja" class="active">日本語</button>
+        <button onclick="setLang('en')" id="btn-en">English</button>
+    </div>
+    <h1 id="ui-title">About</h1>
+    <div id="ui-content">
+        <h2 id="ui-sub1">篠ノ井乗務区について</h2>
+        <p id="ui-p1">当サイトは、鉄道を愛する個人が運営するファンサイトです。名称は信州の鉄路を支える方々への敬意を込めています。実在の組織とは関係ありません。</p>
+        <h2 id="ui-sub2">2026年への願い</h2>
+        <p id="ui-p2">皆様の新しい一年が、安全第一で素晴らしい「定時運行」となりますように。</p>
+    </div>
+    <a href="index.html" class="menu-btn" id="ui-back">会場入口へ戻る / Back</a>
+</div>
+<script>
+const trans = {
+    ja: { title: "このサイトについて", sub1: "篠ノ井乗務区について", p1: "当サイトは、鉄道を愛する個人が運営するファンサイトです。名称は信州の鉄路を支える方々への敬意を込めています。実在の組織とは関係ありません。", sub2: "2026年への願い", p2: "皆様の新しい一年が、安全第一で素晴らしい「定時運行」となりますように。", back: "会場入口へ戻る" },
+    en: { title: "About Us", sub1: "About Shinonoi Depot", p1: "This is a fan site run by a railway enthusiast. The name is a tribute to the railway staff in Nagano. Not affiliated with any official organizations.", sub2: "Wishes for 2026", p2: "We wish your New Year to be a safe and wonderful 'on-time operation'.", back: "Back to Entrance" }
+};
+function setLang(l) {
+    const t = trans[l];
+    document.getElementById("ui-title").innerText = t.title;
+    document.getElementById("ui-sub1").innerText = t.sub1;
+    document.getElementById("ui-p1").innerText = t.p1;
+    document.getElementById("ui-sub2").innerText = t.sub2;
+    document.getElementById("ui-p2").innerText = t.p2;
+    document.getElementById("ui-back").innerText = t.back;
+    document.querySelectorAll('.lang-switcher button').forEach(b=>b.classList.remove('active'));
+    document.getElementById('btn-'+l).classList.add('active');
+}
+setLang('ja');
+</script>
+</body>
+</html>
