@@ -2,56 +2,89 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>新春おみくじ結果 - 篠ノ井乗務区</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>おみくじ結果 - 篠ノ井乗務区</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-/* 共通スタイルはrail_resultと同様 */
-:root { --bg: #fcfaf2; --text: #1a1a1a; --red: #d32f2f; --font: "BIZ UDPGothic", sans-serif; }
-body { background: var(--bg); color: var(--text); font-family: var(--font); text-align: center; padding: 20px; }
-.card { border: 4px solid var(--red); padding: 30px; max-width: 500px; margin: 20px auto; background: #fff; border-radius: 20px; }
-h1 { font-size: 3em; color: var(--red); margin: 10px 0; }
-.detail { text-align: left; background: #fff5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }
-.hidden { display: none; }
+:root { --red: #b71c1c; --bg: #fdfcf0; --gold: #b8860b; --green: #24b500; }
+body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; }
+
+#screenshot-target { background: #fff; border: 3px solid var(--red); border-radius: 20px; padding: 30px 20px; max-width: 450px; margin: 20px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.unsei { font-size: 1.1rem; color: #666; margin-bottom: 5px; }
+.rank { font-size: 3.8rem; font-weight: bold; color: var(--red); margin: 0; letter-spacing: 5px; }
+.lucky-item { font-size: 1.3rem; font-weight: bold; color: #333; margin: 20px 0; padding: 12px; border-top: 2px solid #f0f0f0; border-bottom: 2px solid #f0f0f0; background: #fffaf0; }
+.message { font-size: 0.95rem; line-height: 1.7; color: #444; text-align: left; padding: 0 10px; min-height: 80px; }
+.site-url { font-size: 0.7rem; color: #ccc; margin-top: 15px; display: block; }
+
+.btn-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 450px; margin: 20px auto; }
+.btn { display: flex; align-items: center; justify-content: center; padding: 15px 5px; color: #fff; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 0.9rem; border: none; cursor: pointer; transition: 0.2s; }
+.btn:active { transform: scale(0.95); }
+
+.btn-save { background: var(--gold); grid-column: span 2; font-size: 1.1rem; }
+.btn-tw { background: #000; }
+.btn-line { background: var(--green); }
+.btn-retry { background: #666; grid-column: span 2; margin-top: 10px; }
+
+footer { margin-top: 40px; font-size: 0.7rem; color: #999; }
 </style>
 </head>
 <body>
-<div id="content" class="hidden">
-    <div class="card">
-        <p>2026年 新春おみくじ結果</p>
-        <h1 id="rank"></h1>
-        <div id="msg" class="detail"></div>
-        <a href="index.html" style="display:block; padding:15px; background:var(--red); color:#fff; text-decoration:none; border-radius:30px; font-weight:bold;">戻る</a>
-    </div>
-</div>
-<div id="preparing">
-    <div class="card">
-        <h2>【準備中】</h2>
-        <p>おみくじは2026年1月1日 0時より公開いたします。どうぞお楽しみに！</p>
-        <a href="index.html">戻る</a>
-    </div>
+
+<div id="screenshot-target">
+    <div class="unsei">2026年 今日の運勢</div>
+    <p id="rank-display" class="rank">...</p>
+    <div id="item-display" class="lucky-item">...</div>
+    <div id="msg-display" class="message"></div>
+    <span class="site-url">篠ノ井乗務区 2周年特設サイト<br>https://shinorail.github.io/shinonoi-2026/</span>
 </div>
 
+<div class="btn-container">
+    <button class="btn btn-save" onclick="saveImage()">画像を保存してシェア</button>
+    <button class="btn btn-tw" onclick="shareX()">Xでシェア</button>
+    <button class="btn btn-line" onclick="shareLine()">LINEで送る</button>
+    <a href="index.html" class="btn btn-retry">トップへ戻る</a>
+</div>
+
+<footer>
+    製造元：GitHub / 制作・著作：篠ノ井乗務区
+</footer>
+
 <script>
-const start = new Date("2026/01/01 00:00:00");
-const data = [
-    {rank:"大吉", msg:"【全体運】最高の一年になります。望んでいたことがトントン拍子に進むでしょう。\n【一言】感謝の気持ちを言葉にすると、さらに幸運が舞い込みます。"},
-    {rank:"中吉", msg:"【全体運】非常に安定した運勢です。周囲の協力が得られやすく、物事が順調に運びます。\n【一言】少し高めの目標に挑戦するのに良い時期です。"},
-    {rank:"小吉", msg:"【全体運】一歩ずつ着実に進展します。派手さはありませんが、確実な成果が得られるでしょう。\n【一言】日々の習慣を大切にすることで運気が上がります。"},
-    {rank:"吉", msg:"【全体運】平穏で穏やかな一年になります。大きなトラブルもなく、自分らしく過ごせます。\n【一言】身近な人との時間を大切に過ごしてください。"},
-    {rank:"末吉", msg:"【全体運】今は焦らず、準備を整える時期です。後半に向けて少しずつ運気が上昇します。\n【一言】整理整頓をして、身の回りをスッキリさせると吉です。"},
-    {rank:"吉兆", msg:"【全体運】新しい何かが始まる予感です。直感を信じて動くのが良いでしょう。\n【一言】新しい趣味や学びを始めると、素晴らしい出会いがあります。"}
+const results = [
+    { rank: "大吉", item: "ラッキー：温かい蕎麦", msg: "運気は最高潮！何事もスムーズに進む一日。美味しい信州蕎麦を食べるとさらに運気がアップします。" },
+    { rank: "中吉", item: "ラッキー：赤い小物", msg: "安定した運勢です。身の回りに赤いものを取り入れると、やる気が湧いて良い知らせが届くかも。" },
+    { rank: "吉", item: "ラッキー：散歩", msg: "平穏で穏やかな一日。少し遠回りして歩いてみると、素敵な発見や新しいアイデアが浮かびそう。" },
+    { rank: "小吉", item: "ラッキー：読書", msg: "自分磨きに適した日。静かな場所で本を読むと、将来に役立つ大切な知識が得られるでしょう。" },
+    { rank: "末吉", item: "ラッキー：整理整頓", msg: "身の回りを片付けることで運気が開けます。まずは机の上から綺麗にしてみましょう。" }
 ];
-function check() {
-    if (new Date() >= start) {
-        document.getElementById('content').classList.remove('hidden');
-        document.getElementById('preparing').classList.add('hidden');
-        const res = data[Math.floor(Math.random()*data.length)];
-        document.getElementById('rank').innerText = res.rank;
-        document.getElementById('msg').innerText = res.msg;
-    }
+
+const res = results[Math.floor(Math.random() * results.length)];
+document.getElementById('rank-display').innerText = res.rank;
+document.getElementById('item-display').innerText = res.item;
+document.getElementById('msg-display').innerText = res.msg;
+
+function saveImage() {
+    const target = document.getElementById("screenshot-target");
+    html2canvas(target, { backgroundColor: "#fdfcf0", scale: 2 }).then(canvas => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = `shinorail_omikuji_${res.rank}.png`;
+        link.click();
+        alert("おみくじ画像を保存しました！");
+    });
 }
-check();
-setTimeout(() => { location.reload(); }, 300000);
+
+function shareX() {
+    const text = `篠ノ井乗務区 おみくじの結果は【${res.rank}】！\n${res.item}\n#篠ノ井乗務区 #おみくじ\n`;
+    const url = "https://shinorail.github.io/shinonoi-2026/";
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+}
+
+function shareLine() {
+    const text = `篠ノ井乗務区 おみくじの結果は【${res.rank}】！ ${res.item} https://shinorail.github.io/shinonoi-2026/`;
+    window.open(`https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(text)}`, '_blank');
+}
 </script>
+
 </body>
 </html>
