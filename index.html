@@ -1,25 +1,98 @@
-<div id="greeting" class="greeting">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>篠ノ井乗務区 - Shinonoi Depot</title>
+<style>
+@keyframes sakura-fall { 0% { transform: translateY(-10%) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+body { background-color: #fcfaf2; color: #333; font-family: "serif"; text-align: center; margin: 0; padding: 20px; overflow-x: hidden; }
+.sakura { position: fixed; top: -10%; color: #ffb7c5; font-size: 20px; z-index: 999; pointer-events: none; animation: sakura-fall linear infinite; }
+.container { border: 3px solid #d32f2f; padding: 30px 20px; max-width: 500px; margin: 10px auto; background: rgba(255,255,255,0.95); box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; }
+.lang-switcher { margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; }
+.lang-switcher button { background: #eee; border: 1px solid #ccc; padding: 6px 15px; cursor: pointer; font-size: 12px; border-radius: 4px; font-weight: bold; }
+.lang-switcher button.active { background: #004d40; color: white; border-color: #004d40; }
+h1 { color: #d32f2f; font-size: 1.8em; margin: 10px 0; letter-spacing: 0.1em; }
+.greeting { border-top: 1px solid #d32f2f; border-bottom: 1px solid #d32f2f; padding: 15px; margin: 15px 0; line-height: 1.8; text-align: left; font-size: 0.9em; min-height: 80px; color: #004d40; }
+.status-box { background: #fffaf0; padding: 20px; border: 1px dashed #d32f2f; margin: 15px 0; }
+.timer { font-size: 2.5em; font-weight: bold; color: #d32f2f; margin: 10px 0; }
+.menu-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.menu-btn { background: #004d40; color: #fff; padding: 15px; font-size: 1em; cursor: pointer; border-radius: 4px; text-decoration: none; font-weight: bold; box-shadow: 0 3px 0 #002d20; display: block; }
+.menu-btn:hover { background: #00695c; transform: translateY(-1px); }
+.omikuji-btn { background: #d32f2f; box-shadow: 0 3px 0 #8b1d1d; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="container" id="main-content">
+    <div class="lang-switcher">
+        <button onclick="setLang('ja')" id="btn-ja" class="active">日本語</button>
+        <button onclick="setLang('en')" id="btn-en">English</button>
     </div>
-
+    <h1 id="ui-title">歳末準備</h1>
+    <p>篠ノ井乗務区 特設会場</p>
+    <div id="greeting" class="greeting"></div>
+    <div id="timer-section" class="status-box">
+        <p id="ui-label">2026年 始発列車まで</p>
+        <div id="countdown" class="timer">--d --:--:--</div>
+    </div>
+    <div class="menu-group">
+        <a href="message.html" id="ui-msg" class="menu-btn" style="background:#8b1d1d;">メッセージ詳細 / Message Detail</a>
+        <a href="result.html" id="ui-omikuji" class="menu-btn omikuji-btn hidden">鉄道みくじを引く</a>
+        <a href="news.html" id="ui-news" class="menu-btn">お知らせ / News</a>
+        <a href="about.html" id="ui-about" class="menu-btn">このサイトについて</a>
+        <a href="my-timer.html" id="ui-mytimer" class="menu-btn">マイ・タイマー設定</a>
+    </div>
+</div>
 <script>
-// translations 内の prep と newYear を短く修正
 const translations = {
     ja: {
-        // ... 他の項目はそのまま ...
-        prep: "篠ノ井乗務区 特設会場へようこそ。ただいま新年の運行に向けて準備中です。",
-        newYear: "新年あけましておめでとうございます。本年もよろしくお願い申し上げます。",
-        detail: "運営からのご挨拶（詳細）は..."
+        titlePre: "歳末準備", titleNew: "謹賀新年",
+        prep: "篠ノ井乗務区 特設会場へようこそ。ただいま新年の運行に向けて準備中です。詳細は下記のメッセージボタンよりご覧ください。",
+        newYear: "新年あけましておめでとうございます。本年も皆様の人生という名の列車が快走できる一年になりますようお祈り申し上げます。",
+        about: "このサイトについて", mytimer: "マイ・タイマー設定", omikuji: "鉄道みくじを引く", label: "2026年 始発列車まで",
+        news: "お知らせ / News", msg: "運営からのメッセージ詳細は...", finish: "閉場しました。"
     },
     en: {
-        // ... 他の項目はそのまま ...
-        prep: "Welcome to Shinonoi Depot. Preparing for the New Year operation.",
-        newYear: "Happy New Year! We look forward to seeing you again this year.",
-        detail: "Read the full message..."
+        titlePre: "Preparation", titleNew: "Happy New Year",
+        prep: "Welcome to Shinonoi Depot. Preparing for 2026. Please check the message detail below.",
+        newYear: "Happy New Year 2026! We wish you a safe and smooth journey on the tracks of your life.",
+        about: "About This Site", mytimer: "My Personal Timer", omikuji: "Draw a Fortune", label: "Countdown to 2026",
+        news: "News", msg: "Full message detail...", finish: "Closed."
     }
 };
-
-// menu-group 内に詳細ボタンを追加
-// <a href="message.html" class="menu-btn" style="background:#004d40; opacity:0.9;">
-//    <span id="ui-detail">詳細は...</span>
-// </a>
+let lang = 'ja';
+function setLang(l) { lang = l; document.querySelectorAll('.lang-switcher button').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + l).classList.add('active'); update(); }
+function createSakura() { const s = document.createElement('div'); s.innerHTML = '🌸'; s.className = 'sakura'; s.style.left = Math.random() * 100 + 'vw'; s.style.animationDuration = Math.random() * 3 + 4 + 's'; document.body.appendChild(s); setTimeout(() => s.remove(), 7000); }
+setInterval(createSakura, 500);
+const start = new Date("2026/01/01 00:00:00");
+const end = new Date("2026/01/16 00:00:00");
+function update() {
+    const now = new Date(); const t = translations[lang];
+    document.getElementById("ui-about").innerText = t.about;
+    document.getElementById("ui-mytimer").innerText = t.mytimer;
+    document.getElementById("ui-omikuji").innerText = t.omikuji;
+    document.getElementById("ui-news").innerText = t.news;
+    document.getElementById("ui-label").innerText = t.label;
+    document.getElementById("ui-msg").innerText = t.msg;
+    if (now >= end) { document.getElementById("main-content").innerHTML = `<h1>Finish</h1><p>${t.finish}</p>`; return; }
+    if (now >= start) {
+        document.getElementById("ui-title").innerText = t.titleNew;
+        document.getElementById("greeting").innerHTML = t.newYear;
+        document.getElementById("timer-section").classList.add("hidden");
+        document.getElementById("ui-omikuji").classList.remove("hidden");
+    } else {
+        document.getElementById("ui-title").innerText = t.titlePre;
+        document.getElementById("greeting").innerHTML = t.prep;
+        const diff = start - now;
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+        const m = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+        const s = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+        document.getElementById("countdown").innerText = `${d}d ${h}:${m}:${s}`;
+    }
+}
+setInterval(update, 1000); update();
 </script>
+</body>
+</html>
