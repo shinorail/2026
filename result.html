@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>運勢点検結果 - 篠ノ井乗務区</title>
+<style>
+@keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+body { background: #fcfaf2; color: #333; font-family: "serif"; text-align: center; padding: 20px; }
+.result-card { border: 2px solid #d32f2f; padding: 40px; max-width: 450px; margin: 30px auto; background: #fff; animation: zoomIn 0.5s ease-out; }
+h1 { font-size: 3.5em; margin: 10px 0; color: #000; border-bottom: 4px solid #d32f2f; display: inline-block; }
+.msg { text-align: left; line-height: 2.2; margin: 25px 0; font-size: 1.1em; background: #fffaf0; padding: 20px; border-radius: 5px; }
+.share-btn { display: inline-block; padding: 12px 25px; margin: 10px; color: #fff; text-decoration: none; border-radius: 25px; font-weight: bold; background: #000; }
+.back { display: block; margin-top: 30px; color: #d32f2f; text-decoration: none; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="result-card">
+    <p>運勢点検の結果…</p>
+    <h1 id="rank"></h1>
+    <div id="msg" class="msg"></div>
+    <div class="sns-share">
+        <a id="share-x" class="share-btn" target="_blank">Xに投稿して報告</a>
+    </div>
+    <a href="index.html" class="back">← 戻る</a>
+</div>
+<script>
+const trainResults = [
+    { rank: "超特急", msg: "【全体】オールグリーン！最高速度で突き進めます。<br>【心得】信号よし、前方よし！定時運行で福が来ます。" },
+    { rank: "特急", msg: "【全体】出力良好。急勾配も力強く登り切れます。<br>【心得】車窓の景色を楽しむ余裕が運気を上げます。" },
+    { rank: "各停", msg: "【全体】一駅ずつ着実に。丁寧な歩みが実を結びます。<br>【心得】指差し呼称で安全確認を。一歩ずつが吉。" }
+];
+const res = trainResults[Math.floor(Math.random() * trainResults.length)];
+document.getElementById('rank').innerText = res.rank;
+document.getElementById('msg').innerHTML = res.msg;
+const shareText = `篠ノ井乗務区 新春みくじ：【${res.rank}】\n${res.msg.replace(/<br>/g, '\n')}\n`;
+document.getElementById('share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(window.location.href.split('?')[0].replace('result.html', 'index.html'))}`;
+</script>
+</body>
+</html>
