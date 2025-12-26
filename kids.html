@@ -237,23 +237,16 @@ function gameLoop() {
 
 function sendScore() {
     if(isSending) return;
+    // 0点は送信させない
+    if (score <= 0) {
+        alert("0点ではランキングにのせられません！");
+        return;
+    }
     if (score > 4000) { applyBan(); return; }
+    
+    // （以下、既存の送信処理）
     isSending = true;
-    const btn = document.getElementById("send-btn");
-    btn.innerText = "..."; btn.disabled = true;
-    const gasUrl = "https://script.google.com/macros/s/AKfycbw1Wmit3zAGi1sYBr-F_a8JnEjepmtZL9CJATnOxSdNp0Uz4UTuKu1kgFK6WmdWQ1US/exec";
-    fetch(gasUrl, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ nickname: selectedName, icon: "🐍", score: score, difficulty: diffSettings[selectedDiff].label })
-    })
-    .then(() => {
-        document.getElementById("rank-display").innerText = "送信完了";
-        btn.innerText = "OK";
-    })
-    .catch(() => {
-        isSending = false; btn.disabled = false;
-    });
+    // ...
 }
 </script>
 </body>
