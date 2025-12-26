@@ -7,48 +7,76 @@
 <style>
 :root { --bg: #f4f4f2; --main-blue: #1a237e; --gold: #c5a059; --accent-red: #b71c1c; --border: #ccc; }
 body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; color: #333; overflow-x: hidden; }
-.timer-card { background: #222; border: 4px solid var(--gold); border-radius: 8px; padding: 20px; margin-bottom: 25px; max-width: 450px; margin: auto; box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
-#timer { font-size: 2rem; font-weight: bold; font-family: monospace; color: #fff; }
+
+/* 降ってくるアイテム */
+.falling-item { position: fixed; top: -50px; z-index: 9999; cursor: pointer; animation: fall linear forwards; font-size: 2.5rem; user-select: none; -webkit-tap-highlight-color: transparent; }
+@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+/* アイテム説明 */
+.item-desc { position: fixed; background: rgba(0, 0, 0, 0.85); color: #fff; padding: 10px 15px; border-radius: 20px; font-size: 0.85rem; pointer-events: none; z-index: 10000; animation: fadeUp 1.8s ease-out forwards; white-space: nowrap; }
+@keyframes fadeUp { 0% { opacity: 0; transform: translateY(0); } 15% { opacity: 1; transform: translateY(-30px); } 85% { opacity: 1; transform: translateY(-50px); } 100% { opacity: 0; transform: translateY(-70px); } }
+
+/* タイマーカード */
+.timer-card { background: #222; border: 4px solid var(--gold); border-radius: 12px; padding: 20px; margin-bottom: 25px; max-width: 450px; margin: auto; box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
+#timer { font-size: 2rem; font-weight: bold; font-family: monospace; color: #fff; letter-spacing: 1px; }
+
+/* お知らせエリア */
 .info-container { max-width: 450px; margin: 20px auto; background: #fff; border: 2px solid var(--main-blue); border-radius: 10px; text-align: left; overflow: hidden; }
 .info-header { background: var(--main-blue); color: #fff; padding: 8px 15px; font-weight: bold; font-size: 0.9rem; display: flex; justify-content: space-between; }
-.info-body { padding: 15px; max-height: 200px; overflow-y: auto; font-size: 0.85rem; line-height: 1.6; }
+.info-body { padding: 15px; max-height: 150px; overflow-y: auto; font-size: 0.85rem; line-height: 1.6; }
 .info-item { border-bottom: 1px dashed var(--border); padding-bottom: 8px; margin-bottom: 8px; }
 .notice-red { color: var(--accent-red); font-weight: bold; text-decoration: none; }
+
+/* ボタン群 */
 .btn-group { display: flex; flex-direction: column; gap: 15px; max-width: 450px; margin: 20px auto; }
-.main-btn { position: relative; display: block; padding: 20px; background: var(--main-blue); color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; box-shadow: 0 6px 0 #0d123e; transition: 0.1s; }
+.main-btn { position: relative; display: block; padding: 20px; background: var(--main-blue); color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; box-shadow: 0 6px 0 #0d123e; transition: 0.1s; outline: none; }
 .main-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0d123e; }
+
 .game-btn { background: #ff9800 !important; font-size: 1.4rem; padding: 25px; box-shadow: 0 6px 0 #e68a00 !important; }
 .sub-btn { background: #fff !important; color: var(--main-blue) !important; border: 2px solid var(--main-blue); box-shadow: 0 4px 0 var(--main-blue) !important; padding: 15px !important; }
 .waiting { background: #78909c !important; box-shadow: 0 6px 0 #455a64 !important; opacity: 0.8; }
-.falling-item { position: fixed; top: -50px; z-index: 9999; cursor: pointer; animation: fall linear forwards; font-size: 2.5rem; user-select: none; }
-@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
+
+footer { margin-top: 60px; font-size: 0.75rem; color: #666; line-height: 1.5; }
 </style>
 </head>
 <body>
+
 <div class="timer-card">
-    <div style="font-size: 0.8rem; margin-bottom: 8px; color: var(--gold);">2026年 午年まで あと</div>
+    <div style="font-size: 0.8rem; margin-bottom: 8px; color: var(--gold); font-weight: bold;">2026年 午年まで あと</div>
     <div id="timer">00d 00h 00m 00s</div>
 </div>
+
 <div class="info-container">
-    <div class="info-header"><span>📢 運行情報</span><span>Ver 2.5.4</span></div>
+    <div class="info-header">
+        <span>📢 運行情報・お知らせ</span>
+        <span style="background:#eee; padding:2px 6px; border-radius:4px; font-size:0.7rem; color:#666;">Ver 2.5.6</span>
+    </div>
     <div class="info-body">
         <div class="info-item">
-            <span class="notice-red">【重要】</span>本サイトは<a href="memorial.html" class="notice-red">2026年1月末</a>で終了いたします。
+            <span class="notice-red">【重要】</span>本サイトは<a href="memorial.html" class="notice-red">2026年1月末</a>をもって終了いたします。
+        </div>
+        <div class="info-item">
+            1月1日からおみくじが解禁されます！お楽しみに！
         </div>
     </div>
 </div>
+
 <div class="btn-group">
     <a href="kids.html" class="main-btn game-btn">🚂 ゲームページ 🚃</a>
     <a href="zukan.html" class="main-btn sub-btn" style="background:#4caf50 !important; color:#fff !important; border:none; box-shadow: 0 4px 0 #2e7d32 !important;">📖 車両ずかん</a>
     <button id="rail-kuji" class="main-btn waiting" onclick="tryOpen('rail_result.html')">【点検中】鉄道おみくじ</button>
+    <button id="norm-kuji" class="main-btn waiting" onclick="tryOpen('norm_result.html')" style="background:var(--accent-red); box-shadow: 0 6px 0 #8e1b1b;">【点検中】一般おみくじ</button>
     <a href="howto.html" class="main-btn sub-btn">📖 つかいかた</a>
     <a href="contact.html" class="main-btn sub-btn" style="background:#00796b !important; color:#fff !important; border:none; box-shadow: 0 4px 0 #004d40 !important;">✉ お問い合わせ</a>
 </div>
-<footer>製造元：GitHub<br>制作・著作：篠ノ井乗務区</footer>
+
+<footer>
+    製造元：GitHub<br>
+    制作・著作：篠ノ井乗務区
+</footer>
 
 <script>
-// --- ここを2026年に修正しました ---
+// --- 終了判定 (2026年1月31日 23:59:59まで) ---
 const expiry = new Date("2026/02/01 00:00:00").getTime();
 function checkExpiry() {
     if (new Date().getTime() >= expiry) {
@@ -57,33 +85,77 @@ function checkExpiry() {
 }
 checkExpiry();
 
-const itemData = {'🐎':'午年：物事がうまくいく年だよ','🎍':'門松：年神様を案内するよ','🌅':'初日の出：新しい年を照らす太陽'};
+// --- アイテム演出 ---
+const itemData = {
+    '🐎': '午年：物事が「うま」くいく、活気ある年だよ',
+    '🎍': '門松：年神様を案内する大切なお飾りだよ',
+    '🌅': '初日の出：新しい年を照らす一番最初の太陽',
+    '🧧': 'お年玉：一年の健康と幸せを願う贈り物'
+};
+
 function spawn() {
     const symbols = Object.keys(itemData);
     const symbol = symbols[Math.floor(Math.random() * symbols.length)];
     const e = document.createElement('div');
     e.className = 'falling-item';
-    e.innerText = symbol; e.style.left = Math.random() * 90 + 'vw';
+    e.innerText = symbol;
+    e.style.left = Math.random() * 90 + 'vw';
     e.style.animationDuration = (Math.random() * 3 + 4) + 's';
-    e.onclick = () => { alert(itemData[symbol]); e.remove(); };
+    e.onclick = (event) => {
+        showDesc(event.clientX, event.clientY, itemData[symbol]);
+        e.remove();
+    };
     document.body.appendChild(e);
     setTimeout(() => { if(e.parentElement) e.remove(); }, 7000);
 }
+
+function showDesc(x, y, text) {
+    const desc = document.createElement('div');
+    desc.className = 'item-desc';
+    desc.innerText = text;
+    desc.style.left = Math.max(10, Math.min(window.innerWidth - 200, x - 100)) + 'px';
+    desc.style.top = (y - 50) + 'px';
+    document.body.appendChild(desc);
+    setTimeout(() => desc.remove(), 1800);
+}
 setInterval(spawn, 1000);
 
+// --- カウントダウン & おみくじ解禁判定 ---
 const target = new Date("2026/01/01 00:00:00").getTime();
 let isReady = false;
+
 function update() {
-    const diff = target - new Date().getTime();
-    if (diff <= 0) { isReady = true; document.getElementById("timer").innerText = "00d 00h 00m 00s"; }
-    else {
-        const d = Math.floor(diff / 864e5); const h = Math.floor((diff % 864e5) / 36e5);
-        const m = Math.floor((diff % 36e5) / 6e4); const s = Math.floor((diff % 6e4) / 1e3);
-        document.getElementById("timer").innerText = `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+    const now = new Date().getTime();
+    const diff = target - now;
+
+    if (diff <= 0) {
+        isReady = true;
+        document.getElementById("timer").innerText = "00d 00h 00m 00s";
+        // おみくじボタンを有効化
+        document.getElementById("rail-kuji").classList.remove("waiting");
+        document.getElementById("rail-kuji").innerText = "鉄道おみくじ";
+        document.getElementById("norm-kuji").classList.remove("waiting");
+        document.getElementById("norm-kuji").innerText = "一般おみくじ";
+    } else {
+        const d = Math.floor(diff / 864e5);
+        const h = Math.floor((diff % 864e5) / 36e5);
+        const m = Math.floor((diff % 36e5) / 6e4);
+        const s = Math.floor((diff % 6e4) / 1e3);
+        document.getElementById("timer").innerText = 
+            `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
     }
 }
-setInterval(update, 1000); update();
-function tryOpen(url) { if (isReady) location.href = url; else alert("2026年までお待ちください！"); }
+setInterval(update, 1000);
+update();
+
+function tryOpen(url) {
+    if (isReady) {
+        location.href = url;
+    } else {
+        alert("2026年の幕開けまでお待ちください！");
+    }
+}
 </script>
+
 </body>
 </html>
