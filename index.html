@@ -31,7 +31,7 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
     <div id="timer">00d 00h 00m 00s</div>
 </div>
 <div class="info-container">
-    <div class="info-header"><span>📢 運行情報</span><span>Ver 2.5.3</span></div>
+    <div class="info-header"><span>📢 運行情報</span><span>Ver 2.5.4</span></div>
     <div class="info-body">
         <div class="info-item">
             <span class="notice-red">【重要】</span>本サイトは<a href="memorial.html" class="notice-red">2026年1月末</a>で終了いたします。
@@ -48,11 +48,15 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
 <footer>製造元：GitHub<br>制作・著作：篠ノ井乗務区</footer>
 
 <script>
-// 終了判定（2026年2月1日に自動で切り替わるように修正）
+// --- ここを2026年に修正しました ---
 const expiry = new Date("2026/02/01 00:00:00").getTime();
-if (new Date().getTime() >= expiry) window.location.href = "memorial.html";
+function checkExpiry() {
+    if (new Date().getTime() >= expiry) {
+        window.location.href = "memorial.html";
+    }
+}
+checkExpiry();
 
-// 午年アイテム
 const itemData = {'🐎':'午年：物事がうまくいく年だよ','🎍':'門松：年神様を案内するよ','🌅':'初日の出：新しい年を照らす太陽'};
 function spawn() {
     const symbols = Object.keys(itemData);
@@ -67,7 +71,6 @@ function spawn() {
 }
 setInterval(spawn, 1000);
 
-// タイマー
 const target = new Date("2026/01/01 00:00:00").getTime();
 let isReady = false;
 function update() {
