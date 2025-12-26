@@ -5,89 +5,110 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>車両ずかん - 篠ノ井乗務区</title>
 <style>
-:root { --main-blue: #1a237e; --bg: #f4f4f2; --gold: #c5a059; }
+:root { --main-blue: #1a237e; --bg: #f4f4f2; --gold: #c5a059; --otaku-green: #2e7d32; }
 body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; color: #333; }
 
-h1 { color: var(--main-blue); border-bottom: 3px solid var(--gold); display: inline-block; padding: 0 20px 10px; margin-bottom: 30px; }
+h1 { color: var(--main-blue); border-bottom: 3px solid var(--gold); display: inline-block; padding: 0 20px 10px; margin-bottom: 20px; }
 
-.zukan-list { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+/* タブ切り替え */
+.tab-group { display: flex; max-width: 500px; margin: 0 auto 25px; background: #ddd; border-radius: 10px; padding: 5px; }
+.tab-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+.tab-btn.active { background: var(--main-blue); color: #fff; }
+.tab-btn.otaku.active { background: var(--otaku-green); }
+
+.zukan-list { max-width: 500px; margin: 0 auto; display: none; flex-direction: column; gap: 15px; }
+.zukan-list.active { display: flex; }
 
 .train-card {
     background: #fff;
-    border-radius: 15px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 15px;
     display: flex;
     align-items: center;
-    gap: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    gap: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     text-align: left;
-    transition: transform 0.2s;
-    cursor: pointer;
-    border-left: 8px solid var(--main-blue);
+    border-left: 6px solid var(--main-blue);
 }
-.train-card:active { transform: scale(0.98); }
+.otaku .train-card { border-left-color: var(--otaku-green); }
 
-.train-emoji { font-size: 3rem; min-width: 60px; text-align: center; }
-.train-info h2 { margin: 0; font-size: 1.1rem; color: var(--main-blue); }
-.train-info p { margin: 5px 0 0; font-size: 0.85rem; line-height: 1.4; color: #666; }
+.train-emoji { font-size: 2.5rem; min-width: 50px; text-align: center; }
+.train-info h2 { margin: 0; font-size: 1rem; color: var(--main-blue); }
+.otaku .train-info h2 { color: var(--otaku-green); }
+.train-info p { margin: 5px 0 0; font-size: 0.8rem; line-height: 1.5; color: #555; }
 
-.back-btn {
-    display: inline-block;
-    margin-top: 40px;
-    padding: 15px 30px;
-    background: #333;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-}
+/* 鉄オタ向けスペック表 */
+.spec-box { background: #f9f9f9; padding: 8px; border-radius: 5px; margin-top: 8px; font-size: 0.75rem; border: 1px solid #eee; }
+.spec-title { font-weight: bold; color: var(--otaku-green); margin-right: 5px; }
 
-/* 季節の特別枠 */
-.special { border-left-color: var(--gold); background: #fffdf0; }
+.back-btn { display: inline-block; margin-top: 30px; padding: 12px 25px; background: #333; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; }
 </style>
 </head>
 <body>
 
-<h1>📖 しなのい車両ずかん</h1>
+<h1>📖 車両ずかん</h1>
 
-<div class="zukan-list">
+<div class="tab-group">
+    <button id="btn-kids" class="tab-btn active" onclick="switchTab('kids')">👦 キッズ</button>
+    <button id="btn-otaku" class="tab-btn otaku" onclick="switchTab('otaku')">🚃 一般・鉄オタ</button>
+</div>
+
+<div id="list-kids" class="zukan-list active">
     <div class="train-card">
         <div class="train-emoji">🚄</div>
         <div class="train-info">
-            <h2>E353系（特急あずさ）</h2>
-            <p>長野と東京をむすぶ、とっても速い特急だよ。空気ばねの力で、カーブもスイスイ走れるんだ！</p>
+            <h2>E353系（あずさ）</h2>
+            <p>とっても速い特急電車！カーブでもスピードを落とさずにスイスイ走れるんだよ。</p>
         </div>
     </div>
-
     <div class="train-card">
-        <div class="train-emoji">🚃</div>
+        <div class="train-emoji">🚋</div>
         <div class="train-info">
-            <h2>211系（長野色）</h2>
-            <p>青色と水色のラインが目印。みんなが学校や仕事に行くときに乗る、おなじみの電車だね。</p>
+            <h2>211系（ふつう電車）</h2>
+            <p>青と水色のラインがかっこいい！長野のいろんな場所で見ることができるよ。</p>
         </div>
     </div>
-
-    <div class="train-card">
-        <div class="train-emoji">🌀</div>
-        <div class="train-info">
-            <h2>383系（特急しなの）</h2>
-            <p>名古屋まで行く特急だよ。振り子（ふりこ）の仕組みで、山道を力強く走り抜けるぞ！</p>
-        </div>
-    </div>
-
     <div class="train-card">
         <div class="train-emoji">💙</div>
         <div class="train-info">
-            <h2>EH200形（ブルーサンダー）</h2>
-            <p>荷物をたくさん運ぶ、力持ちな電気機関車だよ。青いボディがかっこいいよね！</p>
+            <h2>EH200（ブルーサンダー）</h2>
+            <p>荷物をひっぱる力持ちな機関車。山道もグイグイのぼっていくぞ！</p>
         </div>
     </div>
+</div>
 
-    <div class="train-card special">
-        <div class="train-emoji">✨</div>
+<div id="list-otaku" class="zukan-list otaku">
+    <div class="train-card">
+        <div class="train-emoji">⚙️</div>
         <div class="train-info">
-            <h2>E001形（TRAIN SUITE 四季島）</h2>
-            <p>たまにしか見られない、金ぴかの超豪華列車だよ。見つけたらラッキー！</p>
+            <h2>E353系（空気ばね式車体傾斜）</h2>
+            <p>E257系・E351系の後継として松本車両センターに配置。空気ばねによる車体傾斜制御を採用し、中央線の曲線区間を本則+25km/hで走行可能。</p>
+            <div class="spec-box">
+                <div><span class="spec-title">起動加速度:</span>2.0km/h/s</div>
+                <div><span class="spec-title">最高速度:</span>130km/h</div>
+            </div>
+        </div>
+    </div>
+    <div class="train-card">
+        <div class="train-emoji">🔧</div>
+        <div class="train-info">
+            <h2>211系（長野総合車両センター）</h2>
+            <p>元田町・高崎車両センター所属車を耐寒耐雪化改造。N編成として活躍中。3000番台はロングシート仕様。勾配対策の砂撒き装置も完備。</p>
+            <div class="spec-box">
+                <div><span class="spec-title">制御方式:</span>界磁添加励磁制御</div>
+                <div><span class="spec-title">所属:</span>長ナノ</div>
+            </div>
+        </div>
+    </div>
+    <div class="train-card">
+        <div class="train-emoji">⚡</div>
+        <div class="train-info">
+            <h2>EH200形（JRF）</h2>
+            <p>中央本線・篠ノ井線のEF64形重連運用を置き換えるために開発された2車体連結8軸駆動のH級機関車。通称「ブルーサンダー」。</p>
+            <div class="spec-box">
+                <div><span class="spec-title">定格出力:</span>4,520kW</div>
+                <div><span class="spec-title">駆動装置:</span>吊り掛け駆動</div>
+            </div>
         </div>
     </div>
 </div>
@@ -95,15 +116,15 @@ h1 { color: var(--main-blue); border-bottom: 3px solid var(--gold); display: inl
 <a href="index.html" class="back-btn">トップページにもどる</a>
 
 <script>
-// カードをタップしたときに少し跳ねる演出
-document.querySelectorAll('.train-card').forEach(card => {
-    card.addEventListener('click', () => {
-        card.style.transform = 'translateY(-5px)';
-        setTimeout(() => {
-            card.style.transform = 'translateY(0)';
-        }, 200);
-    });
-});
+function switchTab(type) {
+    // ボタンの見た目を切り替え
+    document.getElementById('btn-kids').classList.toggle('active', type === 'kids');
+    document.getElementById('btn-otaku').classList.toggle('active', type === 'otaku');
+
+    // リストの表示を切り替え
+    document.getElementById('list-kids').classList.toggle('active', type === 'kids');
+    document.getElementById('list-otaku').classList.toggle('active', type === 'otaku');
+}
 </script>
 
 </body>
