@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>車両修繕申請 - 篠ノ井乗務区</title>
+<style>
+body { background: #001f3f; color: #fff; font-family: sans-serif; text-align: center; padding: 40px 20px; }
+.form-box { max-width: 400px; margin: auto; border: 3px solid #ffd700; padding: 30px; background: #003366; border-radius: 10px; }
+h1 { font-size: 1.4rem; color: #ffd700; }
+p { font-size: 0.9rem; line-height: 1.6; }
+textarea { width: 100%; background: #eee; border: none; color: #333; padding: 15px; margin: 20px 0; border-radius: 5px; font-size: 0.9rem; resize: none; }
+.send-btn { background: #ffd700; color: #003366; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; border-radius: 5px; font-size: 1.1rem; }
+</style>
+</head>
+<body>
+
+<div class="form-box">
+    <h1>🛠️ 車両修繕・復帰申請</h1>
+    <p>異常な挙動が確認されたため、<br>現在この車両は「使用休止」となっています。</p>
+    
+    <textarea rows="4" readonly>安全規定を遵守し、正しい操作で運行することを誓約します。本線復帰のための修繕を依頼します。</textarea>
+    
+    <button id="submit-btn" class="send-btn" onclick="sendAtonement()">修繕を完了して本線へ戻る</button>
+</div>
+
+<script>
+function sendAtonement() {
+    const btn = document.getElementById('submit-btn');
+    const url = "https://script.google.com/macros/s/AKfycbw1Wmit3zAGi1sYBr-F_a8JnEjepmtZL9CJATnOxSdNp0Uz4UTuKu1kgFK6WmdWQ1US/exec";
+    
+    btn.innerText = "信号確認中...";
+    btn.disabled = true;
+
+    fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({
+            nickname: "修理済車両",
+            icon: "🚃",
+            score: "本線復帰",
+            difficulty: "修繕完了"
+        })
+    }).then(() => {
+        localStorage.removeItem('banned_user');
+        sessionStorage.removeItem('banned_session');
+        alert("信号オールグリーン！運行を再開します。");
+        location.href = "kids.html";
+    }).catch(() => {
+        alert("通信エラー");
+        btn.disabled = false;
+    });
+}
+</script>
+
+</body>
+</html>
