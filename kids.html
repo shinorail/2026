@@ -8,7 +8,9 @@
 :root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; --panel: #ffffff; }
 body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow: hidden; }
 
-/* デザインテーマ（目に優しい色合いへ調整） */
+/* 運行停止画面 */
+#ban-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #ff0000; display: none; z-index: 100000; align-items: center; justify-content: center; flex-direction: column; font-weight: bold; }
+
 body.theme-neon { --main: #7b1fa2; --bg: #f3e5f5; --accent: #00bcd4; }
 body.theme-cyber { --main: #2e7d32; --bg: #e8f5e9; --accent: #fbc02d; }
 body.theme-classic { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; }
@@ -24,13 +26,10 @@ canvas { width: 100%; height: 100%; display: block; }
 .btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; box-sizing: border-box; font-size: 1rem; }
 .btn-diff { background: #eee; color: #444; text-align: center; border: 2px solid transparent; }
 .btn-diff.active { background: #fff; border-color: var(--main); color: var(--main); }
-.target-label { font-size: 0.75rem; color: #777; display: block; font-weight: normal; }
 
-/* 名前選択エリアの改善 */
 .name-label { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: var(--main); }
 .list-container { width: 100%; height: 120px; overflow-y: auto; background: #fff; border: 2px solid #ddd; margin-bottom: 10px; border-radius: 8px; }
 .list-item { padding: 12px; font-size: 1.1rem; border-bottom: 1px solid #eee; color: #333; text-align: center; background: #fff; }
-.list-item:active { background: #f0f0f0; }
 .list-item.selected { background: var(--main) !important; color: #fff !important; font-weight: bold; }
 
 .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 5px auto; }
@@ -42,6 +41,12 @@ canvas { width: 100%; height: 100%; display: block; }
 </style>
 </head>
 <body class="theme-classic">
+
+<div id="ban-screen">
+    <h1>⚠️ 運行停止中</h1>
+    <p>不正なスコア操作が検知されました。</p>
+    <p>安全な運行のため、入区を制限しています。</p>
+</div>
 
 <div class="score-area">
     <div id="fps" class="fps-counter">FPS: 0</div>
@@ -59,8 +64,7 @@ canvas { width: 100%; height: 100%; display: block; }
         </div>
         
         <div class="name-label">【1】なまえをえらんでね</div>
-        <div class="list-container" id="name-selector">
-            </div>
+        <div class="list-container" id="name-selector"></div>
 
         <div class="name-label">【2】むずかしさをえらぶ</div>
         <div id="diff-container" style="width:100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px;">
@@ -90,26 +94,40 @@ canvas { width: 100%; height: 100%; display: block; }
 </div>
 
 <script>
+// --- セキュリティ・終了判定 ---
+const expiry = new Date("2026/02/01 00:00:00").getTime();
+if (new Date().getTime() >= expiry) window.location.href = "memorial.html";
+
+function applyBan() {
+    localStorage.setItem('banned_user', 'true');
+    sessionStorage.setItem('banned_session', 'true');
+    document.getElementById('ban-screen').style.display = 'flex';
+}
+
+if (localStorage.getItem('banned_user') === 'true' || sessionStorage.getItem('banned_session') === 'true') {
+    applyBan();
+}
+
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
 const box = 20;
 let snake, food, dir, gameInterval, score, isSending = false;
 let selectedName = "", selectedDiff = 0, lastTime = 0;
+let lastScoreUpdate = Date.now();
 
 const diffSettings = [
-    {speed: 250, label: "☆ 入門"},
-    {speed: 180, label: "☆☆ 初級"},
-    {speed: 120, label: "☆☆☆ 中級"},
-    {speed: 80, label: "☆☆☆☆ 上級"},
-    {speed: 40, label: "☆☆☆☆☆ プロ"}
+    {speed: 250, label: "やさしい"},
+    {speed: 180, label: "初級"},
+    {speed: 120, label: "ふつう"},
+    {speed: 80, label: "上級"},
+    {speed: 40, label: "たつじん"}
 ];
 
-// 名前リストを確実に生成
 const names = ["あかぎ","あさま","あずさ","しなの","かがやき","はくたか","こまち","はやぶさ","のぞみ","みずほ","つばめ","かいじ","ひたち","とき","いなほ"];
 const nameBox = document.getElementById("name-selector");
 
 function renderNames() {
-    nameBox.innerHTML = ""; // 一旦クリア
+    nameBox.innerHTML = "";
     names.forEach(n => {
         const div = document.createElement("div");
         div.className = "list-item";
@@ -160,13 +178,8 @@ function setD(d) {
 }
 
 function gameLoop() {
-    // 背景色（目に優しい白系）
     ctx.fillStyle = "#fafafa"; ctx.fillRect(0,0,400,400);
-    
-    // エサ（赤）
     ctx.fillStyle = "#ff5252"; ctx.fillRect(food.x, food.y, box-1, box-1);
-    
-    // ヘビ
     const mainColor = getComputedStyle(document.body).getPropertyValue('--main');
     const accentColor = getComputedStyle(document.body).getPropertyValue('--accent');
     
@@ -180,6 +193,11 @@ function gameLoop() {
     if(dir=="R") hX += box; if(dir=="D") hY += box;
 
     if(hX == food.x && hY == food.y) {
+        const now = Date.now();
+        // 秒間獲得スコアチェック（100ms以内に連続加点は異常）
+        if (now - lastScoreUpdate < 50) applyBan();
+        lastScoreUpdate = now;
+
         score += (selectedDiff + 1) * 10;
         document.getElementById("now-score").innerText = score;
         food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box };
@@ -197,6 +215,10 @@ function gameLoop() {
 
 function sendScore() {
     if(isSending) return;
+    
+    // スコア上限チェック（4000点以上は即BAN）
+    if (score > 4000) { applyBan(); return; }
+
     isSending = true;
     const btn = document.getElementById("send-btn");
     btn.innerText = "そうしん中..."; btn.disabled = true;
@@ -205,22 +227,16 @@ function sendScore() {
     
     fetch(gasUrl, {
         method: "POST",
-        body: JSON.stringify({ 
-            nickname: selectedName, 
-            icon: "🐍", 
-            score: score, 
-            difficulty: diffSettings[selectedDiff].label 
-        })
+        mode: "no-cors",
+        body: JSON.stringify({ nickname: selectedName, icon: "🐍", score: score, difficulty: diffSettings[selectedDiff].label })
     })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById("rank-display").innerHTML = `じゅんい: ${data.rank} 位 / ${data.total}人中`;
-        btn.innerText = "OK!";
+    .then(() => {
+        document.getElementById("rank-display").innerText = "送信しました！";
+        btn.innerText = "完了";
     })
-    .catch(() => { 
-        btn.innerText = "エラー"; 
-        isSending = false; 
-        btn.disabled = false; 
+    .catch(() => {
+        btn.innerText = "エラー";
+        isSending = false; btn.disabled = false;
     });
 }
 </script>
