@@ -52,7 +52,6 @@ body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-ali
 .main-btn { position: relative; display: block; padding: 20px; background: var(--main-blue); color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; box-shadow: 0 6px 0 #0d123e; transition: 0.1s; }
 .main-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0d123e; }
 
-/* メインボタンのデザイン */
 .game-btn { background: #ff9800 !important; font-size: 1.4rem; padding: 25px; box-shadow: 0 6px 0 #e68a00 !important; }
 .sub-btn { background: #fff !important; color: var(--main-blue) !important; border: 2px solid var(--main-blue); box-shadow: 0 4px 0 var(--main-blue) !important; padding: 15px !important; }
 .waiting { background: #78909c !important; box-shadow: 0 6px 0 #455a64 !important; opacity: 0.8; }
@@ -85,6 +84,8 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
 <div class="btn-group">
     <a href="kids.html" class="main-btn game-btn">🚂 ゲームページ 🚃</a>
 
+    <a href="zukan.html" class="main-btn sub-btn" style="background:#4caf50 !important; color:#fff !important; border:none; box-shadow: 0 4px 0 #2e7d32 !important;">📖 車両ずかん</a>
+
     <button id="rail-kuji" class="main-btn waiting" onclick="tryOpen('rail_result.html')">【点検中】鉄道おみくじ</button>
     <button id="norm-kuji" class="main-btn waiting" onclick="tryOpen('norm_result.html')" style="background:var(--accent-red); box-shadow: 0 6px 0 #8e1b1b;">【点検中】一般おみくじ</button>
 
@@ -93,6 +94,7 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
 </div>
 
 <footer>
+    製造元：GitHub<br>
     制作・著作：篠ノ井乗務区
 </footer>
 
@@ -151,7 +153,7 @@ function update() {
         const h = Math.floor((diff % 864e5) / 36e5);
         const m = Math.floor((diff % 36e5) / 6e4);
         const s = Math.floor((diff % 6e4) / 1e3);
-        document.getElementById("timer").innerText = `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}s`;
+        document.getElementById("timer").innerText = `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
     }
 }
 setInterval(update, 1000);
