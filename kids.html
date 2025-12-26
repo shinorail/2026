@@ -8,7 +8,10 @@
 :root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; --panel: #ffffff; }
 body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow: hidden; }
 
+/* 運行停止画面 */
 #ban-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #ff0000; display: none; z-index: 100000; align-items: center; justify-content: center; flex-direction: column; font-weight: bold; }
+.repair-link { margin-top: 30px; padding: 15px; border: 1px solid #444; border-radius: 8px; background: #111; }
+.repair-link a { color: #ffd700; font-weight: bold; text-decoration: none; border-bottom: 1px solid #ffd700; }
 
 body.theme-neon { --main: #7b1fa2; --bg: #f3e5f5; --accent: #00bcd4; }
 body.theme-cyber { --main: #2e7d32; --bg: #e8f5e9; --accent: #fbc02d; }
@@ -46,6 +49,11 @@ canvas { width: 100%; height: 100%; display: block; }
     <p>不正なスコア操作が検知されました。</p>
     <p>安全な運行のため、入区を制限しています。</p>
     <p style="color:#333; font-size:0.7rem; margin-top:20px;">ERR_CODE: SC_CH_01</p>
+    
+    <div class="repair-link">
+        <p style="font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0;">本線への復帰を希望される場合は</p>
+        <a href="ban_contact.html">🛠️ 車両修繕・復帰申請はこちら</a>
+    </div>
 </div>
 
 <div class="score-area">
@@ -94,6 +102,7 @@ canvas { width: 100%; height: 100%; display: block; }
 </div>
 
 <script>
+// --- セキュリティと管理者解除 ---
 const expiry = new Date("2026/02/01 00:00:00").getTime();
 if (new Date().getTime() >= expiry) window.location.href = "memorial.html";
 
@@ -113,7 +122,7 @@ window.addEventListener('click', () => {
     if (n - lt < 400) tc++; else tc = 1;
     lt = n;
     if (tc === 3) {
-        const p = prompt("Enter Auth Code");
+        const p = prompt("Auth Code");
         if (btoa(p) === "c2hpbm8ybmQ=") {
             localStorage.removeItem('banned_user');
             sessionStorage.removeItem('banned_session');
@@ -123,6 +132,7 @@ window.addEventListener('click', () => {
     }
 });
 
+// --- ゲームロジック ---
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
 const box = 20;
@@ -196,13 +206,16 @@ function gameLoop() {
     ctx.fillStyle = "#ff5252"; ctx.fillRect(food.x, food.y, box-1, box-1);
     const mainColor = getComputedStyle(document.body).getPropertyValue('--main');
     const accentColor = getComputedStyle(document.body).getPropertyValue('--accent');
+    
     snake.forEach((s, i) => {
         ctx.fillStyle = (i==0) ? accentColor : mainColor;
         ctx.fillRect(s.x, s.y, box-1, box-1);
     });
+
     let hX = snake[0].x, hY = snake[0].y;
     if(dir=="L") hX -= box; if(dir=="U") hY -= box;
     if(dir=="R") hX += box; if(dir=="D") hY += box;
+
     if(hX == food.x && hY == food.y) {
         const now = Date.now();
         if (now - lastScoreUpdate < 50) applyBan();
@@ -211,6 +224,7 @@ function gameLoop() {
         document.getElementById("now-score").innerText = score;
         food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box };
     } else { snake.pop(); }
+
     let nH = {x: hX, y: hY};
     if(hX<0 || hX>=400 || hY<0 || hY>=400 || snake.some(s => s.x==nH.x && s.y==nH.y)) {
         clearInterval(gameInterval); gameInterval = null;
