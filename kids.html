@@ -3,117 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>キッズページ - 篠ノ井乗務区</title>
+<title>ゲームコーナー - 篠ノ井乗務区</title>
 <style>
-:root { --main: #ff9800; --bg: #fff9e6; }
-body { background: var(--bg); font-family: sans-serif; text-align: center; margin: 0; padding: 0; touch-action: manipulation; overflow-x: hidden; }
-
-/* スコア表示エリア */
+:root { --main: #3f51b5; --bg: #f0f2f5; --accent: #ff9800; }
+body { background: var(--bg); font-family: sans-serif; text-align: center; margin: 0; padding: 0; touch-action: manipulation; }
 .score-area { display: flex; justify-content: space-around; background: #fff; padding: 10px; border-bottom: 3px solid var(--main); }
-.score-box { font-weight: bold; }
-.score-label { font-size: 0.8rem; color: #666; display: block; }
-.score-val { font-size: 1.5rem; color: var(--main); }
+.score-val { font-size: 1.5rem; color: var(--main); font-weight: bold; }
+#game-area { position: relative; width: 95vw; height: 95vw; max-width: 400px; max-height: 400px; margin: 10px auto; background: #000; border: 8px solid var(--main); border-radius: 20px; overflow: hidden; }
+canvas { width: 100%; height: 100%; }
 
-.btn { display: block; width: 90%; margin: 10px auto; padding: 18px 0; background: var(--main); color: #fff; text-decoration: none; border-radius: 50px; font-size: 1.4rem; font-weight: bold; border: 5px solid #fff; box-shadow: 0 5px 0 #e68a00; cursor: pointer; }
+.result-popup { position: absolute; top: 0; left: 0; width: 100%; height: 100%; color: #fff; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+.btn { display: block; width: 85%; margin: 8px auto; padding: 15px 0; background: var(--main); color: #fff; border-radius: 50px; font-weight: bold; border: 4px solid #fff; cursor: pointer; }
+.btn:disabled { background: #ccc; cursor: not-allowed; border-color: #999; }
 
-#game-area { position: relative; width: 95vw; height: 95vw; max-width: 450px; max-height: 450px; margin: 10px auto; background: #000; border: 8px solid var(--main); border-radius: 20px; box-sizing: border-box; }
-canvas { width: 100%; height: 100%; display: block; }
+.select-label { font-size: 0.9rem; margin-bottom: 5px; color: #fff; font-weight: bold; }
+.list-container { width: 85%; height: 120px; overflow-y: scroll; background: #fff; border-radius: 10px; margin-bottom: 10px; padding: 5px; }
+.list-item { color: #333; padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 1rem; }
+.list-item.selected { background: var(--accent); color: #fff; font-weight: bold; border-radius: 5px; }
 
-/* ポップアップ */
-.result-popup { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-    color: #fff; background: rgba(0,0,0,0.95);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 100; border-radius: 12px;
-}
-.result-rank { font-size: 2rem; color: #00e676; font-weight: bold; border: 2px solid #00e676; padding: 5px 20px; margin-top: 10px; }
-
-/* 操作ボタン */
-.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 90%; max-width: 360px; margin: 15px auto; }
-.p-btn { aspect-ratio: 1/1; background: #fff; border: 4px solid var(--main); border-radius: 20px; font-size: 2.5rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; }
-
-footer { padding: 20px 0; font-weight: bold; font-size: 0.8rem; border-top: 1px solid #ddd; margin-top: 20px; }
+.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 90%; max-width: 320px; margin: 10px auto; }
+.p-btn { aspect-ratio: 1/1; background: #fff; border: 4px solid var(--main); border-radius: 20px; font-size: 2rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div class="score-area">
-    <div class="score-box"><span class="score-label">ハイスコア</span><span id="hi-score" class="score-val">0</span></div>
-    <div class="score-box"><span class="score-label">いまのてんすう</span><span id="now-score" class="score-val">0</span></div>
+    <div>今のスコア: <span id="now-score" class="score-val">0</span></div>
 </div>
 
 <div id="game-area">
     <canvas id="snakeGame" width="400" height="400"></canvas>
     
     <div id="result-popup" class="result-popup" style="display:none;">
-        <div id="mode-title" style="font-size: 1.2rem; color: #ff9800;">1にんプレイ</div>
-        <div style="font-size: 2rem;" id="res-msg">おわり！</div>
-        <div style="font-size: 4rem; color: #ffeb3b;" id="final-score">0</div>
-        <div class="result-rank" id="final-rank">みならい</div>
+        <div style="font-size: 1.2rem;">今回のスコア</div>
+        <div style="font-size: 3.5rem; color: #ffeb3b; font-weight: bold;" id="final-score">0</div>
+        <div id="rank-display" style="font-size: 1.3rem; color: #ff9800; margin: 10px 0;"></div>
+        
+        <button class="btn" id="send-btn" onclick="sendScore()">ランキングに登録する</button>
+        <button class="btn" style="background:#666;" id="retry-btn" onclick="location.reload()">もう一度あそぶ</button>
     </div>
 
-    <div id="start-screen" class="result-popup" style="background:rgba(255,152,0,0.9);">
-        <span style="font-size: 2rem; margin-bottom: 20px;">あそびかたを えらんでね</span>
-        <button class="btn" style="width:80%;" onclick="initGame('solo')">1にんで あそぶ</button>
-        <button class="btn" style="width:80%; background:#2196f3; box-shadow:0 5px 0 #1976d2;" onclick="initGame('vs')">2にんで たいせん</button>
+    <div id="start-screen" class="result-popup" style="background:var(--main);">
+        <div class="select-label">なまえをえらんでね</div>
+        <div class="list-container" id="name-selector"></div>
+        <div class="select-label">アイコンをえらんでね</div>
+        <div class="list-container" id="icon-selector" style="height: 80px; display: grid; grid-template-columns: repeat(5, 1fr);"></div>
+        <button class="btn" onclick="initGame()" id="start-btn">ゲームスタート！</button>
     </div>
-</div>
-
-<div id="ui" style="display:none;">
-    <button id="retry-btn" class="btn" style="background:#4caf50; box-shadow:0 5px 0 #388e3c;" onclick="location.reload()">もういっかい！</button>
 </div>
 
 <div class="pad">
     <div></div><div class="p-btn" onclick="setD('U')">↑</div><div></div>
-    <div class="p-btn" onclick="setD('L')">←</div>
-    <div class="p-btn" onclick="setD('D')">↓</div>
-    <div class="p-btn" onclick="setD('R')">→</div>
+    <div class="p-btn" onclick="setD('L')">←</div><div class="p-btn" onclick="setD('D')">↓</div><div class="p-btn" onclick="setD('R')">→</div>
 </div>
-
-<a href="index.html" class="btn" style="background:#666; font-size:1.2rem; box-shadow:0 5px 0 #444;">← もどる</a>
-
-<footer>
-    製造元：GitHub / 制作・著作：篠ノ井乗務区
-</footer>
 
 <script>
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
 const box = 25;
-let snake, food, dir, gameInterval, score, hiScore, mode, p1Score;
+let snake, food, dir, gameInterval, score, isSending = false;
+let selectedName = "";
+let selectedIcon = "";
 
-// 保存されたハイスコアをよみこむ
-hiScore = localStorage.getItem('shinonoi_hi_score') || 0;
-document.getElementById('hi-score').innerText = hiScore;
+const names = ["あかぎ","あさま","あずさ","あずみの","いなじ","かいじ","かがやき","からざわ","きたぐに","きそ","くろよん","しなの","しらゆき","すわこ","そよかぜ","たてやま","たにがわ","とき","とがくし","はくたか","はくば","ひめかわ","ふるさと","みすず","みょうこう","もりおか","やくも","やまびこ","ゆけむり","りょうもう","ろくもん","わかしお","わかば","アイリス","アカシア","アザレア","アポロ","オリオン","カシオペア","カナリア","カモメ","北アルプス","銀河","こまち","サンライズ","四季島","彗星","すずらん","スノーラビット","大山","ちくま","つばめ","つばさ","つるぎ","出雲","トワイライト","なすの","成田エクスプレス","南風","能登","のぞみ","白鳥","はつかり","ひかり","ひたち","ひばり","富士","北斗","北斗星","北陸","ほくたか","舞いあがれ","まほろば","みずほ","みちのく","明星","夕月","雷鳥","ライラック","ラベンダー","流星","ゆうづる","リレー","ゆふいん","わかしお","わしゅう","かもしか","かもめ","さくら","さつき","はやて","はやぶさ","みどり","ゆうかり","ゆうなぎ","夕日","りんどう"];
+const icons = ["🚃","🚄","🚅","🚆","🚇","🚉","🚂","🚞","🚝","🚌","🚑","🚓","🚕","🚗","🚙","🚲","🚢","✈️","🚀","🚁","🛸","🍎","🍙","🍣","🍔","🍕","⚽","🎮","🎹","🔔"];
 
-function initGame(m) {
-    mode = m;
-    p1Score = null;
-    startGame();
-}
+const nameBox = document.getElementById("name-selector");
+names.forEach(n => {
+    const div = document.createElement("div");
+    div.className = "list-item";
+    div.innerText = n;
+    div.onclick = () => {
+        document.querySelectorAll('#name-selector .list-item').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedName = n;
+    };
+    nameBox.appendChild(div);
+});
 
-function startGame() {
+const iconBox = document.getElementById("icon-selector");
+icons.forEach(i => {
+    const div = document.createElement("div");
+    div.className = "list-item";
+    div.style.textAlign = "center";
+    div.innerText = i;
+    div.onclick = () => {
+        document.querySelectorAll('#icon-selector .list-item').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedIcon = i;
+    };
+    iconBox.appendChild(div);
+});
+
+function initGame() {
+    if (!selectedName || !selectedIcon) { alert("なまえとアイコンをえらんでね！"); return; }
+    document.getElementById("start-screen").style.display = "none";
     score = 0;
-    updateScore();
     snake = [{x: 8 * box, y: 8 * box}];
     food = { x: Math.floor(Math.random()*15)*box, y: Math.floor(Math.random()*15)*box };
     dir = "R";
-    document.getElementById("result-popup").style.display = "none";
-    document.getElementById("start-screen").style.display = "none";
-    document.getElementById("ui").style.display = "none";
-    if(gameInterval) clearInterval(gameInterval);
-    gameInterval = setInterval(draw, 250);
-}
-
-function updateScore() {
-    document.getElementById("now-score").innerText = score;
-}
-
-function getRank(s) {
-    if (s >= 150) return "でんせつ";
-    if (s >= 100) return "すご腕";
-    if (s >= 40) return "一人前";
-    return "がんばり屋";
+    gameInterval = setInterval(draw, 200);
 }
 
 function setD(d) {
@@ -125,70 +114,53 @@ function setD(d) {
 
 function draw() {
     ctx.fillStyle = "#000"; ctx.fillRect(0,0,400,400);
+    ctx.fillStyle = "#f44336"; ctx.fillRect(food.x, food.y, box, box);
     snake.forEach((s, i) => {
         ctx.fillStyle = (i==0) ? "#ffeb3b" : "#ff9800";
         ctx.fillRect(s.x, s.y, box, box);
     });
-    ctx.fillStyle = "#f44336"; ctx.fillRect(food.x, food.y, box, box);
-
     let hX = snake[0].x; let hY = snake[0].y;
     if(dir=="L") hX -= box; if(dir=="U") hY -= box;
     if(dir=="R") hX += box; if(dir=="D") hY += box;
-
     if(hX == food.x && hY == food.y) {
         score += 10;
-        updateScore();
+        document.getElementById("now-score").innerText = score;
         food = { x: Math.floor(Math.random()*15)*box, y: Math.floor(Math.random()*15)*box };
     } else { snake.pop(); }
-
     let nH = {x: hX, y: hY};
     if(hX<0 || hX>=400 || hY<0 || hY>=400 || snake.some(s => s.x==nH.x && s.y==nH.y)) {
-        endGame();
+        clearInterval(gameInterval);
+        document.getElementById("result-popup").style.display = "flex";
+        document.getElementById("final-score").innerText = score;
         return;
     }
     snake.unshift(nH);
 }
 
-function endGame() {
-    clearInterval(gameInterval);
-    const pop = document.getElementById("result-popup");
-    const fScore = document.getElementById("final-score");
-    const fRank = document.getElementById("final-rank");
-    const mTitle = document.getElementById("mode-title");
-    pop.style.display = "flex";
+function sendScore() {
+    if(isSending) return;
+    isSending = true;
+    const btn = document.getElementById("send-btn");
+    btn.innerText = "送信中...";
+    btn.disabled = true;
 
-    if (mode === 'solo') {
-        mTitle.innerText = "1にんプレイ";
-        fScore.innerText = score;
-        fRank.innerText = getRank(score);
-        if (score > hiScore) {
-            hiScore = score;
-            localStorage.setItem('shinonoi_hi_score', hiScore);
-            document.getElementById('hi-score').innerText = hiScore;
-            fRank.innerText = "新きろく！";
-        }
-        document.getElementById("ui").style.display = "block";
-    } else {
-        if (p1Score === null) {
-            p1Score = score;
-            mTitle.innerText = "1ばんめの ひと おわり";
-            fScore.innerText = score;
-            fRank.innerText = "つぎの ひと じゅんび！";
-            setTimeout(() => {
-                alert("つぎは 2ばんめの ひとの ばんです！");
-                startGame();
-            }, 2000);
-        } else {
-            mTitle.innerText = "たいせん けっか";
-            let res = (score > p1Score) ? "2ばんめの 勝ち！" : (score < p1Score) ? "1ばんめの 勝ち！" : "ひきわけ！";
-            fScore.innerText = p1Score + " vs " + score;
-            document.getElementById("res-msg").innerText = res;
-            fRank.innerText = "なかよく あそぼう";
-            document.getElementById("ui").style.display = "block";
-        }
-    }
+    const gasUrl = "https://script.google.com/macros/s/AKfycbw1Wmit3zAGi1sYBr-F_a8JnEjepmtZL9CJATnOxSdNp0Uz4UTuKu1kgFK6WmdWQ1US/exec";
+    
+    fetch(gasUrl, {
+        method: "POST",
+        body: JSON.stringify({ nickname: selectedName, icon: selectedIcon, score: score })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("rank-display").innerHTML = `順位: <span style="font-size:2.5rem;">${data.rank}</span> 位 / ${data.total}人中`;
+        btn.innerText = "登録完了！";
+    })
+    .catch(() => {
+        btn.innerText = "エラー";
+        btn.disabled = false;
+        isSending = false;
+    });
 }
-setTimeout(() => location.reload(), 300000);
 </script>
 </body>
 </html>
