@@ -31,10 +31,10 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
     <div id="timer">00d 00h 00m 00s</div>
 </div>
 <div class="info-container">
-    <div class="info-header"><span>📢 運行情報</span><span>Ver 2.5.2</span></div>
+    <div class="info-header"><span>📢 運行情報</span><span>Ver 2.5.3</span></div>
     <div class="info-body">
         <div class="info-item">
-            <span class="notice-red">【重要】</span>本サイトは<a href="memorial.html" class="notice-red">2025年1月末</a>で終了いたします。
+            <span class="notice-red">【重要】</span>本サイトは<a href="memorial.html" class="notice-red">2026年1月末</a>で終了いたします。
         </div>
     </div>
 </div>
@@ -48,8 +48,8 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
 <footer>製造元：GitHub<br>制作・著作：篠ノ井乗務区</footer>
 
 <script>
-// 終了判定
-const expiry = new Date("2025/02/01 00:00:00").getTime();
+// 終了判定（2026年2月1日に自動で切り替わるように修正）
+const expiry = new Date("2026/02/01 00:00:00").getTime();
 if (new Date().getTime() >= expiry) window.location.href = "memorial.html";
 
 // 午年アイテム
