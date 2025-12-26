@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ランキング - 篠ノ井乗務区</title>
+<style>
+:root { --main: #3f51b5; --bg: #f0f2f5; --gold: #ffd700; }
+body { background: var(--bg); font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
+h1 { color: var(--main); margin-bottom: 20px; }
+
+.ranking-list { max-width: 500px; margin: auto; background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; }
+.rank-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
+.rank-num { width: 40px; font-weight: bold; font-size: 1.2rem; color: #666; }
+.rank-1 { color: var(--gold); font-size: 1.5rem; }
+.rank-icon { font-size: 1.5rem; margin: 0 15px; }
+.rank-name { flex: 1; text-align: left; font-weight: bold; }
+.rank-score { font-weight: bold; color: var(--main); font-size: 1.2rem; }
+
+.loading { padding: 40px; color: #888; }
+.btn-back { display: inline-block; margin-top: 30px; padding: 10px 30px; background: var(--main); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>🏆 歴代TOP10</h1>
+
+<div class="ranking-list" id="ranking-list">
+    <div class="loading">ランキングを読み込み中...</div>
+</div>
+
+<a href="kids.html" class="btn-back">ゲームにもどる</a>
+
+<script>
+const gasUrl = "https://script.google.com/macros/s/AKfycbw1Wmit3zAGi1sYBr-F_a8JnEjepmtZL9CJATnOxSdNp0Uz4UTuKu1kgFK6WmdWQ1US/exec";
+
+async function loadRanking() {
+    try {
+        const response = await fetch(gasUrl);
+        const data = await response.json();
+        const list = document.getElementById("ranking-list");
+        list.innerHTML = "";
+
+        if (data.length === 0) {
+            list.innerHTML = "<div class='loading'>まだ記録がありません</div>";
+            return;
+        }
+
+        data.forEach((item, index) => {
+            const row = document.createElement("div");
+            row.className = "rank-item";
+            const rankClass = (index === 0) ? "rank-num rank-1" : "rank-num";
+            
+            row.innerHTML = `
+                <div class="${rankClass}">${index + 1}</div>
+                <div class="rank-icon">${item.icon}</div>
+                <div class="rank-name">${item.nickname}</div>
+                <div class="rank-score">${item.score}点</div>
+            `;
+            list.appendChild(row);
+        });
+    } catch (e) {
+        document.getElementById("ranking-list").innerHTML = "<div class='loading'>エラーが発生しました</div>";
+    }
+}
+
+loadRanking();
+</script>
+</body>
+</html>
