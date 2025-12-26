@@ -5,76 +5,82 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>超・スネーク - 篠ノ井乗務区</title>
 <style>
-:root { --main: #1a237e; --bg: #0a0e14; --accent: #00e5ff; }
-body { background: var(--bg); color: #fff; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; margin: 0; overflow: hidden; touch-action: none; }
+:root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; --panel: #ffffff; }
+body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow: hidden; }
 
-/* デザインテーマ */
-body.theme-neon { --main: #d500f9; --bg: #000; --accent: #00e5ff; }
-body.theme-cyber { --main: #00c853; --bg: #001200; --accent: #ffea00; }
-body.theme-classic { --main: #3f51b5; --bg: #f0f2f5; color: #333; }
+/* デザインテーマ（目に優しい色合いへ調整） */
+body.theme-neon { --main: #7b1fa2; --bg: #f3e5f5; --accent: #00bcd4; }
+body.theme-cyber { --main: #2e7d32; --bg: #e8f5e9; --accent: #fbc02d; }
+body.theme-classic { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; }
 
-.score-area { display: flex; justify-content: space-between; padding: 10px 20px; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--main); }
-.fps-counter { font-size: 0.8rem; color: var(--accent); opacity: 0.7; }
+.score-area { display: flex; justify-content: space-between; padding: 10px 20px; background: #fff; border-bottom: 3px solid var(--main); }
+.fps-counter { font-size: 0.8rem; color: #888; }
 
-#game-area { position: relative; width: 90vw; height: 90vw; max-width: 400px; max-height: 400px; margin: 10px auto; background: #000; border: 4px solid var(--main); border-radius: 10px; box-shadow: 0 0 20px var(--main); overflow: hidden; }
-canvas { width: 100%; height: 100%; }
+#game-area { position: relative; width: 90vw; height: 90vw; max-width: 400px; max-height: 400px; margin: 10px auto; background: #fafafa; border: 4px solid var(--main); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+canvas { width: 100%; height: 100%; display: block; }
 
-.overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px; box-sizing: border-box; }
+.overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 15px; box-sizing: border-box; }
 
-/* 難易度・設定ボタン */
-.btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-.btn-diff { background: #333; color: #fff; font-size: 0.9rem; }
-.btn-diff.active { background: var(--main); border: 2px solid var(--accent); }
-.target-label { font-size: 0.7rem; color: var(--accent); margin-top: -3px; }
+.btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; box-sizing: border-box; font-size: 1rem; }
+.btn-diff { background: #eee; color: #444; text-align: center; border: 2px solid transparent; }
+.btn-diff.active { background: #fff; border-color: var(--main); color: var(--main); }
+.target-label { font-size: 0.75rem; color: #777; display: block; font-weight: normal; }
 
-.list-container { width: 100%; height: 80px; overflow-y: auto; background: #222; margin: 10px 0; border-radius: 5px; }
-.list-item { padding: 8px; font-size: 0.9rem; border-bottom: 1px solid #444; color: #fff; }
-.list-item.selected { background: var(--main); }
+/* 名前選択エリアの改善 */
+.name-label { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: var(--main); }
+.list-container { width: 100%; height: 120px; overflow-y: auto; background: #fff; border: 2px solid #ddd; margin-bottom: 10px; border-radius: 8px; }
+.list-item { padding: 12px; font-size: 1.1rem; border-bottom: 1px solid #eee; color: #333; text-align: center; background: #fff; }
+.list-item:active { background: #f0f0f0; }
+.list-item.selected { background: var(--main) !important; color: #fff !important; font-weight: bold; }
 
-.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 10px auto; }
-.p-btn { height: 60px; background: rgba(255,255,255,0.1); border: 2px solid var(--main); border-radius: 15px; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; color: #fff; }
+.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 5px auto; }
+.p-btn { height: 60px; background: #fff; border: 3px solid var(--main); border-radius: 15px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; }
+.p-btn:active { background: var(--main); color: #fff; }
 
-.theme-selector { display: flex; gap: 5px; margin-bottom: 10px; }
-.t-btn { padding: 5px 10px; font-size: 0.7rem; border: 1px solid #fff; border-radius: 3px; cursor: pointer; }
+.theme-btns { display: flex; gap: 8px; margin-bottom: 10px; width: 100%; }
+.theme-btns button { flex: 1; padding: 5px; font-size: 0.7rem; border-radius: 5px; border: 1px solid #ccc; background: #fff; }
 </style>
 </head>
-<body class="theme-neon">
+<body class="theme-classic">
 
 <div class="score-area">
     <div id="fps" class="fps-counter">FPS: 0</div>
-    <div style="font-weight:bold;">SCORE: <span id="now-score" style="color:var(--accent);">0</span></div>
+    <div style="font-weight:bold;">スコア: <span id="now-score" style="font-size:1.5rem; color:var(--main);">0</span></div>
 </div>
 
 <div id="game-area">
     <canvas id="snakeGame" width="400" height="400"></canvas>
     
     <div id="start-screen" class="overlay">
-        <div class="theme-selector">
-            <div class="t-btn" onclick="setTheme('neon')">NEON</div>
-            <div class="t-btn" onclick="setTheme('cyber')">CYBER</div>
-            <div class="t-btn" onclick="setTheme('classic')">CLASSIC</div>
+        <div class="theme-btns">
+            <button onclick="setTheme('classic')">標準</button>
+            <button onclick="setTheme('neon')">むらさき</button>
+            <button onclick="setTheme('cyber')">みどり</button>
         </div>
         
-        <div style="font-size:0.8rem; margin-bottom:5px;">難易度を選択</div>
-        <div id="diff-container" style="width:100%">
-            <button class="btn btn-diff active" onclick="setDiff(0)">☆ 入門 <div class="target-label">はじめての方向け</div></button>
-            <button class="btn btn-diff" onclick="setDiff(1)">☆☆ 初級 <div class="target-label">なれてきたお子様向け</div></button>
-            <button class="btn btn-diff" onclick="setDiff(2)">☆☆☆ 中級 <div class="target-label">普通の速さ</div></button>
-            <button class="btn btn-diff" onclick="setDiff(3)">☆☆☆☆ 上級 <div class="target-label">スリルを求める方向け</div></button>
-            <button class="btn btn-diff" onclick="setDiff(4)">☆☆☆☆☆ プロ <div class="target-label">限界に挑戦！</div></button>
-        </div>
+        <div class="name-label">【1】なまえをえらんでね</div>
+        <div class="list-container" id="name-selector">
+            </div>
 
-        <div class="list-container" id="name-selector"></div>
-        <button class="btn" style="background:var(--accent); color:#000; font-size:1.2rem;" onclick="initGame()">START</button>
+        <div class="name-label">【2】むずかしさをえらぶ</div>
+        <div id="diff-container" style="width:100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px;">
+            <button class="btn-diff active" onclick="setDiff(0)" style="padding: 5px;">☆<br><span style="font-size:0.6rem;">やさしい</span></button>
+            <button class="btn-diff" onclick="setDiff(2)" style="padding: 5px;">☆☆☆<br><span style="font-size:0.6rem;">ふつう</span></button>
+            <button class="btn-diff" onclick="setDiff(4)" style="padding: 5px;">☆☆☆☆☆<br><span style="font-size:0.6rem;">たつじん</span></button>
+        </div>
+        
+        <button class="btn" style="background:var(--main); color:#fff; font-size:1.3rem; margin-top:5px;" onclick="initGame()">あそぶ！</button>
+        <a href="index.html" style="font-size:0.8rem; color:#888; margin-top:10px;">トップにもどる</a>
     </div>
 
     <div id="result-popup" class="overlay" style="display:none;">
-        <div style="font-size: 1rem;">FINISH!</div>
-        <div style="font-size: 3.5rem; color: var(--accent); font-weight: bold;" id="final-score">0</div>
-        <div id="rank-display" style="font-size: 1.1rem; color: #ffeb3b; margin: 10px 0;"></div>
-        <button class="btn" id="send-btn" onclick="sendScore()" style="background:var(--main);">ランキングに登録</button>
-        <a href="ranking.html" class="btn" style="background:#444; text-decoration:none; text-align:center;">ランキングを見る</a>
-        <button class="btn" style="background:#222;" onclick="location.reload()">タイトルへ</button>
+        <div style="font-size:1.2rem; color:#666;">スコア</div>
+        <div style="font-size:4rem; color:var(--main); font-weight: bold;" id="final-score">0</div>
+        <div id="rank-display" style="margin:10px 0; font-weight:bold; color:var(--accent);"></div>
+        
+        <button class="btn" id="send-btn" onclick="sendScore()" style="background:var(--accent); color:#fff;">ランキングにのせる</button>
+        <a href="ranking.html" class="btn" style="background:var(--main); color:#fff;">ベスト10をみる</a>
+        <button class="btn" style="background:#eee; color:#666;" onclick="location.reload()">もういちど</button>
     </div>
 </div>
 
@@ -86,10 +92,9 @@ canvas { width: 100%; height: 100%; }
 <script>
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
-const box = 20; // マス目を細かく
+const box = 20;
 let snake, food, dir, gameInterval, score, isSending = false;
-let selectedName = "", selectedDiff = 0;
-let lastTime = 0, fps = 0;
+let selectedName = "", selectedDiff = 0, lastTime = 0;
 
 const diffSettings = [
     {speed: 250, label: "☆ 入門"},
@@ -99,51 +104,51 @@ const diffSettings = [
     {speed: 40, label: "☆☆☆☆☆ プロ"}
 ];
 
-const names = ["あかぎ","あさま","あずさ","しなの","かがやき","はくたか","こまち","はやぶさ","のぞみ","ひかり"]; // 短縮表示
+// 名前リストを確実に生成
+const names = ["あかぎ","あさま","あずさ","しなの","かがやき","はくたか","こまち","はやぶさ","のぞみ","みずほ","つばめ","かいじ","ひたち","とき","いなほ"];
+const nameBox = document.getElementById("name-selector");
 
-function setTheme(t) {
-    document.body.className = "theme-" + t;
+function renderNames() {
+    nameBox.innerHTML = ""; // 一旦クリア
+    names.forEach(n => {
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerText = n;
+        div.onclick = () => {
+            document.querySelectorAll('.list-item').forEach(el => el.classList.remove('selected'));
+            div.classList.add('selected');
+            selectedName = n;
+        };
+        nameBox.appendChild(div);
+    });
 }
+renderNames();
+
+function setTheme(t) { document.body.className = "theme-" + t; }
 
 function setDiff(idx) {
     selectedDiff = idx;
     const btns = document.querySelectorAll('.btn-diff');
-    btns.forEach((b, i) => b.classList.toggle('active', i === idx));
+    btns[0].classList.toggle('active', idx === 0);
+    btns[1].classList.toggle('active', idx === 2);
+    btns[2].classList.toggle('active', idx === 4);
 }
-
-// 名前セレクター生成
-const nameBox = document.getElementById("name-selector");
-names.forEach(n => {
-    const div = document.createElement("div");
-    div.className = "list-item";
-    div.innerText = n;
-    div.onclick = () => {
-        document.querySelectorAll('.list-item').forEach(el => el.classList.remove('selected'));
-        div.classList.add('selected');
-        selectedName = n;
-    };
-    nameBox.appendChild(div);
-});
 
 function initGame() {
     if (!selectedName) { alert("なまえをえらんでね！"); return; }
     document.getElementById("start-screen").style.display = "none";
     score = 0;
+    document.getElementById("now-score").innerText = score;
     snake = [{x: 10 * box, y: 10 * box}];
     food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box };
     dir = "R";
-    
-    if(gameInterval) clearInterval(gameInterval);
     gameInterval = setInterval(gameLoop, diffSettings[selectedDiff].speed);
     requestAnimationFrame(updateFPS);
 }
 
-function updateFPS(timestamp) {
-    if (lastTime) {
-        fps = Math.round(1000 / (timestamp - lastTime));
-        document.getElementById("fps").innerText = "FPS: " + fps;
-    }
-    lastTime = timestamp;
+function updateFPS(t) {
+    if (lastTime) { document.getElementById("fps").innerText = "FPS: " + Math.round(1000/(t-lastTime)); }
+    lastTime = t;
     if (gameInterval) requestAnimationFrame(updateFPS);
 }
 
@@ -155,21 +160,22 @@ function setD(d) {
 }
 
 function gameLoop() {
-    ctx.fillStyle = "#000"; ctx.fillRect(0,0,400,400);
+    // 背景色（目に優しい白系）
+    ctx.fillStyle = "#fafafa"; ctx.fillRect(0,0,400,400);
     
-    // エサの描画
-    ctx.fillStyle = "#ff5252";
-    ctx.beginPath();
-    ctx.arc(food.x + box/2, food.y + box/2, box/2 - 2, 0, Math.PI*2);
-    ctx.fill();
-
-    // ヘビの描画
+    // エサ（赤）
+    ctx.fillStyle = "#ff5252"; ctx.fillRect(food.x, food.y, box-1, box-1);
+    
+    // ヘビ
+    const mainColor = getComputedStyle(document.body).getPropertyValue('--main');
+    const accentColor = getComputedStyle(document.body).getPropertyValue('--accent');
+    
     snake.forEach((s, i) => {
-        ctx.fillStyle = (i==0) ? varColor('--accent') : varColor('--main');
+        ctx.fillStyle = (i==0) ? accentColor : mainColor;
         ctx.fillRect(s.x, s.y, box-1, box-1);
     });
 
-    let hX = snake[0].x; let hY = snake[0].y;
+    let hX = snake[0].x, hY = snake[0].y;
     if(dir=="L") hX -= box; if(dir=="U") hY -= box;
     if(dir=="R") hX += box; if(dir=="D") hY += box;
 
@@ -181,8 +187,7 @@ function gameLoop() {
 
     let nH = {x: hX, y: hY};
     if(hX<0 || hX>=400 || hY<0 || hY>=400 || snake.some(s => s.x==nH.x && s.y==nH.y)) {
-        clearInterval(gameInterval);
-        gameInterval = null;
+        clearInterval(gameInterval); gameInterval = null;
         document.getElementById("result-popup").style.display = "flex";
         document.getElementById("final-score").innerText = score;
         return;
@@ -190,17 +195,12 @@ function gameLoop() {
     snake.unshift(nH);
 }
 
-function varColor(name) {
-    return getComputedStyle(document.body).getPropertyValue(name);
-}
-
 function sendScore() {
     if(isSending) return;
     isSending = true;
     const btn = document.getElementById("send-btn");
-    btn.innerText = "送信中...";
-    btn.disabled = true;
-
+    btn.innerText = "そうしん中..."; btn.disabled = true;
+    
     const gasUrl = "https://script.google.com/macros/s/AKfycbw1Wmit3zAGi1sYBr-F_a8JnEjepmtZL9CJATnOxSdNp0Uz4UTuKu1kgFK6WmdWQ1US/exec";
     
     fetch(gasUrl, {
@@ -208,16 +208,20 @@ function sendScore() {
         body: JSON.stringify({ 
             nickname: selectedName, 
             icon: "🐍", 
-            score: score,
-            difficulty: diffSettings[selectedDiff].label
+            score: score, 
+            difficulty: diffSettings[selectedDiff].label 
         })
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById("rank-display").innerHTML = `順位: ${data.rank} 位 / ${data.total}人中`;
-        btn.innerText = "完了！";
+        document.getElementById("rank-display").innerHTML = `じゅんい: ${data.rank} 位 / ${data.total}人中`;
+        btn.innerText = "OK!";
     })
-    .catch(() => { btn.innerText = "エラー"; isSending = false; btn.disabled = false; });
+    .catch(() => { 
+        btn.innerText = "エラー"; 
+        isSending = false; 
+        btn.disabled = false; 
+    });
 }
 </script>
 </body>
