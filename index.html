@@ -51,8 +51,11 @@ body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-ali
 .btn-group { display: flex; flex-direction: column; gap: 15px; max-width: 450px; margin: 20px auto; }
 .main-btn { position: relative; display: block; padding: 20px; background: var(--main-blue); color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; box-shadow: 0 6px 0 #0d123e; transition: 0.1s; }
 .main-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0d123e; }
+
+/* メインボタンのデザイン */
 .game-btn { background: #ff9800 !important; font-size: 1.4rem; padding: 25px; box-shadow: 0 6px 0 #e68a00 !important; }
-.main-btn.waiting { background: #78909c !important; box-shadow: 0 6px 0 #455a64 !important; opacity: 0.8; }
+.sub-btn { background: #fff !important; color: var(--main-blue) !important; border: 2px solid var(--main-blue); box-shadow: 0 4px 0 var(--main-blue) !important; padding: 15px !important; }
+.waiting { background: #78909c !important; box-shadow: 0 6px 0 #455a64 !important; opacity: 0.8; }
 
 footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
 </style>
@@ -67,23 +70,26 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
 <div class="info-container">
     <div class="info-header">
         <span>📢 運行情報・お知らせ</span>
-        <span style="background:#eee; padding:2px 6px; border-radius:4px; font-size:0.7rem; color:#666;">Ver 2.4.0</span>
+        <span style="background:#eee; padding:2px 6px; border-radius:4px; font-size:0.7rem; color:#666;">Ver 2.5.0</span>
     </div>
     <div class="info-body">
         <div class="info-item">
             <span class="notice-red">【重要】</span>本サイトは<span class="notice-red">2026年1月末</span>をもって終了いたします。
         </div>
         <div class="info-item">
-            アイテムをタッチして、2026年「午年」の豆知識をチェック！
+            午年のアイテムをタッチすると豆知識が見れるよ！
         </div>
     </div>
 </div>
 
 <div class="btn-group">
     <a href="kids.html" class="main-btn game-btn">🚂 ゲームページ 🚃</a>
+
     <button id="rail-kuji" class="main-btn waiting" onclick="tryOpen('rail_result.html')">【点検中】鉄道おみくじ</button>
-    <button id="norm-kuji" class="main-btn waiting" onclick="tryOpen('norm_result.html')" style="background:var(--accent-red);">【点検中】一般おみくじ</button>
-    <a href="contact.html" class="main-btn" style="background:#00796b; box-shadow:0 6px 0 #004d40;">お問い合わせ</a>
+    <button id="norm-kuji" class="main-btn waiting" onclick="tryOpen('norm_result.html')" style="background:var(--accent-red); box-shadow: 0 6px 0 #8e1b1b;">【点検中】一般おみくじ</button>
+
+    <a href="howto.html" class="main-btn sub-btn">📖 つかいかた</a>
+    <a href="contact.html" class="main-btn sub-btn" style="background:#00796b !important; color:#fff !important; border:none; box-shadow: 0 4px 0 #004d40 !important;">✉ お問い合わせ</a>
 </div>
 
 <footer>
@@ -91,7 +97,6 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
 </footer>
 
 <script>
-// 午年（2026）に合わせたアイテムデータ
 const itemData = {
     '🐎': '午年：物事が「うま」くいく、活気ある年だよ',
     '🎠': '回転木馬：前向きに楽しく進む一年になりますように',
@@ -104,18 +109,15 @@ const itemData = {
 function spawn() {
     const symbols = Object.keys(itemData);
     const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-    
     const e = document.createElement('div');
     e.className = 'falling-item';
     e.innerText = symbol;
     e.style.left = Math.random() * 90 + 'vw';
     e.style.animationDuration = (Math.random() * 3 + 4) + 's';
-    
     e.onclick = (event) => {
         showDesc(event.clientX, event.clientY, itemData[symbol]);
         e.remove();
     };
-    
     document.body.appendChild(e);
     setTimeout(() => { if(e.parentElement) e.remove(); }, 7000);
 }
@@ -129,7 +131,6 @@ function showDesc(x, y, text) {
     document.body.appendChild(desc);
     setTimeout(() => desc.remove(), 1800);
 }
-
 setInterval(spawn, 800);
 
 const target = new Date("2026/01/01 00:00:00").getTime();
@@ -143,6 +144,8 @@ function update() {
         document.getElementById("timer").innerText = "00d 00h 00m 00s";
         document.getElementById("rail-kuji").classList.remove("waiting");
         document.getElementById("norm-kuji").classList.remove("waiting");
+        document.getElementById("rail-kuji").innerText = "鉄道おみくじ";
+        document.getElementById("norm-kuji").innerText = "一般おみくじ";
     } else {
         const d = Math.floor(diff / 864e5);
         const h = Math.floor((diff % 864e5) / 36e5);
