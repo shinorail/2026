@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>車両ずかん - 篠ノ井乗務区</title>
+<style>
+:root { --main-blue: #1a237e; --bg: #f4f4f2; --gold: #c5a059; }
+body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; margin: 0; padding: 20px; color: #333; }
+
+h1 { color: var(--main-blue); border-bottom: 3px solid var(--gold); display: inline-block; padding: 0 20px 10px; margin-bottom: 30px; }
+
+.zukan-list { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+.train-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: left;
+    transition: transform 0.2s;
+    cursor: pointer;
+    border-left: 8px solid var(--main-blue);
+}
+.train-card:active { transform: scale(0.98); }
+
+.train-emoji { font-size: 3rem; min-width: 60px; text-align: center; }
+.train-info h2 { margin: 0; font-size: 1.1rem; color: var(--main-blue); }
+.train-info p { margin: 5px 0 0; font-size: 0.85rem; line-height: 1.4; color: #666; }
+
+.back-btn {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 15px 30px;
+    background: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* 季節の特別枠 */
+.special { border-left-color: var(--gold); background: #fffdf0; }
+</style>
+</head>
+<body>
+
+<h1>📖 しなのい車両ずかん</h1>
+
+<div class="zukan-list">
+    <div class="train-card">
+        <div class="train-emoji">🚄</div>
+        <div class="train-info">
+            <h2>E353系（特急あずさ）</h2>
+            <p>長野と東京をむすぶ、とっても速い特急だよ。空気ばねの力で、カーブもスイスイ走れるんだ！</p>
+        </div>
+    </div>
+
+    <div class="train-card">
+        <div class="train-emoji">🚃</div>
+        <div class="train-info">
+            <h2>211系（長野色）</h2>
+            <p>青色と水色のラインが目印。みんなが学校や仕事に行くときに乗る、おなじみの電車だね。</p>
+        </div>
+    </div>
+
+    <div class="train-card">
+        <div class="train-emoji">🌀</div>
+        <div class="train-info">
+            <h2>383系（特急しなの）</h2>
+            <p>名古屋まで行く特急だよ。振り子（ふりこ）の仕組みで、山道を力強く走り抜けるぞ！</p>
+        </div>
+    </div>
+
+    <div class="train-card">
+        <div class="train-emoji">💙</div>
+        <div class="train-info">
+            <h2>EH200形（ブルーサンダー）</h2>
+            <p>荷物をたくさん運ぶ、力持ちな電気機関車だよ。青いボディがかっこいいよね！</p>
+        </div>
+    </div>
+
+    <div class="train-card special">
+        <div class="train-emoji">✨</div>
+        <div class="train-info">
+            <h2>E001形（TRAIN SUITE 四季島）</h2>
+            <p>たまにしか見られない、金ぴかの超豪華列車だよ。見つけたらラッキー！</p>
+        </div>
+    </div>
+</div>
+
+<a href="index.html" class="back-btn">トップページにもどる</a>
+
+<script>
+// カードをタップしたときに少し跳ねる演出
+document.querySelectorAll('.train-card').forEach(card => {
+    card.addEventListener('click', () => {
+        card.style.transform = 'translateY(-5px)';
+        setTimeout(() => {
+            card.style.transform = 'translateY(0)';
+        }, 200);
+    });
+});
+</script>
+
+</body>
+</html>
