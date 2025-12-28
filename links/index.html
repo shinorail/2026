@@ -13,74 +13,82 @@
 
         body {
             margin: 0;
-            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             color: #333;
             background-color: #f8f9fa;
             line-height: 1.6;
         }
 
-        /* お知らせバー（赤色強調） */
+        /* 赤いお知らせバー */
         .info-bar {
-            background-color: #d93025; /* 警告の赤 */
+            background-color: #d93025;
             color: white;
-            padding: 12px 20px;
+            padding: 12px 15px;
             text-align: center;
             font-size: 14px;
             font-weight: bold;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         header {
-            padding: 30px 40px;
+            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        .logo { font-size: 24px; color: #5f6368; font-weight: bold; }
+        .logo { font-size: 20px; color: #5f6368; font-weight: bold; }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 30px 20px;
         }
 
+        /* リンクグリッド（レスポンシブ） */
         .link-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 15px;
         }
 
+        /* ボタンの共通スタイル */
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 18px 25px;
+            padding: 18px 20px;
             border-radius: 12px;
             color: white;
             text-decoration: none;
             font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             gap: 12px;
             animation: fadeInUp 0.8s ease-out both;
         }
-        .btn:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            filter: brightness(1.1);
+        }
 
+        /* 配色 */
         .btn-new { background: linear-gradient(135deg, #00c853, #00a651); }
         .btn-old { background: linear-gradient(135deg, #81c784, #66bb6a); }
         .btn-twitter { background: linear-gradient(135deg, #1da1f2, #0c85d0); }
         .btn-special { background: linear-gradient(135deg, #424242, #212121); }
         .btn-contact { background: linear-gradient(135deg, #78909c, #546e7a); }
 
-        /* ポップアップのスタイル */
+        /* ポップアップ */
         #popup-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.75);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -88,47 +96,58 @@
             visibility: hidden;
             opacity: 0;
             transition: 0.3s;
+            padding: 20px;
         }
         #popup-content {
             background: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             max-width: 400px;
+            width: 100%;
             text-align: center;
-            transform: scale(0.8);
+            transform: scale(0.9);
             transition: 0.3s;
         }
         .show-popup { visibility: visible !important; opacity: 1 !important; }
         .show-popup #popup-content { transform: scale(1); }
         .close-btn {
             margin-top: 20px;
-            padding: 10px 20px;
+            padding: 12px 30px;
             background: #0b57d0;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
         }
 
         footer {
-            margin-top: 80px;
+            margin-top: 60px;
             padding: 40px 20px;
             text-align: center;
             color: #888;
-            font-size: 14px;
+            font-size: 13px;
+        }
+
+        /* スマホ向け調整 */
+        @media (max-width: 480px) {
+            header { padding: 15px 5%; }
+            .logo { font-size: 18px; }
+            .btn { padding: 15px; font-size: 15px; }
+            .info-bar { font-size: 12px; }
         }
     </style>
 </head>
 <body>
 
     <div class="info-bar">
-        <span>【重要】旧サイトは新サイト完成まで同時更新し、完成後は閉鎖いたします。</span>
+        <span>【重要】旧サイトは完成後に閉鎖します。同時更新中。</span>
     </div>
 
     <div id="popup-overlay">
         <div id="popup-content">
-            <h3>お知らせ</h3>
-            <p>旧公式サイトは新サイトの完成に伴い、将来的に閲覧できなくなります。ブックマークの変更をお願いします。</p>
+            <h3 style="margin-top:0;">お知らせ</h3>
+            <p>旧公式サイトは新サイト完成に伴い、将来的に閉鎖いたします。ブックマークの更新をお願いいたします。</p>
             <button class="close-btn" onclick="closePopup()">了解しました</button>
         </div>
     </div>
@@ -145,21 +164,20 @@
             <a href="https://x.com/Shino_Rail" class="btn btn-twitter"><i class="fa-brands fa-x-twitter"></i> 篠ノ井乗務区 Twitter</a>
             <a href="https://x.com/shinorail_lab" class="btn btn-twitter"><i class="fa-brands fa-x-twitter"></i> しのれーるらぼ Twitter</a>
             <a href="https://shinorail.github.io/shinonoi-2026/" class="btn btn-special"><i class="fa-solid fa-wand-magic-sparkles"></i> 2026カウントダウン・おみくじ</a>
-            <a href="#" class="btn btn-contact"><i class="fa-solid fa-paper-plane"></i> コンタクトページ</a>
+            <a href="https://shinorail.github.io/shinonoi-2026/contact.html" class="btn btn-contact"><i class="fa-solid fa-envelope"></i> お問い合わせ</a>
         </div>
 
         <footer>
-            <div class="version">Version 2.4.0</div>
-            <div class="copyright">&copy; 2025 Shinorail-Group. All Rights Reserved.</div>
+            <div style="font-weight:bold; margin-bottom:5px;">Version 2.5.0</div>
+            <div>&copy; 2025 Shinorail-Group. All Rights Reserved.</div>
         </footer>
     </div>
 
     <script>
-        // ページ読み込み時にポップアップを表示
         window.onload = function() {
             setTimeout(function() {
                 document.getElementById('popup-overlay').classList.add('show-popup');
-            }, 500); // 0.5秒後に表示
+            }, 600);
         };
 
         function closePopup() {
