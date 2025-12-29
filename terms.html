@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 
-<html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 1. 基本デザイン（ドット絵風） */ body { background: linear-gradient(to bottom, #000033, #660000, #ffcc00) fixed !important; color: #222; font-family: 'Courier New', monospace; padding: 10px; margin: 0; image-rendering: pixelated; }
-
-.ver-tag { position: fixed; top: 10px; left: 10px; background: #000; color: #0f0; font-size: 10px; padding: 2px 8px; border: 2px solid #555; z-index: 10000; }
+<html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 1. 基本設定 */ body { background: linear-gradient(to bottom, #000033, #660000, #ffcc00) fixed !important; color: #222; font-family: 'Courier New', monospace; padding: 10px; margin: 0; image-rendering: pixelated; }
 
 .container { max-width: 800px; margin: 50px auto; background: #fff; padding: 30px; border: 4px solid #000; box-shadow: 10px 10px 0px rgba(0,0,0,0.2); position: relative; z-index: 10; }
 
-h1 { font-size: 1.4rem; border-left: 10px solid #000; padding-left: 15px; } h2 { font-size: 1.1rem; border-bottom: 4px double #000; margin-top: 30px; } .important { background: #fff0f0; border: 4px solid #f00; padding: 15px; font-weight: bold; font-size: 0.85rem; }
+h1 { font-size: 1.4rem; border-left: 10px solid #000; padding-left: 15px; } .important { background: #fff0f0; border: 4px solid #f00; padding: 15px; font-weight: bold; font-size: 0.85rem; }
 
-/* 2. 切り替えボタン */ .sw-area { text-align: right; max-width: 800px; margin: 0 auto 10px auto; } .sw-area button { background: #000; color: #fff; border: 2px solid #fff; padding: 8px 15px; cursor: pointer; font-family: inherit; font-size: 0.7rem; box-shadow: 4px 4px 0px #444; }
+/* 2. 切替ボタン */ .sw-area { text-align: right; max-width: 800px; margin: 0 auto 10px auto; } .sw-area button { background: #000; color: #fff; border: 2px solid #fff; padding: 8px 15px; cursor: pointer; font-size: 0.7rem; box-shadow: 4px 4px 0px #444; }
 
-/* 3. 太陽（規約の上に表示・アニメーション） */ #sun-icon { position: fixed; bottom: 20px; right: 20px; width: 70px; height: 70px; background: #ff4500; z-index: 9999; cursor: pointer; box-shadow: 0 -10px 0 #ff4500, 0 10px 0 #ff4500, -10px 0 0 #ff4500, 10px 0 0 #ff4500; animation: s-rise 2s steps(6) forwards; } @keyframes s-rise { from { transform: translateY(200px); } to { transform: translateY(0); } }
+/* 3. 太陽（おみくじ起動ボタン） */ #sun-btn { position: fixed; bottom: 110px; right: 20px; width: 60px; height: 60px; background: #ff4500; z-index: 9999; cursor: pointer; box-shadow: 0 -8px 0 #ff4500, 0 8px 0 #ff4500, -8px 0 0 #ff4500, 8px 0 0 #ff4500; animation: s-rise 2s steps(6) forwards; } @keyframes s-rise { from { transform: translateY(200px); } to { transform: translateY(0); } }
 
-/* 4. モード設定用 */ body.pc-view { min-width: 1000px !important; } body.pc-view .container { max-width: 900px !important; } </style>
+/* 4. 右下のバージョン・更新情報ボード */ .info-board { position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: #0f0; padding: 8px; border: 2px solid #555; font-size: 9px; z-index: 10000; line-height: 1.2; width: 150px; } .info-board b { color: #fff; font-size: 10px; display: block; margin-bottom: 2px; }
+
+/* PCモード用 */ body.pc-view { min-width: 1000px !important; } body.pc-view .container { max-width: 900px !important; } </style>
 
 </head> <body id="b-tag">
 
-<div class="ver-tag">VER. 2025.12.30</div>
+<div class="info-board"> <b>SYSTEM UPDATE</b> VERSION: 2025.12.30
 
-<div id="sun-icon" onclick="doKuji()"></div>
+
+DATE: 2025-12-30
+
+
+LOG: おみくじ機能の安定化 / バージョン表示の実装 </div>
+
+<div id="sun-btn" onclick="doKuji()"></div>
 
 <div class="sw-area"> <button onclick="layoutSw()">PC / スマホ 表示切替</button> </div>
 
@@ -27,21 +33,15 @@ h1 { font-size: 1.4rem; border-left: 10px solid #000; padding-left: 15px; } h2 {
 <div class="important"> 【重要事項：サイトの性質について】
 
 
-本サイト「超・スネーク」および「篠ノ井乗務区 2周年特設サイト」は個人運営によるファンサイトであり、実在する鉄道事業者、関連団体、およびその関係先とは一切関係ありません。本サイトに関するお問い合わせを公式団体へ行うことは、業務妨害に繋がる恐れがあるため固く禁じます。 </div>
+本サイト「超・スネーク」および「篠ノ井乗務区 2周年特設サイト」は個人運営によるファンサイトであり、実在する鉄道事業者、関連団体とは一切関係ありません。 </div>
 
-<h2>第1条（著作権の帰属）</h2> <p>本サイトに掲載されているすべてのコンテンツ（文章、プログラム、画像、アイコン、デザイン、ロゴ等）の著作権は、すべて運営者「篠ノ井乗務区」に帰属します。著作権法により認められる引用の範囲を超えて、無断で複製、転載、改変、配布、二次利用を行うことは、営利・非営利を問わず一切禁止します。</p>
+<h2>第1条（著作権の帰属）</h2> <p>本サイトに掲載されているすべてのコンテンツ（文章、プログラム、画像、アイコン、デザイン、ロゴ等）の著作権は、すべて運営者「篠ノ井乗務区」に帰属します。無断での利用・配布を一切禁止します。</p>
 
-<h2>第2条（禁止行為とアクセス制限）</h2> <p>利用者が以下の行為を行った場合、運営者は予告なく当該利用者に対しアクセス制限（BAN）、送信データの抹消、および将来にわたる一切の利用禁止措置を講じる権利を有します。</p> <ul> <li>プログラムの解析、改ざん、リバースエンジニアリング。</li> <li>不正な通信によるスコアの偽装、およびサーバーへの過度な負荷を与える行為。</li> <li>運営者の著作物（画像やファビコンを含む）を無断で使用し、自らのコンテンツとして公開する行為。</li> </ul>
+<h2>第2条（禁止行為とアクセス制限）</h2> <p>プログラムの解析、改ざん、不正アクセスを禁じます。違反時はアクセス制限（BAN）を行います。</p>
 
-<h2>第3条（免責事項）</h2> <p>1. 運営者は、本サイトの提供する情報の正確性、完全性、および安全性について一切の保証を行いません。
+<h2>第3条（免責事項）</h2> <p>利用により生じた損害について、運営者は一切の責任を負いません。システムの停止や誤作動による苦情にも応じられません。</p>
 
-
-2. 本サイトの利用により生じた直接的・間接的な損害（端末の故障、データ消失、精神的苦痛、その他不利益）について、運営者は一切の責任を負いかねます。
-
-
-3. システムメンテナンス、チート検知システムの誤作動、または運営者の判断による運行停止についても、データの復旧や苦情には応じられません。</p>
-
-<h2>第4条（損害賠償）</h2> <p>悪質な不正アクセスや著作権侵害により運営者が損害を被った場合、運営者は当該利用者に対し、調査費用、弁護士費用を含む損害賠償を請求し、刑事告訴を含めた法的措置を断行します。</p>
+<h2>第4条（損害賠償）</h2> <p>悪質な著作権侵害や不正アクセスには法的措置を断行します。</p>
 
 <a href="index.html" style="display:block; text-align:center; margin-top:30px; font-weight:bold; color:#0066cc; text-decoration:none;">トップページへ戻る</a>
 
@@ -51,12 +51,8 @@ h1 { font-size: 1.4rem; border-left: 10px solid #000; padding-left: 15px; } h2 {
 
 <script> // 1. レイアウト切り替え function layoutSw() { const b = document.getElementById('b-tag'); const m = document.getElementById('v-meta'); if (b.classList.contains('pc-view')) { b.classList.remove('pc-view'); m.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { b.classList.add('pc-view'); m.setAttribute('content', 'width=1000'); } }
 
-// 2. おみくじ（ポップアップ表示） function doKuji() { const results = ["ダイキチ！", "チュウキチ！", "ショウキチ！", "キチ！", "スエキチ！"]; const final = results[Math.floor(Math.random() * results.length)];
+// 2. おみくじ（ポップアップ表示） // 太陽（sun-btn）をクリックするとこの命令が動きます function doKuji() { const results = ["ダイキチ！", "チュウキチ！", "ショウキチ！", "キチ！", "スエキチ！"]; const final = results[Math.floor(Math.random() * results.length)];
 
-let message = "【おみくじ結果】\n\n運勢： " + final;
-
-if (final === "ダイキチ！") { message += "\n\nおめでとうございます！最高の一年になります！"; } else { message += "\n\n2026年もよろしくお願いします。"; }
-
-alert(message); } </script>
+// ブラウザの標準ポップアップ（通知）で結果を表示 alert("【おみくじ結果】\n\n運勢： " + final + "\n\n2026年もよろしくお願いします！"); } </script>
 
 </body> </html>
