@@ -1,111 +1,83 @@
 <!DOCTYPE html>
 
-<html lang="ja"> <head> <link rel="icon" href="favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 1. 基本レイアウト & ドット絵デザイン */ body { background: #f4f4f4 !important; color: #222; font-family: 'Courier New', monospace; line-height: 1.8; padding: 20px; margin: 0; image-rendering: pixelated; overflow-x: hidden; } .ver-display { position: fixed; top: 10px; left: 10px; background: #000; color: #0f0; font-size: 10px; padding: 2px 8px; border: 2px solid #555; z-index: 5000; } .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 40px; border: 4px solid #000; box-shadow: 8px 8px 0px rgba(0,0,0,0.1); position: relative; z-index: 10; } .important { background: #fff0f0; border: 4px solid #ff0000; padding: 20px; margin-bottom: 30px; font-weight: bold; }
+<html lang="ja"> <head> <link rel="icon" href="favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> body { background: #f4f4f4 !important; color: #222; font-family: 'Courier New', monospace; line-height: 1.8; padding: 20px; margin: 0; image-rendering: pixelated; } .ver-display { position: fixed; top: 10px; left: 10px; background: #000; color: #0f0; font-size: 10px; padding: 2px 8px; border: 2px solid #555; z-index: 9999; } .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 40px; border: 4px solid #000; box-shadow: 8px 8px 0px rgba(0,0,0,0.1); position: relative; z-index: 10; } .important { background: #fff0f0; border: 4px solid #ff0000; padding: 20px; font-weight: bold; }
 
-/* 2. 切替ボタン */
-.view-switch { text-align: right; max-width: 800px; margin: 0 auto 10px auto; }
-.view-switch button { 
-  background: #000; color: #fff; border: 2px solid #fff; padding: 5px 15px; 
-  cursor: pointer; font-size: 0.7rem; box-shadow: 4px 4px 0px #555;
-}
-
-/* 3. 【最重要】日の出アニメーション（ドット絵） */
+/* 太陽：z-indexを最大にして手前に出す */
 #sunrise-target {
-  position: fixed; bottom: -200px; left: 50%; transform: translateX(-50%);
-  width: 120px; height: 120px; background: #ff4500;
+  position: fixed; 
+  bottom: -200px; 
+  left: 50%; 
+  transform: translateX(-50%);
+  width: 120px; 
+  height: 120px; 
+  background: #ff4500;
+  /* ドット絵風の形にする影 */
   box-shadow: 0 -15px 0 #ff4500, 0 15px 0 #ff4500, -15px 0 0 #ff4500, 15px 0 0 #ff4500;
-  z-index: 5; cursor: pointer; display: none; /* 初期は非表示 */
+  z-index: 9000; /* コンテナより手前に表示 */
+  cursor: pointer; 
+  display: none;
 }
-/* カクカク昇るアニメーション */
+
+/* 上昇アニメーション */
 @keyframes rise-animation {
   0% { bottom: -200px; }
-  100% { bottom: 50px; }
+  100% { bottom: 100px; } /* 画面下から100pxの位置までしっかり出す */
 }
 
-/* 4. おみくじ表示 */
 #omikuji-box {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
   background: #fff; border: 4px solid #000; padding: 30px;
-  z-index: 6000; display: none; text-align: center; box-shadow: 10px 10px 0px #f00;
+  z-index: 10000; display: none; text-align: center; box-shadow: 10px 10px 0px #f00;
 }
 
-/* 5. ポップアップ（右下） */
 #pop-msg {
   position: fixed; bottom: 30px; right: 30px; background: #a61d24; color: #fff;
   padding: 10px; border: 4px solid #fff; width: 100px; height: 100px;
   display: none; align-items: center; justify-content: center; text-align: center;
-  font-size: 0.7rem; font-weight: bold; z-index: 2000; box-shadow: 6px 6px 0px #000;
-  animation: jump 1s steps(2) infinite;
+  font-size: 0.7rem; z-index: 8000; animation: jump 1s steps(2) infinite;
 }
 @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-/* PCモード用 */
 body.pc-mode { min-width: 1000px !important; }
-body.pc-mode .container { max-width: 900px !important; }
 </style> </head> <body>
 
 <div class="ver-display">VER. 2025.12.30</div>
 
-<div id="sunrise-target" onclick="startOmikuji()"></div> <div id="omikuji-box" onclick="this.style.display='none'"> <p style="font-size: 0.7rem;">【 おみくじ結果 】</p> <h2 id="luck-result" style="color: #f00; font-size: 2.5rem; margin: 15px 0;"></h2> <p style="font-size: 0.6rem;">クリックで閉じる</p> </div> <div id="pop-msg"><span></span></div>
+<div id="sunrise-target" onclick="startOmikuji()"></div>
 
-<div class="view-switch"> <button onclick="toggleView()">PC/SP 切替</button> </div>
+<div id="omikuji-box" onclick="this.style.display='none'"> <p>【 おみくじ結果 】</p> <h2 id="luck-result" style="color:#f00; font-size:2.5rem;"></h2> <p style="font-size:0.6rem;">クリックで閉じる</p> </div>
 
-<div class="container"> <h1>利用規約および権利規定</h1>
+<div id="pop-msg"><span></span></div>
 
-<div class="important">
-    【重要事項：サイトの性質について】<br>
-    本サイト「超・スネーク」および「篠ノ井乗務区 2周年特設サイト」は個人運営によるファンサイトであり、実在する鉄道事業者、関連団体、およびその関係先とは一切関係ありません。本サイトに関するお問い合わせを公式団体へ行うことは、業務妨害に繋がる恐れがあるため固く禁じます。
-</div>
+<div class="view-switch" style="text-align:right; max-width:800px; margin:0 auto;"> <button onclick="toggleView()" style="background:#000; color:#fff; border:2px solid #fff; padding:5px 15px; cursor:pointer;">PC/SP 切替</button> </div>
 
-<h2>第1条（著作権の帰属）</h2>
-<p>本サイトに掲載されているすべてのコンテンツ（文章、プログラム、画像、アイコン、デザイン、ロゴ等）の著作権は、すべて運営者「篠ノ井乗務区」に帰属します。著作権法により認められる引用の範囲を超えて、無断で複製、転載、改変、配布、二次利用を行うことは、営利・非営利を問わず一切禁止します。</p>
+<div class="container"> <h1>利用規約および権利規定</h1> <div class="important"> 【重要事項：サイトの性質について】
 
-<h2>第2条（禁止行為とアクセス制限）</h2>
-<p>利用者が以下の行為を行った場合、運営者は予告なく当該利用者に対しアクセス制限（BAN）、送信データの抹消、および将来にわたる一切の利用禁止措置を講じる権利を有します。</p>
-<ul>
-    <li>プログラムの解析、改ざん、リバースエンジニアリング。</li>
-    <li>不正な通信によるスコアの偽装、およびサーバーへの過度な負荷を与える行為。</li>
-    <li>運営者の著作物（画像やファビコンを含む）を無断で使用し、自らのコンテンツとして公開する行為。</li>
-</ul>
 
-<h2>第3条（免責事項）</h2>
-<p>1. 運営者は、本サイトの提供する情報の正確性、完全性、および安全性について一切の保証を行いません。<br>
-2. 本サイトの利用により生じた直接的・間接的な損害（端末の故障、データ消失、精神的苦痛、その他不利益）について、運営者は一切の責任を負いかねます。<br>
-3. システムメンテナンス、チート検知システムの誤作動、または運営者の判断による運行停止についても、データの復旧や苦情には応じられません。</p>
+本サイト「超・スネーク」および「篠ノ井乗務区 2周年特設サイト」は個人運営によるファンサイトであり、実在する鉄道事業者、関連団体、およびその関係先とは一切関係ありません。本サイトに関するお問い合わせを公式団体へ行うことは、業務妨害に繋がる恐れがあるため固く禁じます。 </div> <h2>第1条（著作権の帰属）</h2> <p>本サイトに掲載されているすべてのコンテンツ（文章、プログラム、画像、アイコン、デザイン、ロゴ等）の著作権は、すべて運営者「篠ノ井乗務区」に帰属します。無断での二次利用を行うことは、営利・非営利を問わず一切禁止します。</p> <h2>第2条（禁止行為とアクセス制限）</h2> <p>利用者が以下の行為を行った場合、運営者は予告なくアクセス制限（BAN）等を講じる権利を有します。</p> <ul> <li>プログラムの解析、改ざん。</li> <li>不正な通信によるスコアの偽装。</li> <li>運営者の著作物を無断で使用する行為。</li> </ul> <h2>第3条（免責事項）</h2> <p>1. 情報の正確性、安全性について一切の保証を行いません。
 
-<h2>第4条（損害賠償）</h2>
-<p>悪質な不正アクセスや著作権侵害により運営者が損害を被った場合、運営者は当該利用者に対し、調査費用、弁護士費用を含む損害賠償を請求し、刑事告訴を含めた法的措置を断行します。</p>
 
-<a href="index.html" style="display: block; text-align: center; margin-top: 30px; text-decoration: none; color: #0066cc;">トップページへ戻る</a>
-</div>
+2. 利用により生じた損害について、運営者は一切の責任を負いかねます。</p> <h2>第4条（損害賠償）</h2> <p>悪質な不正アクセスや著作権侵害により運営者が損害を被った場合、法的措置を断行します。</p> <a href="index.html" style="display:block; text-align:center; margin-top:30px;">トップページへ戻る</a> </div>
 
-<div style="text-align: center; margin-bottom: 40px; font-size: 0.75rem; color: #888;"> &copy; 2023-2026 篠ノ井乗務区 All Rights Reserved. </div>
+<div style="text-align:center; padding-bottom:40px; font-size:0.75rem; color:#888;"> &copy; 2023-2026 篠ノ井乗務区 All Rights Reserved. </div>
 
-<script> // A. 表示切替 function toggleView() { const body = document.body; const viewport = document.getElementById('viewport'); if (body.classList.contains('pc-mode')) { body.classList.remove('pc-mode'); viewport.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { body.classList.add('pc-mode'); viewport.setAttribute('content', 'width=1000'); } }
+<script> function toggleView() { document.body.classList.toggle('pc-mode'); const viewport = document.getElementById('viewport'); if (document.body.classList.contains('pc-mode')) { viewport.setAttribute('content', 'width=1000'); } else { viewport.setAttribute('content', 'width=device-width, initial-scale=1.0'); } }
 
-// B. おみくじ機能 function startOmikuji() { const list = ["大吉", "中吉", "小吉", "吉", "末吉"]; const rnd = list[Math.floor(Math.random() * list.length)]; document.getElementById('luck-result').innerText = rnd; document.getElementById('omikuji-box').style.display = 'block'; }
+function startOmikuji() { const list = ["大吉", "中吉", "小吉", "吉", "末吉"]; document.getElementById('luck-result').innerText = list[Math.floor(Math.random()*list.length)]; document.getElementById('omikuji-box').style.display = 'block'; }
 
-// C. 演出の強制実行と自動判定 window.onload = function() { const now = new Date(); const m = now.getMonth() + 1; const d = now.getDate();
+window.onload = function() { const sun = document.getElementById('sunrise-target'); const pop = document.getElementById('pop-msg');
 
-const sun = document.getElementById(&#39;sunrise-target&#39;);
-const pop = document.getElementById(&#39;pop-msg&#39;);
-const msg = pop.querySelector(&#39;span&#39;);
+// 背景を強制的に夜明け色に変更
+document.body.style.setProperty(&#39;background&#39;, &#39;linear-gradient(to bottom, #000033, #660000, #ffcc00)&#39;, &#39;important&#39;);
 
-// テスト用に12月26日〜1月3日の条件が成立しているとみなして動かします
-if ((m === 12 &amp;&amp; d &gt;= 26) || (m === 1 &amp;&amp; d &lt;= 3)) {
-    // 背景を夜明けグラデーションに
-    document.body.style.setProperty(&#39;background&#39;, &#39;linear-gradient(to bottom, #000033, #660000, #ffcc00)&#39;, &#39;important&#39;);
-    
-    // 太陽を出現させてアニメーション開始
-    sun.style.display = &#39;block&#39;;
-    sun.style.animation = &#39;rise-animation 3s steps(10) forwards&#39;;
-    
-    // ポップアップ
-    pop.style.display = &#39;flex&#39;;
-    pop.style.backgroundColor = &#39;#d4af37&#39;;
-    pop.style.color = &#39;#000&#39;;
-    msg.innerText = (m === 1) ? &quot;アケオメ！&quot; : &quot;太陽を 押してね！&quot;;
-}
+// 太陽を出現させてアニメーション開始
+sun.style.display = &#39;block&#39;;
+sun.style.animation = &#39;rise-animation 3s steps(10) forwards&#39;;
+
+// ポップアップ案内
+pop.style.display = &#39;flex&#39;;
+pop.style.backgroundColor = &#39;#d4af37&#39;;
+pop.querySelector(&#39;span&#39;).innerText = &quot;太陽を 押してね！&quot;;
 }; </script>
 
 </body> </html>
