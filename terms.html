@@ -1,89 +1,54 @@
 <!DOCTYPE html>
 
-<html lang="ja"> <head> <link rel="icon" href="favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* ドット絵風・基本設定 */ body { background: #f4f4f4 !important; color: #222; font-family: 'Courier New', 'Courier', 'MS Gothic', monospace; line-height: 1.8; padding: 20px; margin: 0; image-rendering: pixelated; overflow-x: hidden; transition: background 0.5s steps(4); }
+<html lang="ja"> <head> <link rel="icon" href="favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 1. 基本レイアウト & ドット絵デザイン */ body { background: #f4f4f4 !important; color: #222; font-family: 'Courier New', monospace; line-height: 1.8; padding: 20px; margin: 0; image-rendering: pixelated; overflow-x: hidden; } .ver-display { position: fixed; top: 10px; left: 10px; background: #000; color: #0f0; font-size: 10px; padding: 2px 8px; border: 2px solid #555; z-index: 5000; } .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 40px; border: 4px solid #000; box-shadow: 8px 8px 0px rgba(0,0,0,0.1); position: relative; z-index: 10; } .important { background: #fff0f0; border: 4px solid #ff0000; padding: 20px; margin-bottom: 30px; font-weight: bold; }
 
-/* バージョン表示（左上） */
-.ver-display {
-  position: fixed; top: 10px; left: 10px;
-  background: #000; color: #0f0;
-  font-size: 10px; padding: 2px 8px;
-  border: 2px solid #555; z-index: 5000;
-}
-
-.container { 
-  max-width: 800px; margin: 40px auto; 
-  background: #fff; padding: 40px; 
-  border: 4px solid #000;
-  box-shadow: 8px 8px 0px rgba(0,0,0,0.1); 
-  position: relative; z-index: 10;
-}
-
-h1 { font-size: 1.5rem; border-left: 8px solid #000; padding-left: 15px; margin-bottom: 20px; }
-h2 { font-size: 1.1rem; border-bottom: 4px double #000; padding-bottom: 5px; margin-top: 30px; }
-p, li { font-size: 0.85rem; }
-
-.important { 
-  background: #fff0f0; border: 4px solid #ff0000; padding: 20px; 
-  margin-bottom: 30px; font-weight: bold; font-size: 0.85rem;
-}
-
-/* 切替ボタン（ドットボタン風） */
+/* 2. 切替ボタン */
 .view-switch { text-align: right; max-width: 800px; margin: 0 auto 10px auto; }
 .view-switch button { 
   background: #000; color: #fff; border: 2px solid #fff; padding: 5px 15px; 
   cursor: pointer; font-size: 0.7rem; box-shadow: 4px 4px 0px #555;
-  font-family: inherit;
 }
-.view-switch button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #555; }
 
-/* ドット絵・日の出 */
-#sunrise {
-  position: fixed; bottom: -160px; left: 50%; transform: translateX(-50%);
+/* 3. 【最重要】日の出アニメーション（ドット絵） */
+#sunrise-target {
+  position: fixed; bottom: -200px; left: 50%; transform: translateX(-50%);
   width: 120px; height: 120px; background: #ff4500;
-  box-shadow: 0 -15px 0 #ff4500, 0 15px 0 #ff4500, -15px 0 0 #ff4500, 20px 0 0 #ff4500;
-  z-index: 5; display: none; cursor: pointer;
+  box-shadow: 0 -15px 0 #ff4500, 0 15px 0 #ff4500, -15px 0 0 #ff4500, 15px 0 0 #ff4500;
+  z-index: 5; cursor: pointer; display: none; /* 初期は非表示 */
+}
+/* カクカク昇るアニメーション */
+@keyframes rise-animation {
+  0% { bottom: -200px; }
+  100% { bottom: 50px; }
 }
 
-/* おみくじ */
-#omikuji-result {
+/* 4. おみくじ表示 */
+#omikuji-box {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  background: #fff; border: 4px solid #000; padding: 20px;
-  z-index: 6000; display: none; text-align: center;
-  box-shadow: 10px 10px 0px #f00;
+  background: #fff; border: 4px solid #000; padding: 30px;
+  z-index: 6000; display: none; text-align: center; box-shadow: 10px 10px 0px #f00;
 }
 
-/* 右下ポップアップ */
-#seasonal-popup {
-  position: fixed; bottom: 30px; right: 30px; 
-  background: #a61d24; color: #fff;
+/* 5. ポップアップ（右下） */
+#pop-msg {
+  position: fixed; bottom: 30px; right: 30px; background: #a61d24; color: #fff;
   padding: 10px; border: 4px solid #fff; width: 100px; height: 100px;
   display: none; align-items: center; justify-content: center; text-align: center;
   font-size: 0.7rem; font-weight: bold; z-index: 2000; box-shadow: 6px 6px 0px #000;
-  animation: pixel-bounce 1s steps(2) infinite;
+  animation: jump 1s steps(2) infinite;
 }
+@keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-@keyframes rise { from { bottom: -160px; } to { bottom: 40px; } }
-@keyframes pixel-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-/* スマホ・PC切り替え用 */
-@media screen and (max-width: 768px) {
-  body { padding: 10px; }
-  .container { padding: 20px; border: 4px solid #000; }
-  h1 { font-size: 1.2rem; }
-}
+/* PCモード用 */
 body.pc-mode { min-width: 1000px !important; }
 body.pc-mode .container { max-width: 900px !important; }
 </style> </head> <body>
 
-<div class="ver-display">VER. 2025.12.29</div>
+<div class="ver-display">VER. 2025.12.30</div>
 
-<div id="sunrise" onclick="drawOmikuji()"></div>
+<div id="sunrise-target" onclick="startOmikuji()"></div> <div id="omikuji-box" onclick="this.style.display='none'"> <p style="font-size: 0.7rem;">【 おみくじ結果 】</p> <h2 id="luck-result" style="color: #f00; font-size: 2.5rem; margin: 15px 0;"></h2> <p style="font-size: 0.6rem;">クリックで閉じる</p> </div> <div id="pop-msg"><span></span></div>
 
-<div id="omikuji-result" onclick="this.style.display='none'"> <p style="font-size: 0.6rem;">オミクジ ヲ ヒイタ！</p> <h2 id="luck-text" style="color: #f00; font-size: 2rem; margin: 10px 0;"></h2> <p style="font-size: 0.7rem;">[ クリック デ トジル ]</p> </div>
-
-<div id="seasonal-popup"><span id="message-text"></span></div>
-
-<div class="view-switch"> <button id="mode-toggle" onclick="toggleMode()">PC/SP 切替</button> </div>
+<div class="view-switch"> <button onclick="toggleView()">PC/SP 切替</button> </div>
 
 <div class="container"> <h1>利用規約および権利規定</h1>
 
@@ -111,36 +76,35 @@ body.pc-mode .container { max-width: 900px !important; }
 <h2>第4条（損害賠償）</h2>
 <p>悪質な不正アクセスや著作権侵害により運営者が損害を被った場合、運営者は当該利用者に対し、調査費用、弁護士費用を含む損害賠償を請求し、刑事告訴を含めた法的措置を断行します。</p>
 
-<a href="index.html" style="display: block; text-align: center; margin-top: 30px; text-decoration: none; color: #0066cc; font-weight: bold;">トップページへ戻る</a>
+<a href="index.html" style="display: block; text-align: center; margin-top: 30px; text-decoration: none; color: #0066cc;">トップページへ戻る</a>
 </div>
 
-<div style="text-align: center; margin: 40px 0; font-size: 0.75rem; color: #888; position: relative; z-index: 10;"> &copy; 2023-2026 篠ノ井乗務区 All Rights Reserved. </div>
+<div style="text-align: center; margin-bottom: 40px; font-size: 0.75rem; color: #888;"> &copy; 2023-2026 篠ノ井乗務区 All Rights Reserved. </div>
 
-<script> // モード切替 function toggleMode() { const body = document.body; const viewport = document.getElementById('viewport'); if (body.classList.contains('pc-mode')) { body.classList.remove('pc-mode'); viewport.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { body.classList.add('pc-mode'); viewport.setAttribute('content', 'width=1000'); } }
+<script> // A. 表示切替 function toggleView() { const body = document.body; const viewport = document.getElementById('viewport'); if (body.classList.contains('pc-mode')) { body.classList.remove('pc-mode'); viewport.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { body.classList.add('pc-mode'); viewport.setAttribute('content', 'width=1000'); } }
 
-// おみくじ function drawOmikuji() { const results = ["ダイキチ", "チュウキチ", "ショウキチ", "キチ", "スエキチ"]; const result = results[Math.floor(Math.random() * results.length)]; document.getElementById('luck-text').innerText = result; document.getElementById('omikuji-result').style.display = 'block'; }
+// B. おみくじ機能 function startOmikuji() { const list = ["大吉", "中吉", "小吉", "吉", "末吉"]; const rnd = list[Math.floor(Math.random() * list.length)]; document.getElementById('luck-result').innerText = rnd; document.getElementById('omikuji-box').style.display = 'block'; }
 
-// 演出実行 window.onload = function() { const now = new Date(); const month = now.getMonth() + 1; const date = now.getDate();
+// C. 演出の強制実行と自動判定 window.onload = function() { const now = new Date(); const m = now.getMonth() + 1; const d = now.getDate();
 
-const popup = document.getElementById(&#39;seasonal-popup&#39;);
-const msg = document.getElementById(&#39;message-text&#39;);
-const sunrise = document.getElementById(&#39;sunrise&#39;);
+const sun = document.getElementById(&#39;sunrise-target&#39;);
+const pop = document.getElementById(&#39;pop-msg&#39;);
+const msg = pop.querySelector(&#39;span&#39;);
 
-// 年越し演出 (12/26-1/3)
-if ((month === 12 &amp;&amp; date &gt;= 26) || (month === 1 &amp;&amp; date &lt;= 3)) {
+// テスト用に12月26日〜1月3日の条件が成立しているとみなして動かします
+if ((m === 12 &amp;&amp; d &gt;= 26) || (m === 1 &amp;&amp; d &lt;= 3)) {
+    // 背景を夜明けグラデーションに
     document.body.style.setProperty(&#39;background&#39;, &#39;linear-gradient(to bottom, #000033, #660000, #ffcc00)&#39;, &#39;important&#39;);
-    sunrise.style.display = &#39;block&#39;;
-    sunrise.style.animation = &#39;rise 3s steps(8) forwards&#39;;
     
-    popup.style.display = &#39;flex&#39;;
-    popup.style.backgroundColor = &#39;#d4af37&#39;;
-    popup.style.color = &#39;#000&#39;;
-    msg.innerText = (month === 1) ? &quot;ハッピーニューイヤー&quot; : &quot;タイヨウ ヲ クリック！&quot;;
-} 
-// クリスマス演出 (12/1-12/25)
-else if (month === 12 &amp;&amp; date &lt;= 25) {
-    popup.style.display = &#39;flex&#39;;
-    msg.innerText = &quot;メリークリスマス&quot;;
+    // 太陽を出現させてアニメーション開始
+    sun.style.display = &#39;block&#39;;
+    sun.style.animation = &#39;rise-animation 3s steps(10) forwards&#39;;
+    
+    // ポップアップ
+    pop.style.display = &#39;flex&#39;;
+    pop.style.backgroundColor = &#39;#d4af37&#39;;
+    pop.style.color = &#39;#000&#39;;
+    msg.innerText = (m === 1) ? &quot;アケオメ！&quot; : &quot;太陽を 押してね！&quot;;
 }
 }; </script>
 
