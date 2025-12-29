@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="ja"> <head> <link rel="icon" href="favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 共通基本設定 */ body { background: #f4f4f4; color: #222; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; line-height: 1.8; padding: 20px; margin: 0; transition: background 0.5s ease; } .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; z-index: 10; } h1 { font-size: 1.5rem; border-left: 5px solid #000; padding-left: 15px; margin-bottom: 30px; } h2 { font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 30px; } p, li { font-size: 0.85rem; } .important { background: #fff0f0; border: 1px solid #ffcccc; padding: 20px; margin-bottom: 30px; font-weight: bold; } .footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: #888; position: relative; z-index: 10; } .back-link { display: block; text-align: center; margin-top: 20px; text-decoration: none; color: #0066cc; font-size: 0.9rem; }
+<html lang="ja"> <head> <link rel="icon" href="favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 基本設定：!importantを追加して優先度を最大にしています */ body { background: #f4f4f4 !important; color: #222; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; line-height: 1.8; padding: 20px; margin: 0; } .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; z-index: 10; } h1 { font-size: 1.5rem; border-left: 5px solid #000; padding-left: 15px; margin-bottom: 30px; } h2 { font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 30px; } p, li { font-size: 0.85rem; } .important { background: #fff0f0; border: 1px solid #ffcccc; padding: 20px; margin-bottom: 30px; font-weight: bold; } .footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: #888; position: relative; z-index: 10; } .back-link { display: block; text-align: center; margin-top: 20px; text-decoration: none; color: #0066cc; font-size: 0.9rem; }
 
 /* レスポンシブ切替ボタン */
 .view-switch { text-align: right; max-width: 800px; margin: 0 auto 10px auto; }
@@ -14,15 +14,13 @@
   body { padding: 10px; }
   .container { padding: 20px; border: none; }
   h1 { font-size: 1.2rem; }
-  .important { font-size: 0.8rem; padding: 15px; }
 }
 
-/* PC強制モード */
-body.pc-mode { min-width: 1000px; }
-body.pc-mode .container { max-width: 900px; }
+/* PC強制モード用設定 */
+body.pc-mode { min-width: 1000px !important; }
+body.pc-mode .container { max-width: 900px !important; }
 
-/* 季節演出：初日の出 */
-.new-year-bg { background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d) !important; }
+/* 初日の出 */
 #sunrise {
   position: fixed; bottom: -150px; left: 50%; transform: translateX(-50%);
   width: 150px; height: 150px; background: radial-gradient(circle, #ff4500, #ff8c00);
@@ -30,7 +28,7 @@ body.pc-mode .container { max-width: 900px; }
 }
 @keyframes rise { from { bottom: -150px; } to { bottom: 20px; } }
 
-/* 季節演出：丸いメッセージ */
+/* 丸いメッセージ */
 #seasonal-popup {
   position: fixed; bottom: 30px; right: 30px; background: #a61d24; color: #fff;
   padding: 10px; border-radius: 50%; width: 90px; height: 90px;
@@ -76,7 +74,7 @@ body.pc-mode .container { max-width: 900px; }
 
 <div class="footer"> &copy; 2023-2026 篠ノ井乗務区 All Rights Reserved. </div>
 
-<script> // 1. レスポンシブ切り替え機能 function toggleMode() { const body = document.body; const btn = document.getElementById('mode-toggle'); const viewport = document.getElementById('viewport');
+<script> // 1. レスポンシブ切り替え function toggleMode() { const body = document.body; const btn = document.getElementById('mode-toggle'); const viewport = document.getElementById('viewport');
 
 if (body.classList.contains(&#39;pc-mode&#39;)) {
     body.classList.remove(&#39;pc-mode&#39;);
@@ -89,20 +87,23 @@ if (body.classList.contains(&#39;pc-mode&#39;)) {
 }
 }
 
-// 2. 季節演出の自動判定 function applySeasonalEffect() { const now = new Date(); const month = now.getMonth() + 1; const date = now.getDate();
+// 2. 季節演出の適用（強制反映版） function applySeasonalEffect() { const now = new Date(); const month = now.getMonth() + 1; const date = now.getDate();
 
 const popup = document.getElementById(&#39;seasonal-popup&#39;);
 const msg = document.getElementById(&#39;message-text&#39;);
 const sunrise = document.getElementById(&#39;sunrise&#39;);
 
-// クリスマス (12/1〜12/25)
+// 12/1〜12/25（クリスマス）
 if (month === 12 &amp;&amp; date &lt;= 25) {
     popup.style.display = &#39;flex&#39;;
     msg.innerText = &quot;Merry Xmas!&quot;;
 } 
-// 年越し・正月 (12/26〜1/3)
+// 12/26〜1/3（年越し・正月）
 else if ((month === 12 &amp;&amp; date &gt;= 26) || (month === 1 &amp;&amp; date &lt;= 3)) {
-    document.body.classList.add(&#39;new-year-bg&#39;);
+    // 背景色を強制的に上書き
+    document.body.style.setProperty(&#39;background&#39;, &#39;linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d)&#39;, &#39;important&#39;);
+    document.body.style.backgroundAttachment = &#39;fixed&#39;;
+    
     popup.style.display = &#39;flex&#39;;
     popup.style.backgroundColor = &#39;#d4af37&#39;;
     popup.style.color = &#39;#a61d24&#39;;
@@ -113,11 +114,12 @@ else if ((month === 12 &amp;&amp; date &gt;= 26) || (month === 1 &amp;&amp; date
         msg.innerText = &quot;よいお年を！&quot;;
     }
 
+    // 太陽を表示して昇らせる
     sunrise.style.display = &#39;block&#39;;
     sunrise.style.animation = &#39;rise 4s forwards&#39;;
 }
 }
 
-applySeasonalEffect(); </script>
+// ページ読み込み時に実行 window.onload = applySeasonalEffect; </script>
 
 </body> </html>
