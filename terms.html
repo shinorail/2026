@@ -1,42 +1,36 @@
 <!DOCTYPE html>
 
-<html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 1. 全体背景とレイアウト */ body { background: linear-gradient(to bottom, #000033, #660000, #ffcc00) fixed !important; color: #222; font-family: 'Courier New', monospace; padding: 10px; margin: 0; image-rendering: pixelated; overflow-x: hidden; padding-bottom: 120px; }
+<html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 1. 基本設定 */ body { background: linear-gradient(to bottom, #000033, #660000, #ffcc00) fixed !important; color: #222; font-family: 'Courier New', monospace; padding: 10px; margin: 0; image-rendering: pixelated; overflow-x: hidden; padding-bottom: 150px; }
 
-.container { max-width: 800px; margin: 40px auto; background: #fff; padding: 25px; border: 4px solid #000; position: relative; z-index: 10; }
+.container { max-width: 800px; margin: 40px auto; background: #fff; padding: 25px; border: 4px solid #000; position: relative; z-index: 1; }
 
-/* 2. 下部のメッセージウィンドウ（話してるふう） */ .msg-window { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 650px; background: #000; border: 3px solid #fff; padding: 12px; z-index: 9999; display: flex; align-items: center; box-shadow: 0 0 0 4px #000; } .msg-text { color: #fff; font-size: 0.85rem; flex-grow: 1; line-height: 1.5; }
+/* 2. 下部のメッセージウィンドウ（最前面に配置） / .msg-window { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 600px; background: #000; border: 3px solid #fff; padding: 15px; z-index: 10000; / 確実に一番手前に */ display: flex; align-items: center; justify-content: space-between; box-shadow: 0 0 0 4px #000; } .msg-text { color: #fff; font-size: 0.85rem; line-height: 1.4; padding-right: 10px; }
 
-/* おみくじボタン */ #kuji-btn { background: #ff4500; color: #fff; border: 2px solid #fff; padding: 10px 18px; cursor: pointer; font-size: 0.8rem; font-weight: bold; font-family: inherit; box-shadow: 4px 4px 0px #444; margin-left: 10px; } #kuji-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #444; }
+/* 3. おみくじボタン（確実に押せる設定） / #kuji-btn { background: #ff4500; color: #fff; border: 2px solid #fff; padding: 12px 20px; cursor: pointer; font-size: 0.9rem; font-weight: bold; font-family: inherit; flex-shrink: 0; box-shadow: 4px 4px 0px #444; -webkit-appearance: none; / スマホ用 */ } #kuji-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #444; }
 
-/* 3. 飛び出すおみくじの演出 */ #pop-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 11000; display: none; align-items: center; justify-content: center; } #kuji-card { background: #fff; border: 6px solid #000; padding: 25px; width: 250px; text-align: center; box-shadow: 15px 15px 0px #f00; animation: pop-bridge 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; } @keyframes pop-bridge { 0% { transform: translateY(150px) scale(0); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+/* 4. 飛び出す演出 */ #pop-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 11000; display: none; align-items: center; justify-content: center; } #kuji-card { background: #fff; border: 6px solid #000; padding: 25px; width: 250px; text-align: center; box-shadow: 15px 15px 0px #f00; animation: pop-bridge 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; } @keyframes pop-bridge { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-/* 4. バージョン情報ボード */ .ver-board { position: fixed; bottom: 95px; right: 15px; background: rgba(0,0,0,0.9); color: #0f0; padding: 6px 10px; border: 1px solid #555; font-size: 10px; z-index: 9998; }
-
-.sw-btn { background: #000; color: #fff; border: 1px solid #fff; padding: 4px; font-size: 0.6rem; cursor: pointer; } </style>
+/* 5. バージョン情報 */ .ver-board { position: fixed; bottom: 105px; right: 15px; background: rgba(0,0,0,0.9); color: #0f0; padding: 4px 8px; border: 1px solid #555; font-size: 9px; z-index: 9999; } </style>
 
 </head> <body id="b-tag">
 
 <div class="ver-board">SYSTEM VER. 06.07</div>
 
-<div id="pop-overlay" onclick="closeKuji()"> <div id="kuji-card"> <div style="font-size:0.7rem; color:#888; border-bottom:1px solid #ccc; margin-bottom:10px;">2025-2026 篠ノ井おみくじ</div> <div id="loading-txt" style="font-weight:bold;">ヒイテマス...</div> <div id="result-area" style="display:none;"> <h2 id="luck-res" style="color:#f00; font-size:3.2rem; margin:15px 0;"></h2> <div style="font-size:0.6rem; background:#ffff00; padding:5px; border:1px solid #000;">[ 画面をタッチして閉じる ]</div> </div> </div> </div>
+<div id="pop-overlay" onclick="closeKuji()"> <div id="kuji-card"> <div style="font-size:0.7rem; color:#888; border-bottom:1px solid #ccc; margin-bottom:10px;">篠ノ井おみくじ</div> <div id="loading-txt" style="font-weight:bold;">ヒイテマス...</div> <div id="result-area" style="display:none;"> <h2 id="luck-res" style="color:#f00; font-size:3rem; margin:15px 0;"></h2> <div style="font-size:0.6rem; background:#eee; padding:5px;">[ 画面をタッチして閉じる ]</div> </div> </div> </div>
 
-<div style="text-align:right; max-width:800px; margin:0 auto;"> <button class="sw-btn" onclick="layoutSw()">PC / SP 切替</button> </div>
+<div class="container"> <h1>利用規約および権利規定</h1> <div style="background:#fff0f0; border:2px solid red; padding:10px; font-weight:bold; font-size:0.8rem; margin-bottom:15px;"> 【注意】公式団体への問い合わせは絶対におやめください。 </div> <p>第1条：著作権は「篠ノ井乗務区」に帰属します。</p> <p>第2条：プログラムの解析、不正アクセスを禁じます。</p> <p>第3条：損害について運営者は一切の責任を負いません。</p> <a href="index.html" style="display:block; text-align:center; margin-top:20px; font-size:0.8rem;">トップページへ戻る</a> </div>
 
-<div class="container"> <h1 style="font-size:1.3rem;">利用規約および権利規定</h1> <div style="background:#fff0f0; border:2px solid red; padding:12px; font-weight:bold; font-size:0.8rem; margin-bottom:15px;"> 【注意】本サイトはファンサイトです。公式団体への問い合わせは絶対におやめください。 </div> <p>第1条：著作権は「篠ノ井乗務区」に帰属します。無断転載・改変を一切禁じます。</p> <p>第2条：プログラムの解析、不正アクセス、サーバーへの負荷行為を禁じます。違反時はアクセス制限を行います。</p> <p>第3条：本サイトの利用により生じた損害について、運営者は責任を負いかねます。</p> <p>第4条：悪質な行為に対しては法的措置を講じます。</p> <a href="index.html" style="display:block; text-align:center; margin-top:25px; color:#0066cc; font-size:0.8rem; text-decoration:none; font-weight:bold;">トップページへ戻る</a> </div>
+<div class="msg-window"> <div class="msg-text" id="talk-box"> 「2025年もあとわずか。12/31までおみくじが引けるようです。引いてみませんか？」 </div> <button id="kuji-btn" onclick="runKuji()">くじを引く</button> </div>
 
-<div class="msg-window"> <div class="msg-text" id="talk-box"> 「2025年もあとわずか。12/31までおみくじが引けるようです。運試しをしていきませんか？」 </div> <button id="kuji-btn" onclick="runKuji()">くじを引く</button> </div>
+<script> // おみくじ実行 function runKuji() { const now = new Date(); const limit = new Date('2025/12/31 23:59:59');
 
-<script> // レイアウト切替 function layoutSw() { const b = document.getElementById('b-tag'); const m = document.getElementById('v-meta'); if (b.classList.contains('pc-view')) { b.classList.remove('pc-view'); m.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { b.classList.add('pc-view'); m.setAttribute('content', 'width=1000'); } }
-
-// おみくじ実行 function runKuji() { // 期間チェック (2025/12/31 23:59:59まで) const now = new Date(); const limit = new Date('2025/12/31 23:59:59');
-
-if (now > limit) { alert("おみくじの期間（12/31まで）は終了しました。"); return; }
+if (now > limit) { alert("おみくじの期間は終了しました。"); return; }
 
 const overlay = document.getElementById('pop-overlay'); const loading = document.getElementById('loading-txt'); const resultArea = document.getElementById('result-area'); const luckRes = document.getElementById('luck-res'); const talkBox = document.getElementById('talk-box');
 
-// 演出開始 overlay.style.display = 'flex'; loading.style.display = 'block'; resultArea.style.display = 'none'; talkBox.innerText = "「おや、何を引くんでしょうか……」";
+// 表示の切り替え overlay.style.display = 'flex'; loading.style.display = 'block'; resultArea.style.display = 'none'; talkBox.innerText = "「おや、何を引くんでしょうか……」";
 
-// 1.2秒後にポンと出す setTimeout(() => { loading.style.display = 'none'; const list = ["大吉", "中吉", "小吉", "吉", "末吉"]; luckRes.innerText = list[Math.floor(Math.random() * list.length)]; resultArea.style.display = 'block'; talkBox.innerText = "「おみくじの結果が出たようですよ！」"; }, 1200); }
+// 演出 setTimeout(() => { loading.style.display = 'none'; const list = ["大吉", "中吉", "小吉", "吉", "末吉"]; luckRes.innerText = list[Math.floor(Math.random() * list.length)]; resultArea.style.display = 'block'; talkBox.innerText = "「結果が出たようですよ！」"; }, 1000); }
 
 // 閉じる function closeKuji() { document.getElementById('pop-overlay').style.display = 'none'; } </script>
 
