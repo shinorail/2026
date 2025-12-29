@@ -1,6 +1,10 @@
+ドット絵の質感、アニメーション、PC/SP切り替え、そして「ポップアップで結果が出るおみくじ」をすべて統合した完璧版です。
+
+太陽（オレンジの四角）をクリックすると、ブラウザの通知機能で結果が表示されます。
+
 <!DOCTYPE html>
 
-<html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* --- 基本デザイン（ドット絵風） --- */ body { background: linear-gradient(to bottom, #000033, #660000, #ffcc00) fixed !important; color: #222; font-family: 'Courier New', monospace; padding: 10px; margin: 0; image-rendering: pixelated; }
+<html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 1. 基本デザイン（ドット絵風） */ body { background: linear-gradient(to bottom, #000033, #660000, #ffcc00) fixed !important; color: #222; font-family: 'Courier New', monospace; padding: 10px; margin: 0; image-rendering: pixelated; }
 
 .ver-tag { position: fixed; top: 10px; left: 10px; background: #000; color: #0f0; font-size: 10px; padding: 2px 8px; border: 2px solid #555; z-index: 10000; }
 
@@ -8,21 +12,17 @@
 
 h1 { font-size: 1.4rem; border-left: 10px solid #000; padding-left: 15px; } h2 { font-size: 1.1rem; border-bottom: 4px double #000; margin-top: 30px; } .important { background: #fff0f0; border: 4px solid #f00; padding: 15px; font-weight: bold; font-size: 0.85rem; }
 
-/* --- 切り替えボタン --- */ .sw-area { text-align: right; max-width: 800px; margin: 0 auto 10px auto; } .sw-area button { background: #000; color: #fff; border: 2px solid #fff; padding: 8px 15px; cursor: pointer; font-family: inherit; font-size: 0.7rem; box-shadow: 4px 4px 0px #444; }
+/* 2. 切り替えボタン */ .sw-area { text-align: right; max-width: 800px; margin: 0 auto 10px auto; } .sw-area button { background: #000; color: #fff; border: 2px solid #fff; padding: 8px 15px; cursor: pointer; font-family: inherit; font-size: 0.7rem; box-shadow: 4px 4px 0px #444; }
 
-/* --- 太陽（アニメーション） --- */ #sun-target { position: fixed; bottom: 20px; right: 20px; width: 70px; height: 70px; background: #ff4500; z-index: 9999; cursor: pointer; box-shadow: 0 -10px 0 #ff4500, 0 10px 0 #ff4500, -10px 0 0 #ff4500, 10px 0 0 #ff4500; animation: s-rise 3s steps(8) forwards; } @keyframes s-rise { from { transform: translateY(200px); } to { transform: translateY(0); } }
+/* 3. 太陽（規約の上に表示・アニメーション） */ #sun-icon { position: fixed; bottom: 20px; right: 20px; width: 70px; height: 70px; background: #ff4500; z-index: 9999; cursor: pointer; box-shadow: 0 -10px 0 #ff4500, 0 10px 0 #ff4500, -10px 0 0 #ff4500, 10px 0 0 #ff4500; animation: s-rise 2s steps(6) forwards; } @keyframes s-rise { from { transform: translateY(200px); } to { transform: translateY(0); } }
 
-/* --- おみくじ --- */ #kuji-ui { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; border: 6px solid #000; padding: 20px; width: 260px; z-index: 10001; display: none; text-align: center; box-shadow: 15px 15px 0px #f00; }
-
-/* --- モード設定 --- */ body.pc-view { min-width: 1000px !important; } body.pc-view .container { max-width: 900px !important; } </style>
+/* 4. モード設定用 */ body.pc-view { min-width: 1000px !important; } body.pc-view .container { max-width: 900px !important; } </style>
 
 </head> <body id="b-tag">
 
 <div class="ver-tag">VER. 2025.12.30</div>
 
-<div id="sun-target" onclick="openKuji()"></div>
-
-<div id="kuji-ui" onclick="this.style.display='none'"> <p style="font-size:0.7rem;">オミクジ ヲ ヒイタ！</p> <h2 id="kuji-txt" style="color:#f00; font-size:2.5rem; margin:15px 0;"></h2> <p style="font-size:0.6rem;">[ 画面をタッチして閉じる ]</p> </div>
+<div id="sun-icon" onclick="doKuji()"></div>
 
 <div class="sw-area"> <button onclick="layoutSw()">PC / スマホ 表示切替</button> </div>
 
@@ -53,8 +53,8 @@ h1 { font-size: 1.4rem; border-left: 10px solid #000; padding-left: 15px; } h2 {
 
 <div style="text-align:center; padding:20px; color:#fff; font-size:0.8rem;"> &copy; 2023-2026 篠ノ井乗務区 All Rights Reserved. </div>
 
-<script> // レイアウト切り替え function layoutSw() { const b = document.getElementById('b-tag'); const m = document.getElementById('v-meta'); if (b.classList.contains('pc-view')) { b.classList.remove('pc-view'); m.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { b.classList.add('pc-view'); m.setAttribute('content', 'width=1000'); } }
+<script> // 1. レイアウト切り替え function layoutSw() { const b = document.getElementById('b-tag'); const m = document.getElementById('v-meta'); if (b.classList.contains('pc-view')) { b.classList.remove('pc-view'); m.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { b.classList.add('pc-view'); m.setAttribute('content', 'width=1000'); } }
 
-// おみくじ function openKuji() { const res = ["ダイキチ", "チュウキチ", "ショウキチ", "キチ", "スエキチ"]; document.getElementById('kuji-txt').innerText = res[Math.floor(Math.random() * res.length)]; document.getElementById('kuji-ui').style.display = 'block'; } </script>
+// 2. おみくじ（ポップアップ表示） function doKuji() { const results = ["ダイキチ！", "チュウキチ！", "ショウキチ！", "キチ！", "スエキチ！"]; const final = results[Math.floor(Math.random() * results.length)]; alert("【おみくじ結果】\n\n" + final + "\n\n2026年もよろしくお願いします。"); } </script>
 
 </body> </html>
