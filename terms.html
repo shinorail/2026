@@ -1,101 +1,60 @@
 <!DOCTYPE html>
 
-<html lang="ja"> <head> <link rel="icon" href="favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 全体設定 */ body { background: #f4f4f4 !important; color: #222; font-family: 'Courier New', monospace; line-height: 1.6; padding: 10px; margin: 0; image-rendering: pixelated; }
+<html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* --- 基本デザイン（ドット絵風） --- */ body { background: linear-gradient(to bottom, #000033, #660000, #ffcc00) fixed !important; color: #222; font-family: 'Courier New', monospace; padding: 10px; margin: 0; image-rendering: pixelated; }
 
-/* バージョン表示 */
-.ver-tag {
-  position: fixed; top: 5px; left: 5px; background: #000; color: #0f0;
-  font-size: 10px; padding: 2px 8px; z-index: 10000;
-}
+.ver-tag { position: fixed; top: 10px; left: 10px; background: #000; color: #0f0; font-size: 10px; padding: 2px 8px; border: 2px solid #555; z-index: 10000; }
 
-/* 規約ボックス */
-.container { 
-  max-width: 800px; margin: 50px auto; background: #fff; padding: 20px; 
-  border: 4px solid #000; position: relative; z-index: 10;
-}
-.important { background: #fff0f0; border: 4px solid #ff0000; padding: 15px; font-weight: bold; }
+.container { max-width: 800px; margin: 50px auto; background: #fff; padding: 30px; border: 4px solid #000; box-shadow: 10px 10px 0px rgba(0,0,0,0.2); position: relative; z-index: 10; }
 
-/* 切り替えボタン */
-.btn-area { text-align: right; max-width: 800px; margin: 0 auto 10px auto; }
-.btn-area button { background: #000; color: #fff; border: 2px solid #fff; padding: 5px 10px; cursor: pointer; }
+h1 { font-size: 1.4rem; border-left: 10px solid #000; padding-left: 15px; } h2 { font-size: 1.1rem; border-bottom: 4px double #000; margin-top: 30px; } .important { background: #fff0f0; border: 4px solid #f00; padding: 15px; font-weight: bold; font-size: 0.85rem; }
 
-/* 【修正】太陽を規約の上に絶対出す設定 */
-#sun-icon {
-  position: fixed; 
-  bottom: 20px;   /* 画面下から20pxの位置に固定 */
-  right: 20px;    /* 画面右から20pxの位置に固定 */
-  width: 80px; height: 80px; 
-  background: #ff4500;
-  /* ドット感を出す影 */
-  box-shadow: 0 -10px 0 #ff4500, 0 10px 0 #ff4500, -10px 0 0 #ff4500, 10px 0 0 #ff4500;
-  z-index: 9999;  /* 規約(z-index:10)より圧倒的に上に配置 */
-  cursor: pointer;
-  display: none;  /* JSで表示させます */
-}
+/* --- 切り替えボタン --- */ .sw-area { text-align: right; max-width: 800px; margin: 0 auto 10px auto; } .sw-area button { background: #000; color: #fff; border: 2px solid #fff; padding: 8px 15px; cursor: pointer; font-family: inherit; font-size: 0.7rem; box-shadow: 4px 4px 0px #444; }
 
-/* 太陽のアニメーション */
-@keyframes sun-up {
-  from { transform: translateY(200px); }
-  to { transform: translateY(0); }
-}
+/* --- 太陽（アニメーション） --- */ #sun-target { position: fixed; bottom: 20px; right: 20px; width: 70px; height: 70px; background: #ff4500; z-index: 9999; cursor: pointer; box-shadow: 0 -10px 0 #ff4500, 0 10px 0 #ff4500, -10px 0 0 #ff4500, 10px 0 0 #ff4500; animation: s-rise 3s steps(8) forwards; } @keyframes s-rise { from { transform: translateY(200px); } to { transform: translateY(0); } }
 
-/* おみくじ */
-#luck-box {
-  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  background: #fff; border: 4px solid #000; padding: 20px; width: 250px;
-  z-index: 10001; display: none; text-align: center; box-shadow: 10px 10px 0px #f00;
-}
+/* --- おみくじ --- */ #kuji-ui { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; border: 6px solid #000; padding: 20px; width: 260px; z-index: 10001; display: none; text-align: center; box-shadow: 15px 15px 0px #f00; }
 
-/* PCモード用スタイル（強制上書き） */
-body.pc-view { min-width: 1000px !important; }
-body.pc-view .container { max-width: 900px !important; }
-</style> </head> <body id="b-body">
+/* --- モード設定 --- */ body.pc-view { min-width: 1000px !important; } body.pc-view .container { max-width: 900px !important; } </style>
+
+</head> <body id="b-tag">
 
 <div class="ver-tag">VER. 2025.12.30</div>
 
-<div id="sun-icon" onclick="openLuck()"></div>
+<div id="sun-target" onclick="openKuji()"></div>
 
-<div id="luck-box" onclick="this.style.display='none'"> <p>【 おみくじ 】</p> <h2 id="luck-txt" style="color:#f00; font-size:2.5rem; margin:10px 0;"></h2> <p style="font-size:0.7rem;">[ 画面を閉じる ]</p> </div>
+<div id="kuji-ui" onclick="this.style.display='none'"> <p style="font-size:0.7rem;">オミクジ ヲ ヒイタ！</p> <h2 id="kuji-txt" style="color:#f00; font-size:2.5rem; margin:15px 0;"></h2> <p style="font-size:0.6rem;">[ 画面をタッチして閉じる ]</p> </div>
 
-<div class="btn-area"> <button onclick="changeLayout()">PC版 / スマホ版 切替</button> </div>
+<div class="sw-area"> <button onclick="layoutSw()">PC / スマホ 表示切替</button> </div>
 
-<div class="container"> <h1>利用規約および権利規定</h1> <div class="important"> 【重要事項：サイトの性質について】
+<div class="container"> <h1>利用規約および権利規定</h1>
+
+<div class="important"> 【重要事項：サイトの性質について】
 
 
-本サイト「超・スネーク」および「篠ノ井乗務区 2周年特設サイト」は個人運営によるファンサイトであり、実在する鉄道事業者、関連団体、およびその関係先とは一切関係ありません。本サイトに関するお問い合わせを公式団体へ行うことは、業務妨害に繋がる恐れがあるため固く禁じます。 </div> <h2>第1条（著作権の帰属）</h2> <p>本サイトに掲載されているすべてのコンテンツ（文章、プログラム、画像、アイコン、デザイン、ロゴ等）の著作権は、すべて運営者「篠ノ井乗務区」に帰属します。著作権法により認められる引用の範囲を超えて、無断で複製、転載、改変、配布、二次利用を行うことは、営利・非営利を問わず一切禁止します。</p> <h2>第2条（禁止行為とアクセス制限）</h2> <p>利用者が以下の行為を行った場合、運営者は予告なく当該利用者に対しアクセス制限（BAN）、送信データの抹消、および将来にわたる一切の利用禁止措置を講じる権利を有します。</p> <ul> <li>プログラムの解析、改ざん、リバースエンジニアリング。</li> <li>不正な通信によるスコアの偽装、およびサーバーへの過度な負荷を与える行為。</li> <li>運営者の著作物（画像やファビコンを含む）を無断で使用し、自らのコンテンツとして公開する行為。</li> </ul> <h2>第3条（免責事項）</h2> <p>1. 運営者は、本サイトの提供する情報の正確性、完全性、および安全性について一切の保証を行いません。
+本サイト「超・スネーク」および「篠ノ井乗務区 2周年特設サイト」は個人運営によるファンサイトであり、実在する鉄道事業者、関連団体、およびその関係先とは一切関係ありません。本サイトに関するお問い合わせを公式団体へ行うことは、業務妨害に繋がる恐れがあるため固く禁じます。 </div>
+
+<h2>第1条（著作権の帰属）</h2> <p>本サイトに掲載されているすべてのコンテンツ（文章、プログラム、画像、アイコン、デザイン、ロゴ等）の著作権は、すべて運営者「篠ノ井乗務区」に帰属します。著作権法により認められる引用の範囲を超えて、無断で複製、転載、改変、配布、二次利用を行うことは、営利・非営利を問わず一切禁止します。</p>
+
+<h2>第2条（禁止行為とアクセス制限）</h2> <p>利用者が以下の行為を行った場合、運営者は予告なく当該利用者に対しアクセス制限（BAN）、送信データの抹消、および将来にわたる一切の利用禁止措置を講じる権利を有します。</p> <ul> <li>プログラムの解析、改ざん、リバースエンジニアリング。</li> <li>不正な通信によるスコアの偽装、およびサーバーへの過度な負荷を与える行為。</li> <li>運営者の著作物（画像やファビコンを含む）を無断で使用し、自らのコンテンツとして公開する行為。</li> </ul>
+
+<h2>第3条（免責事項）</h2> <p>1. 運営者は、本サイトの提供する情報の正確性、完全性、および安全性について一切の保証を行いません。
 
 
 2. 本サイトの利用により生じた直接的・間接的な損害（端末の故障、データ消失、精神的苦痛、その他不利益）について、運営者は一切の責任を負いかねます。
 
 
-3. システムメンテナンス、チート検知システムの誤作動、または運営者の判断による運行停止についても、データの復旧や苦情には応じられません。</p> <h2>第4条（損害賠償）</h2> <p>悪質な不正アクセスや著作権侵害により運営者が損害を被った場合、運営者は当該利用者に対し、調査費用、弁護士費用を含む損害賠償を請求し、刑事告訴を含めた法的措置を断行します。</p>
+3. システムメンテナンス、チート検知システムの誤作動、または運営者の判断による運行停止についても、データの復旧や苦情には応じられません。</p>
 
-<a href="index.html" style="display:block; text-align:center; margin-top:20px; color:#0066cc; font-weight:bold; text-decoration:none;">トップページへ戻る</a>
+<h2>第4条（損害賠償）</h2> <p>悪質な不正アクセスや著作権侵害により運営者が損害を被った場合、運営者は当該利用者に対し、調査費用、弁護士費用を含む損害賠償を請求し、刑事告訴を含めた法的措置を断行します。</p>
+
+<a href="index.html" style="display:block; text-align:center; margin-top:30px; font-weight:bold; color:#0066cc; text-decoration:none;">トップページへ戻る</a>
+
 </div>
 
-<div style="text-align:center; padding:20px; font-size:0.75rem; color:#888;"> &copy; 2023-2026 篠ノ井乗務区 All Rights Reserved. </div>
+<div style="text-align:center; padding:20px; color:#fff; font-size:0.8rem;"> &copy; 2023-2026 篠ノ井乗務区 All Rights Reserved. </div>
 
-<script> // 1. レイアウト切り替え（確実に動作させるためのID指定） function changeLayout() { const bodyObj = document.getElementById('b-body'); const metaObj = document.getElementById('v-meta');
+<script> // レイアウト切り替え function layoutSw() { const b = document.getElementById('b-tag'); const m = document.getElementById('v-meta'); if (b.classList.contains('pc-view')) { b.classList.remove('pc-view'); m.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { b.classList.add('pc-view'); m.setAttribute('content', 'width=1000'); } }
 
-if (bodyObj.classList.contains(&#39;pc-view&#39;)) {
-    bodyObj.classList.remove(&#39;pc-view&#39;);
-    metaObj.setAttribute(&#39;content&#39;, &#39;width=device-width, initial-scale=1.0&#39;);
-} else {
-    bodyObj.classList.add(&#39;pc-view&#39;);
-    metaObj.setAttribute(&#39;content&#39;, &#39;width=1000&#39;);
-}
-}
-
-// 2. おみくじ function openLuck() { const res = ["ダイキチ", "チュウキチ", "ショウキチ", "キチ", "スエキチ"]; document.getElementById('luck-txt').innerText = res[Math.floor(Math.random() * res.length)]; document.getElementById('luck-box').style.display = 'block'; }
-
-// 3. 起動時の演出 window.onload = function() { const sunIcon = document.getElementById('sun-icon');
-
-// 背景を夜明けグラデーションに（強制適用）
-document.body.style.setProperty(&#39;background&#39;, &#39;linear-gradient(to bottom, #000033, #660000, #ffcc00)&#39;, &#39;important&#39;);
-
-// 太陽を表示してアニメーション実行
-sunIcon.style.display = &#39;block&#39;;
-sunIcon.style.animation = &#39;sun-up 3s steps(10) forwards&#39;;
-}; </script>
+// おみくじ function openKuji() { const res = ["ダイキチ", "チュウキチ", "ショウキチ", "キチ", "スエキチ"]; document.getElementById('kuji-txt').innerText = res[Math.floor(Math.random() * res.length)]; document.getElementById('kuji-ui').style.display = 'block'; } </script>
 
 </body> </html>
