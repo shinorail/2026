@@ -1,7 +1,3 @@
-ドット絵の質感、アニメーション、PC/SP切り替え、そして「ポップアップで結果が出るおみくじ」をすべて統合した完璧版です。
-
-太陽（オレンジの四角）をクリックすると、ブラウザの通知機能で結果が表示されます。
-
 <!DOCTYPE html>
 
 <html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" id="v-meta" content="width=device-width, initial-scale=1.0"> <title>利用規約・権利規定 - 篠ノ井乗務区</title> <style> /* 1. 基本デザイン（ドット絵風） */ body { background: linear-gradient(to bottom, #000033, #660000, #ffcc00) fixed !important; color: #222; font-family: 'Courier New', monospace; padding: 10px; margin: 0; image-rendering: pixelated; }
@@ -55,6 +51,12 @@ h1 { font-size: 1.4rem; border-left: 10px solid #000; padding-left: 15px; } h2 {
 
 <script> // 1. レイアウト切り替え function layoutSw() { const b = document.getElementById('b-tag'); const m = document.getElementById('v-meta'); if (b.classList.contains('pc-view')) { b.classList.remove('pc-view'); m.setAttribute('content', 'width=device-width, initial-scale=1.0'); } else { b.classList.add('pc-view'); m.setAttribute('content', 'width=1000'); } }
 
-// 2. おみくじ（ポップアップ表示） function doKuji() { const results = ["ダイキチ！", "チュウキチ！", "ショウキチ！", "キチ！", "スエキチ！"]; const final = results[Math.floor(Math.random() * results.length)]; alert("【おみくじ結果】\n\n" + final + "\n\n2026年もよろしくお願いします。"); } </script>
+// 2. おみくじ（ポップアップ表示） function doKuji() { const results = ["ダイキチ！", "チュウキチ！", "ショウキチ！", "キチ！", "スエキチ！"]; const final = results[Math.floor(Math.random() * results.length)];
+
+let message = "【おみくじ結果】\n\n運勢： " + final;
+
+if (final === "ダイキチ！") { message += "\n\nおめでとうございます！最高の一年になります！"; } else { message += "\n\n2026年もよろしくお願いします。"; }
+
+alert(message); } </script>
 
 </body> </html>
