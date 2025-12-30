@@ -48,10 +48,7 @@
 <div id="ban-screen">
     <h1>⚠️ 運行停止中</h1>
     <p>不正なスコア操作が検知されました。</p>
-    <p>安全な運行のため、入区を制限しています。</p>
-    <p style="color:#333; font-size:0.7rem; margin-top:20px;">ERR_CODE: SC_CH_01</p>
     <div class="repair-link">
-        <p style="font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0;">本線への復帰を希望される場合は</p>
         <a href="https://shinorail.github.io/2026/ban_contact.html">🛠️ 車両修繕・復帰申請はこちら</a>
     </div>
 </div>
@@ -87,7 +84,7 @@
         <div style="font-size:4rem; color:var(--main); font-weight: bold;" id="final-score">0</div>
         <div id="rank-display" style="margin:10px 0; font-weight:bold; color:var(--accent);"></div>
         <button class="btn" id="send-btn" onclick="sendScore()" style="background:var(--accent); color:#fff;">ランキングにのせる</button>
-        <a href="rank.html" class="btn" style="background:var(--main); color:#fff;">ベスト10をみる</a>
+        <a href="ranking.html" class="btn" style="background:var(--main); color:#fff;">ベスト10をみる</a>
         <button class="btn" style="background:#eee; color:#666;" onclick="location.reload()">もういちど</button>
     </div>
 </div>
@@ -233,16 +230,13 @@ function sendScore() {
     if(isSending) return;
     if (score <= 0) { alert("0点ではランキングにのせられません！"); return; }
     
-    // 【チート検知】ban_contact.htmlへ誘導
     if (score > 4000) { 
         alert("異常なスコアが検出されました。");
         window.location.href = "https://shinorail.github.io/2026/ban_contact.html";
         return; 
     }
 
-    // 【不具合・通常確認】contact.htmlへ誘導
-    const confirmMsg = "このスコアで運行記録を送信しますか？\n（送信できない場合は「キャンセル」を押して不具合報告へ）";
-    if (!confirm(confirmMsg)) {
+    if (!confirm("このスコアで運行記録を送信しますか？\n（送信できない場合は「キャンセル」を押して不具合報告へ）")) {
         if (confirm("登録をやめて不具合報告（お問い合わせ）へ移動しますか？")) {
             window.location.href = "https://shinorail.github.io/2026/contact.html";
         }
@@ -265,7 +259,7 @@ function sendScore() {
     })
     .then(() => {
         alert("運行記録が登録されました！");
-        window.location.href = "rank.html";
+        window.location.href = "ranking.html";
     })
     .catch(error => {
         console.error("Error:", error);
@@ -279,27 +273,6 @@ function sendScore() {
         }
     });
 }
-</script>
-
-<footer style="margin-top: 80px; padding: 30px 10px; border-top: 1px solid #ccc; text-align: center; background: #eee; color: #666;">
-    <div style="font-size: 0.75rem; margin-bottom: 10px;">
-        <a href="terms.html" style="color: #444; text-decoration: underline; margin: 0 10px;">利用規約・権利規定</a>
-        <span style="margin: 0 5px;">|</span>
-        <a href="https://shinorail.github.io/2026/ban_contact.html" style="color: #444; text-decoration: underline; margin: 0 10px;">車両修繕申請</a>
-    </div>
-    <p style="font-size: 0.8rem; font-weight: bold; margin: 5px 0;">&copy; 2023-2026 篠ノ井乗務区</p>
-    <p style="font-size: 0.6rem; line-height: 1.4; max-width: 500px; margin: auto;">
-        本サイトは個人運営のファンサイトであり、実際の鉄道事業者等とは無関係です。
-    </p>
-</footer>
-
-<script>
-(function() {
-    const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
-    if (new Date().getTime() >= expiry) {
-        window.location.href = "memorial.html";
-    }
-})();
 </script>
 </body>
 </html>
