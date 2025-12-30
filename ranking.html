@@ -6,16 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ランキング - 篠ノ井乗務区</title>
     <style>
-        :root { --main: #1a237e; --bg: #f4f4f2; --gold: #c5a059; }
+        :root { --main: #1a237e; --bg: #f4f4f2; --gold: #c5a059; --accent-red: #b71c1c; }
         body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-align: center; padding: 20px; color: #333; }
         h1 { color: var(--main); border-bottom: 3px solid var(--gold); display: inline-block; padding: 0 20px 10px; margin-bottom: 30px; }
 
         .ranking-list { max-width: 450px; margin: 0 auto 20px; background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; min-height: 250px; }
-        .rank-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; transition: 0.2s; }
-        .rank-item:last-child { border-bottom: none; }
+        .rank-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
         .rank-num { width: 40px; font-weight: bold; font-size: 1.2rem; color: #666; }
         
-        /* 1〜3位の装飾 */
         .rank-item:nth-child(1) .rank-num { color: #d4af37; font-size: 1.5rem; }
         .rank-item:nth-child(2) .rank-num { color: #a9a9a9; }
         .rank-item:nth-child(3) .rank-num { color: #cd7f32; }
@@ -24,20 +22,22 @@
         .rank-name { flex: 1; text-align: left; font-weight: bold; }
         .rank-score { font-weight: bold; color: var(--main); }
 
-        /* 読み込み中アニメーション */
-        .loading-area { padding: 80px 20px; color: #888; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .loading-area { padding: 60px 20px; color: #888; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .loader { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--main); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* シェアボックス */
+        /* エラー時のボタン */
+        .err-btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-err { padding: 10px 15px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+        .btn-retry { background: #eee; color: #333; }
+        .btn-contact { background: var(--accent-red); color: #fff; text-decoration: none; }
+
         .share-box { max-width: 450px; margin: 20px auto; padding: 15px; background: #eef; border-radius: 12px; font-size: 0.85rem; border: 1px solid #d1d1f0; }
         .share-btns { display: flex; justify-content: center; gap: 10px; margin-top: 12px; }
-        .sh-btn { padding: 10px 18px; border-radius: 6px; color: #fff; text-decoration: none; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
-        .sh-btn:active { transform: scale(0.95); opacity: 0.8; }
+        .sh-btn { padding: 10px 18px; border-radius: 6px; color: #fff; text-decoration: none; font-weight: bold; font-size: 0.8rem; }
 
         .nav-btns { display: flex; gap: 10px; max-width: 450px; margin: 20px auto; }
-        .btn-nav { flex: 1; padding: 16px; border-radius: 8px; text-decoration: none; font-weight: bold; color: #fff; transition: 0.2s; border: none; cursor: pointer; }
-        .btn-nav:active { transform: translateY(3px); filter: brightness(0.9); }
+        .btn-nav { flex: 1; padding: 16px; border-radius: 8px; text-decoration: none; font-weight: bold; color: #fff; }
     </style>
 </head>
 <body>
@@ -53,7 +53,6 @@
 
 <div class="share-box">
     <div style="font-weight: bold; color: var(--main);">ランクインしましたか？</div>
-    <div style="margin-top: 5px; color: #666;">最高記録をみんなに教えよう！</div>
     <div class="share-btns">
         <a id="sh-x" href="#" target="_blank" class="sh-btn" style="background:#000;">Xでシェア</a>
         <a id="sh-line" href="#" target="_blank" class="sh-btn" style="background:#06C755;">LINE</a>
@@ -70,13 +69,12 @@ const gasUrl = "https://script.google.com/macros/s/AKfycbw1Wmit3zAGi1sYBr-F_a8Jn
 
 // シェアURLの設定
 const siteUrl = encodeURIComponent("https://shinorail.github.io/");
-const shareText = encodeURIComponent("篠ノ井乗務区 2周年特設サイトでゲームに挑戦！現在のランキングをチェックしよう！ #篠ノ井乗務区");
+const shareText = encodeURIComponent("篠ノ井乗務区 2周年特設サイトでゲームに挑戦！ #篠ノ井乗務区");
 document.getElementById("sh-x").href = `https://twitter.com/intent/tweet?text=${shareText}&url=${siteUrl}`;
 document.getElementById("sh-line").href = `https://social-plugins.line.me/lineit/share?url=${siteUrl}`;
 
 async function loadRanking() {
     try {
-        // キャッシュ対策でタイムスタンプを付与
         const response = await fetch(gasUrl + "?t=" + new Date().getTime());
         if (!response.ok) throw new Error();
         const data = await response.json();
@@ -88,7 +86,6 @@ async function loadRanking() {
             return;
         }
 
-        // TOP10のみを表示
         data.slice(0, 10).forEach((item, index) => {
             const row = document.createElement("div");
             row.className = "rank-item";
@@ -101,18 +98,19 @@ async function loadRanking() {
             list.appendChild(row);
         });
     } catch (e) {
-        console.error(e);
         document.getElementById("ranking-list").innerHTML = `
             <div class="loading-area">
-                <span style="color:#b71c1c;">データの取得に失敗しました。</span>
-                <button onclick="location.reload()" style="padding:8px 15px; margin-top:15px; border-radius:5px; border:1px solid #ccc; cursor:pointer;">再読み込み</button>
+                <span style="color:var(--accent-red);">運行データの取得に失敗しました。</span>
+                <div class="err-btn-group">
+                    <button onclick="location.reload()" class="btn-err btn-retry">再試行</button>
+                    <a href="contact.html" class="btn-err btn-contact">✉ お問い合わせ</a>
+                </div>
             </div>`;
     }
 }
 
 loadRanking();
 
-// 2月1日以降の自動転送
 (function() {
     const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
     if (new Date().getTime() >= expiry) {
