@@ -77,8 +77,9 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; line-height: 1.5; }
 </div>
 
 <script>
-const expiry = new Date("2026/02/01 00:00:00").getTime();
-const target = new Date("2026/01/01 00:00:00").getTime();
+// 日本時間JST基準でのターゲット時刻設定
+const target = new Date("2026-01-01T00:00:00+09:00").getTime();
+const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
 let isReady = false;
 
 function checkExpiry() {
@@ -126,7 +127,21 @@ function update() {
     const now = new Date().getTime();
     const diff = target - now;
 
-    if (diff <= 0) {
+    if (diff > 0) {
+        // --- 1月1日0時より前（年末モード） ---
+        isReady = false;
+        const d = Math.floor(diff / 864e5);
+        const h = Math.floor((diff % 864e5) / 36e5);
+        const m = Math.floor((diff % 36e5) / 6e4);
+        const s = Math.floor((diff % 6e4) / 1e3);
+        document.getElementById("timer").innerText = 
+            `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+
+        document.getElementById("msg-label").innerText = "2025-2026";
+        document.getElementById("msg-text").innerText = "フォロワーの皆様へ（年末のご挨拶）";
+        document.getElementById("msg-btn").href = "newyearMessage.html"; // ファイル名は共通
+    } else {
+        // --- 1月1日0時以降（新年モード） ---
         isReady = true;
         document.getElementById("timer").innerText = "00d 00h 00m 00s";
         document.getElementById("rail-kuji").classList.remove("waiting");
@@ -134,18 +149,10 @@ function update() {
         document.getElementById("norm-kuji").classList.remove("waiting");
         document.getElementById("norm-kuji").innerText = "一般おみくじ";
 
-        // メッセージボタンの切り替え
         document.getElementById("msg-label").innerText = "2026 New Year";
         document.getElementById("msg-text").innerText = "謹賀新年（新年のご挨拶）";
         document.getElementById("msg-btn").style.borderColor = "#b71c1c";
         document.getElementById("msg-btn").style.color = "#b71c1c";
-    } else {
-        const d = Math.floor(diff / 864e5);
-        const h = Math.floor((diff % 864e5) / 36e5);
-        const m = Math.floor((diff % 36e5) / 6e4);
-        const s = Math.floor((diff % 6e4) / 1e3);
-        document.getElementById("timer").innerText = 
-            `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
     }
 }
 setInterval(update, 1000);
