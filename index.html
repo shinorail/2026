@@ -32,7 +32,7 @@ body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-ali
 .share-area { margin-top: 40px; padding: 20px; border-top: 1px solid #ddd; }
 .share-label { font-size: 0.8rem; color: #666; margin-bottom: 15px; font-weight: bold; }
 .share-list { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-.share-item { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #fff; font-size: 0.7rem; font-weight: bold; transition: 0.2s; }
+.share-item { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #fff; font-size: 0.7rem; font-weight: bold; transition: 0.2s; border: none; cursor: pointer; }
 .sh-x { background: #000; }
 .sh-line { background: #06C755; }
 .sh-fb { background: #1877F2; }
@@ -54,11 +54,11 @@ footer { margin-top: 60px; padding: 30px 10px; border-top: 1px solid #ccc; backg
 <div class="info-container">
     <div class="info-header">
         <div class="info-title">📢 運行情報・お知らせ</div>
-        <div class="info-version">Ver 2.5.9</div>
+        <div class="info-version">Ver 2.6.0</div>
     </div>
     <div class="info-body">
         <div class="info-item">本特設サイトは1月末で閉鎖いたします。</div>
-        <div class="info-item">閉鎖後は公式リンク集をご利用ください。</div>
+        <div class="info-item">閉鎖後は<a href="https://shinorail.github.io/links/" style="color:var(--main-blue); font-weight:bold; text-decoration:underline;">公式リンク集</a>をご利用ください。</div>
     </div>
 </div>
 
@@ -71,7 +71,7 @@ footer { margin-top: 60px; padding: 30px 10px; border-top: 1px solid #ccc; backg
     <a href="zukan.html" class="main-btn" style="background:#4caf50 !important; box-shadow:0 6px 0 #2e7d32 !important;">📖 車両ずかん</a>
     <button id="rail-kuji" class="main-btn waiting" onclick="tryOpen('rail_result.html')">【点検中】鉄道おみくじ</button>
     <button id="norm-kuji" class="main-btn waiting" onclick="tryOpen('norm_result.html')" style="background:#b71c1c; box-shadow:0 6px 0 #8e1b1b;">【点検中】一般おみくじ</button>
-    <a href="howto.html" class="main-btn" style="background:#fff !important; color:var(--main-blue) !important; border:2px solid var(--main-blue); box-shadow:0 4px 0 var(--main-blue) !important;">📖 つかいかた</a>
+    <a href="https://shinorail.github.io/links/" class="main-btn" style="background:#fff !important; color:var(--main-blue) !important; border:2px solid var(--main-blue); box-shadow:0 4px 0 var(--main-blue) !important;">🔗 公式リンク集（SNS等）</a>
     <a href="contact.html" class="main-btn" style="background:#00796b !important; box-shadow:0 6px 0 #004d40 !important;">✉ お問い合わせ</a>
 </div>
 
