@@ -2,46 +2,48 @@
 <html lang="ja">
 <head>
     <link rel="icon" href="favicon.ico">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>超・スネーク - 篠ノ井乗務区</title>
-<style>
-:root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; --panel: #ffffff; }
-body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow: hidden; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>超・スネーク - 篠ノ井乗務区</title>
+    <style>
+        :root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; --panel: #ffffff; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow: hidden; }
+        
+        /* 運行停止画面 */
+        #ban-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #ff0000; display: none; z-index: 100000; align-items: center; justify-content: center; flex-direction: column; font-weight: bold; }
+        .repair-link { margin-top: 30px; padding: 15px; border: 1px solid #444; border-radius: 8px; background: #111; }
+        .repair-link a { color: #ffd700; font-weight: bold; text-decoration: none; border-bottom: 1px solid #ffd700; }
 
-/* 運行停止画面 */
-#ban-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #ff0000; display: none; z-index: 100000; align-items: center; justify-content: center; flex-direction: column; font-weight: bold; }
-.repair-link { margin-top: 30px; padding: 15px; border: 1px solid #444; border-radius: 8px; background: #111; }
-.repair-link a { color: #ffd700; font-weight: bold; text-decoration: none; border-bottom: 1px solid #ffd700; }
+        body.theme-neon { --main: #7b1fa2; --bg: #f3e5f5; --accent: #00bcd4; }
+        body.theme-cyber { --main: #2e7d32; --bg: #e8f5e9; --accent: #fbc02d; }
+        body.theme-classic { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; }
 
-body.theme-neon { --main: #7b1fa2; --bg: #f3e5f5; --accent: #00bcd4; }
-body.theme-cyber { --main: #2e7d32; --bg: #e8f5e9; --accent: #fbc02d; }
-body.theme-classic { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; }
+        .score-area { display: flex; justify-content: space-between; padding: 10px 20px; background: #fff; border-bottom: 3px solid var(--main); }
+        .fps-counter { font-size: 0.8rem; color: #888; }
 
-.score-area { display: flex; justify-content: space-between; padding: 10px 20px; background: #fff; border-bottom: 3px solid var(--main); }
-.fps-counter { font-size: 0.8rem; color: #888; }
+        #game-area { position: relative; width: 90vw; height: 90vw; max-width: 400px; max-height: 400px; margin: 10px auto; background: #fafafa; border: 4px solid var(--main); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        canvas { width: 100%; height: 100%; display: block; }
 
-#game-area { position: relative; width: 90vw; height: 90vw; max-width: 400px; max-height: 400px; margin: 10px auto; background: #fafafa; border: 4px solid var(--main); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-canvas { width: 100%; height: 100%; display: block; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 15px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; box-sizing: border-box; font-size: 1rem; }
+        .btn-diff { background: #eee; color: #444; text-align: center; border: 2px solid transparent; cursor: pointer; }
+        .btn-diff.active { background: #fff; border-color: var(--main); color: var(--main); }
 
-.overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 15px; box-sizing: border-box; }
+        .name-label { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: var(--main); }
+        .list-container { width: 100%; height: 120px; overflow-y: auto; background: #fff; border: 2px solid #ddd; margin-bottom: 10px; border-radius: 8px; }
+        .list-item { padding: 12px; font-size: 1.1rem; border-bottom: 1px solid #eee; color: #333; text-align: center; background: #fff; cursor: pointer; }
+        .list-item.selected { background: var(--main) !important; color: #fff !important; font-weight: bold; }
 
-.btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; box-sizing: border-box; font-size: 1rem; }
-.btn-diff { background: #eee; color: #444; text-align: center; border: 2px solid transparent; }
-.btn-diff.active { background: #fff; border-color: var(--main); color: var(--main); }
+        .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 5px auto; }
+        .p-btn { height: 60px; background: #fff; border: 3px solid var(--main); border-radius: 15px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; cursor: pointer; }
+        .p-btn:active { background: var(--main); color: #fff; }
 
-.name-label { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: var(--main); }
-.list-container { width: 100%; height: 120px; overflow-y: auto; background: #fff; border: 2px solid #ddd; margin-bottom: 10px; border-radius: 8px; }
-.list-item { padding: 12px; font-size: 1.1rem; border-bottom: 1px solid #eee; color: #333; text-align: center; background: #fff; }
-.list-item.selected { background: var(--main) !important; color: #fff !important; font-weight: bold; }
+        .theme-btns { display: flex; gap: 8px; margin-bottom: 10px; width: 100%; }
+        .theme-btns button { flex: 1; padding: 5px; font-size: 0.7rem; border-radius: 5px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
 
-.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 5px auto; }
-.p-btn { height: 60px; background: #fff; border: 3px solid var(--main); border-radius: 15px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; }
-.p-btn:active { background: var(--main); color: #fff; }
-
-.theme-btns { display: flex; gap: 8px; margin-bottom: 10px; width: 100%; }
-.theme-btns button { flex: 1; padding: 5px; font-size: 0.7rem; border-radius: 5px; border: 1px solid #ccc; background: #fff; }
-</style>
+        /* 送信中のスタイル */
+        .btn:disabled { background: #ccc !important; color: #666 !important; cursor: not-allowed !important; box-shadow: none !important; }
+    </style>
 </head>
 <body class="theme-classic">
 
@@ -50,7 +52,6 @@ canvas { width: 100%; height: 100%; display: block; }
     <p>不正なスコア操作が検知されました。</p>
     <p>安全な運行のため、入区を制限しています。</p>
     <p style="color:#333; font-size:0.7rem; margin-top:20px;">ERR_CODE: SC_CH_01</p>
-    
     <div class="repair-link">
         <p style="font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0;">本線への復帰を希望される場合は</p>
         <a href="ban_contact.html">🛠️ 車両修繕・復帰申請はこちら</a>
@@ -71,17 +72,14 @@ canvas { width: 100%; height: 100%; display: block; }
             <button onclick="setTheme('neon')">むらさき</button>
             <button onclick="setTheme('cyber')">みどり</button>
         </div>
-        
         <div class="name-label">【1】なまえをえらんでね</div>
         <div class="list-container" id="name-selector"></div>
-
         <div class="name-label">【2】むずかしさをえらぶ</div>
         <div id="diff-container" style="width:100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px;">
             <button class="btn-diff active" onclick="setDiff(0)" style="padding: 5px;">☆<br><span style="font-size:0.6rem;">やさしい</span></button>
             <button class="btn-diff" onclick="setDiff(2)" style="padding: 5px;">☆☆☆<br><span style="font-size:0.6rem;">ふつう</span></button>
             <button class="btn-diff" onclick="setDiff(4)" style="padding: 5px;">☆☆☆☆☆<br><span style="font-size:0.6rem;">たつじん</span></button>
         </div>
-        
         <button class="btn" style="background:var(--main); color:#fff; font-size:1.3rem; margin-top:5px;" onclick="initGame()">あそぶ！</button>
         <a href="index.html" style="font-size:0.8rem; color:#888; margin-top:10px;">トップにもどる</a>
     </div>
@@ -90,9 +88,8 @@ canvas { width: 100%; height: 100%; display: block; }
         <div style="font-size:1.2rem; color:#666;">スコア</div>
         <div style="font-size:4rem; color:var(--main); font-weight: bold;" id="final-score">0</div>
         <div id="rank-display" style="margin:10px 0; font-weight:bold; color:var(--accent);"></div>
-        
         <button class="btn" id="send-btn" onclick="sendScore()" style="background:var(--accent); color:#fff;">ランキングにのせる</button>
-        <a href="ranking.html" class="btn" style="background:var(--main); color:#fff;">ベスト10をみる</a>
+        <a href="rank.html" class="btn" style="background:var(--main); color:#fff;">ベスト10をみる</a>
         <button class="btn" style="background:#eee; color:#666;" onclick="location.reload()">もういちど</button>
     </div>
 </div>
@@ -103,7 +100,7 @@ canvas { width: 100%; height: 100%; display: block; }
 </div>
 
 <script>
-// --- セキュリティと管理者解除 ---
+// --- セキュリティ ---
 const expiry = new Date("2026/02/01 00:00:00").getTime();
 if (new Date().getTime() >= expiry) window.location.href = "memorial.html";
 
@@ -178,7 +175,7 @@ function setDiff(idx) {
 }
 
 function initGame() {
-    if (!selectedName) return;
+    if (!selectedName) { alert("なまえをえらんでね！"); return; }
     document.getElementById("start-screen").style.display = "none";
     score = 0;
     document.getElementById("now-score").innerText = score;
@@ -238,19 +235,39 @@ function gameLoop() {
 
 function sendScore() {
     if(isSending) return;
-    // 0点は送信させない
-    if (score <= 0) {
-        alert("0点ではランキングにのせられません！");
-        return;
-    }
+    if (score <= 0) { alert("0点ではランキングにのせられません！"); return; }
     if (score > 4000) { applyBan(); return; }
     
-    // （以下、既存の送信処理）
     isSending = true;
-    // ...
+    const sendBtn = document.getElementById("send-btn");
+    sendBtn.disabled = true;
+    sendBtn.innerText = "記録を送信中...";
+    sendBtn.style.opacity = "0.7";
+
+    const gasUrl = "https://script.google.com/macros/s/AKfycbw1Wmit3zAGi1sYBr-F_a8JnEjepmtZL9CJATnOxSdNp0Uz4UTuKu1kgFK6WmdWQ1US/exec";
+
+    fetch(gasUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `nickname=${encodeURIComponent(selectedName)}&score=${score}&icon=${encodeURIComponent('🐍')}`
+    })
+    .then(() => {
+        alert("運行記録が登録されました！");
+        window.location.href = "rank.html";
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("通信エラーが発生しました。");
+        isSending = false;
+        sendBtn.disabled = false;
+        sendBtn.innerText = "ランキングにのせる";
+        sendBtn.style.opacity = "1";
+    });
 }
 </script>
-    <footer style="margin-top: 80px; padding: 30px 10px; border-top: 1px solid #ccc; text-align: center; background: #eee; color: #666;">
+
+<footer style="margin-top: 80px; padding: 30px 10px; border-top: 1px solid #ccc; text-align: center; background: #eee; color: #666;">
     <div style="font-size: 0.75rem; margin-bottom: 10px;">
         <a href="terms.html" style="color: #444; text-decoration: underline; margin: 0 10px;">利用規約・権利規定</a>
         <span style="margin: 0 5px;">|</span>
@@ -262,8 +279,9 @@ function sendScore() {
         運行停止やデータ消失に関する責任は負いかねます。
     </p>
 </footer>
-    <script>
-// 2月1日以降の直接アクセスを禁止し、終着駅ページへ飛ばす
+
+<script>
+// 2月1日以降の自動転送
 (function() {
     const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
     if (new Date().getTime() >= expiry) {
@@ -271,8 +289,5 @@ function sendScore() {
     }
 })();
 </script>
-
-</body>
-</html>
 </body>
 </html>
