@@ -9,7 +9,6 @@
         :root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; --panel: #ffffff; }
         body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow: hidden; }
         
-        /* 運行停止画面 */
         #ban-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #ff0000; display: none; z-index: 100000; align-items: center; justify-content: center; flex-direction: column; font-weight: bold; }
         .repair-link { margin-top: 30px; padding: 15px; border: 1px solid #444; border-radius: 8px; background: #111; }
         .repair-link a { color: #ffd700; font-weight: bold; text-decoration: none; border-bottom: 1px solid #ffd700; }
@@ -41,7 +40,6 @@
         .theme-btns { display: flex; gap: 8px; margin-bottom: 10px; width: 100%; }
         .theme-btns button { flex: 1; padding: 5px; font-size: 0.7rem; border-radius: 5px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
 
-        /* 送信中のスタイル */
         .btn:disabled { background: #ccc !important; color: #666 !important; cursor: not-allowed !important; box-shadow: none !important; }
     </style>
 </head>
@@ -54,7 +52,7 @@
     <p style="color:#333; font-size:0.7rem; margin-top:20px;">ERR_CODE: SC_CH_01</p>
     <div class="repair-link">
         <p style="font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0;">本線への復帰を希望される場合は</p>
-        <a href="ban_contact.html">🛠️ 車両修繕・復帰申請はこちら</a>
+        <a href="https://shinorail.github.io/2026/ban_contact.html">🛠️ 車両修繕・復帰申請はこちら</a>
     </div>
 </div>
 
@@ -100,7 +98,6 @@
 </div>
 
 <script>
-// --- セキュリティ ---
 const expiry = new Date("2026/02/01 00:00:00").getTime();
 if (new Date().getTime() >= expiry) window.location.href = "memorial.html";
 
@@ -130,7 +127,6 @@ window.addEventListener('click', () => {
     }
 });
 
-// --- ゲームロジック ---
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
 const box = 20;
@@ -236,7 +232,22 @@ function gameLoop() {
 function sendScore() {
     if(isSending) return;
     if (score <= 0) { alert("0点ではランキングにのせられません！"); return; }
-    if (score > 4000) { applyBan(); return; }
+    
+    // 【チート検知】ban_contact.htmlへ誘導
+    if (score > 4000) { 
+        alert("異常なスコアが検出されました。");
+        window.location.href = "https://shinorail.github.io/2026/ban_contact.html";
+        return; 
+    }
+
+    // 【不具合・通常確認】contact.htmlへ誘導
+    const confirmMsg = "このスコアで運行記録を送信しますか？\n（送信できない場合は「キャンセル」を押して不具合報告へ）";
+    if (!confirm(confirmMsg)) {
+        if (confirm("登録をやめて不具合報告（お問い合わせ）へ移動しますか？")) {
+            window.location.href = "https://shinorail.github.io/2026/contact.html";
+        }
+        return;
+    }
     
     isSending = true;
     const sendBtn = document.getElementById("send-btn");
@@ -258,11 +269,14 @@ function sendScore() {
     })
     .catch(error => {
         console.error("Error:", error);
-        alert("通信エラーが発生しました。");
-        isSending = false;
-        sendBtn.disabled = false;
-        sendBtn.innerText = "ランキングにのせる";
-        sendBtn.style.opacity = "1";
+        if (confirm("通信エラーが発生しました。不具合報告（お問い合わせ）へ移動しますか？")) {
+            window.location.href = "https://shinorail.github.io/2026/contact.html";
+        } else {
+            isSending = false;
+            sendBtn.disabled = false;
+            sendBtn.innerText = "ランキングにのせる";
+            sendBtn.style.opacity = "1";
+        }
     });
 }
 </script>
@@ -271,17 +285,15 @@ function sendScore() {
     <div style="font-size: 0.75rem; margin-bottom: 10px;">
         <a href="terms.html" style="color: #444; text-decoration: underline; margin: 0 10px;">利用規約・権利規定</a>
         <span style="margin: 0 5px;">|</span>
-        <a href="ban_contact.html" style="color: #444; text-decoration: underline; margin: 0 10px;">車両修繕申請</a>
+        <a href="https://shinorail.github.io/2026/ban_contact.html" style="color: #444; text-decoration: underline; margin: 0 10px;">車両修繕申請</a>
     </div>
     <p style="font-size: 0.8rem; font-weight: bold; margin: 5px 0;">&copy; 2023-2026 篠ノ井乗務区</p>
     <p style="font-size: 0.6rem; line-height: 1.4; max-width: 500px; margin: auto;">
-        本サイトは個人運営のファンサイトであり、実際の鉄道事業者等とは無関係です。<br>
-        運行停止やデータ消失に関する責任は負いかねます。
+        本サイトは個人運営のファンサイトであり、実際の鉄道事業者等とは無関係です。
     </p>
 </footer>
 
 <script>
-// 2月1日以降の自動転送
 (function() {
     const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
     if (new Date().getTime() >= expiry) {
