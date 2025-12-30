@@ -63,7 +63,7 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; line-height: 1.5; }
 </div>
 
 <div class="btn-group">
-    <a href="newyearMessage.html" id="msg-btn" class="main-btn" style="background: #ffffff !important; color: #1a237e !important; border: 2px solid #1a237e; box-shadow: 0 4px 0 #1a237e !important;">
+    <a href="2025-2026.html" id="msg-btn" class="main-btn" style="background: #ffffff !important; color: #1a237e !important; border: 2px solid #1a237e; box-shadow: 0 4px 0 #1a237e !important;">
         <span id="msg-label" style="font-size: 0.7rem; display: block; opacity: 0.7; margin-bottom: 2px;">2025-2026</span>
         <span id="msg-text">フォロワーの皆様へ（年末のご挨拶）</span>
     </a>
@@ -77,7 +77,7 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; line-height: 1.5; }
 </div>
 
 <script>
-// 日本時間JST基準でのターゲット時刻設定
+// 日本時間基準の設定
 const target = new Date("2026-01-01T00:00:00+09:00").getTime();
 const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
 let isReady = false;
@@ -128,7 +128,7 @@ function update() {
     const diff = target - now;
 
     if (diff > 0) {
-        // --- 1月1日0時より前（年末モード） ---
+        // --- 年末モード（12/31まで） ---
         isReady = false;
         const d = Math.floor(diff / 864e5);
         const h = Math.floor((diff % 864e5) / 36e5);
@@ -139,9 +139,11 @@ function update() {
 
         document.getElementById("msg-label").innerText = "2025-2026";
         document.getElementById("msg-text").innerText = "フォロワーの皆様へ（年末のご挨拶）";
-        document.getElementById("msg-btn").href = "newyearMessage.html"; // ファイル名は共通
+        document.getElementById("msg-btn").href = "2025-2026.html";
+        document.getElementById("msg-btn").style.borderColor = "#1a237e";
+        document.getElementById("msg-btn").style.color = "#1a237e";
     } else {
-        // --- 1月1日0時以降（新年モード） ---
+        // --- 新年モード（1/1から） ---
         isReady = true;
         document.getElementById("timer").innerText = "00d 00h 00m 00s";
         document.getElementById("rail-kuji").classList.remove("waiting");
@@ -151,6 +153,7 @@ function update() {
 
         document.getElementById("msg-label").innerText = "2026 New Year";
         document.getElementById("msg-text").innerText = "謹賀新年（新年のご挨拶）";
+        document.getElementById("msg-btn").href = "newyearMessage.html";
         document.getElementById("msg-btn").style.borderColor = "#b71c1c";
         document.getElementById("msg-btn").style.color = "#b71c1c";
     }
