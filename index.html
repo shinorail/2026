@@ -63,6 +63,11 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; line-height: 1.5; }
 </div>
 
 <div class="btn-group">
+    <a href="newyearMessage.html" id="msg-btn" class="main-btn" style="background: #ffffff !important; color: #1a237e !important; border: 2px solid #1a237e; box-shadow: 0 4px 0 #1a237e !important;">
+        <span id="msg-label" style="font-size: 0.7rem; display: block; opacity: 0.7; margin-bottom: 2px;">2025-2026</span>
+        <span id="msg-text">フォロワーの皆様へ（年末のご挨拶）</span>
+    </a>
+
     <a href="kids.html" class="main-btn game-btn">🚂 ゲームページ 🚃</a>
     <a href="zukan.html" class="main-btn sub-btn" style="background:#4caf50 !important; color:#fff !important; border:none; box-shadow: 0 4px 0 #2e7d32 !important;">📖 車両ずかん</a>
     <button id="rail-kuji" class="main-btn waiting" onclick="tryOpen('rail_result.html')">【点検中】鉄道おみくじ</button>
@@ -71,14 +76,11 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; line-height: 1.5; }
     <a href="contact.html" class="main-btn sub-btn" style="background:#00796b !important; color:#fff !important; border:none; box-shadow: 0 4px 0 #004d40 !important;">✉ お問い合わせ</a>
 </div>
 
-<footer>
-    製造元：GitHub<br>
-    制作・著作：篠ノ井乗務区
-</footer>
-
 <script>
-// --- 終了判定 (2026年1月31日 23:59:59まで) ---
 const expiry = new Date("2026/02/01 00:00:00").getTime();
+const target = new Date("2026/01/01 00:00:00").getTime();
+let isReady = false;
+
 function checkExpiry() {
     if (new Date().getTime() >= expiry) {
         window.location.href = "memorial.html";
@@ -86,7 +88,6 @@ function checkExpiry() {
 }
 checkExpiry();
 
-// --- アイテム演出 ---
 const itemData = {
     '🐎': '午年：物事が「うま」くいく、活気ある年だよ',
     '🎍': '門松：年神様を案内する大切なお飾りだよ',
@@ -121,10 +122,6 @@ function showDesc(x, y, text) {
 }
 setInterval(spawn, 1000);
 
-// --- カウントダウン & おみくじ解禁判定 ---
-const target = new Date("2026/01/01 00:00:00").getTime();
-let isReady = false;
-
 function update() {
     const now = new Date().getTime();
     const diff = target - now;
@@ -132,11 +129,16 @@ function update() {
     if (diff <= 0) {
         isReady = true;
         document.getElementById("timer").innerText = "00d 00h 00m 00s";
-        // おみくじボタンを有効化
         document.getElementById("rail-kuji").classList.remove("waiting");
         document.getElementById("rail-kuji").innerText = "鉄道おみくじ";
         document.getElementById("norm-kuji").classList.remove("waiting");
         document.getElementById("norm-kuji").innerText = "一般おみくじ";
+
+        // メッセージボタンの切り替え
+        document.getElementById("msg-label").innerText = "2026 New Year";
+        document.getElementById("msg-text").innerText = "謹賀新年（新年のご挨拶）";
+        document.getElementById("msg-btn").style.borderColor = "#b71c1c";
+        document.getElementById("msg-btn").style.color = "#b71c1c";
     } else {
         const d = Math.floor(diff / 864e5);
         const h = Math.floor((diff % 864e5) / 36e5);
@@ -157,6 +159,7 @@ function tryOpen(url) {
     }
 }
 </script>
+
 <footer style="margin-top: 80px; padding: 30px 10px; border-top: 1px solid #ccc; text-align: center; background: #eee; color: #666;">
     <div style="font-size: 0.75rem; margin-bottom: 10px;">
         <a href="terms.html" style="color: #444; text-decoration: underline; margin: 0 10px;">利用規約・権利規定</a>
