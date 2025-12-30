@@ -21,7 +21,6 @@ body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-ali
 .info-version { font-size: 0.7rem; opacity: 0.8; font-family: monospace; }
 .info-body { padding: 15px; font-size: 0.85rem; line-height: 1.6; }
 .info-item { border-bottom: 1px dashed var(--border); padding-bottom: 8px; margin-bottom: 8px; }
-.info-item:last-child { border-bottom: none; margin-bottom: 0; }
 
 /* ボタン */
 .btn-group { display: flex; flex-direction: column; gap: 15px; max-width: 450px; margin: 20px auto; }
@@ -29,7 +28,20 @@ body { background: var(--bg); font-family: "BIZ UDPGothic", sans-serif; text-ali
 .main-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0d123e; }
 .waiting { background: #78909c !important; box-shadow: 0 6px 0 #455a64 !important; opacity: 0.8; }
 
-footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
+/* シェア機能 */
+.share-area { margin-top: 40px; padding: 20px; border-top: 1px solid #ddd; }
+.share-label { font-size: 0.8rem; color: #666; margin-bottom: 15px; font-weight: bold; }
+.share-list { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.share-item { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #fff; font-size: 0.7rem; font-weight: bold; transition: 0.2s; }
+.sh-x { background: #000; }
+.sh-line { background: #06C755; }
+.sh-fb { background: #1877F2; }
+.sh-th { background: #000; border: 1px solid #444; }
+
+/* フッター */
+footer { margin-top: 60px; padding: 30px 10px; border-top: 1px solid #ccc; background: #eee; color: #666; }
+.footer-links { font-size: 0.75rem; margin-bottom: 15px; }
+.footer-links a { color: #444; text-decoration: underline; margin: 0 10px; }
 </style>
 </head>
 <body>
@@ -42,7 +54,7 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
 <div class="info-container">
     <div class="info-header">
         <div class="info-title">📢 運行情報・お知らせ</div>
-        <div class="info-version">Ver 2.5.6</div>
+        <div class="info-version">Ver 2.5.9</div>
     </div>
     <div class="info-body">
         <div class="info-item">本特設サイトは1月末で閉鎖いたします。</div>
@@ -55,37 +67,48 @@ footer { margin-top: 60px; font-size: 0.75rem; color: #666; }
         <span id="msg-label" style="font-size:0.7rem; display:block; opacity:0.7;">2025-2026</span>
         <span id="msg-text">フォロワーの皆様へ（年末のご挨拶）</span>
     </a>
-    <a href="kids.html" class="main-btn">🚂 ゲームページ</a>
+    <a href="kids.html" class="main-btn" style="background: #ff9800 !important; box-shadow: 0 6px 0 #e68a00 !important;">🚂 ゲームページ</a>
     <a href="zukan.html" class="main-btn" style="background:#4caf50 !important; box-shadow:0 6px 0 #2e7d32 !important;">📖 車両ずかん</a>
     <button id="rail-kuji" class="main-btn waiting" onclick="tryOpen('rail_result.html')">【点検中】鉄道おみくじ</button>
     <button id="norm-kuji" class="main-btn waiting" onclick="tryOpen('norm_result.html')" style="background:#b71c1c; box-shadow:0 6px 0 #8e1b1b;">【点検中】一般おみくじ</button>
+    <a href="howto.html" class="main-btn" style="background:#fff !important; color:var(--main-blue) !important; border:2px solid var(--main-blue); box-shadow:0 4px 0 var(--main-blue) !important;">📖 つかいかた</a>
+    <a href="contact.html" class="main-btn" style="background:#00796b !important; box-shadow:0 6px 0 #004d40 !important;">✉ お問い合わせ</a>
+</div>
+
+<div class="share-area">
+    <div class="share-label">特設サイトをシェア</div>
+    <div class="share-list">
+        <a id="sh-x" href="#" target="_blank" class="share-item sh-x">X</a>
+        <a id="sh-line" href="#" target="_blank" class="share-item sh-line">LINE</a>
+        <a id="sh-fb" href="#" target="_blank" class="share-item sh-fb">FB</a>
+        <a id="sh-th" href="#" target="_blank" class="share-item sh-th">Th</a>
+    </div>
 </div>
 
 <script>
 const targetNewYear = new Date("2026-01-01T00:00:00+09:00").getTime();
 const targetExpiry = new Date("2026-02-01T00:00:00+09:00").getTime();
 
+const siteUrl = encodeURIComponent("https://shinorail.github.io/");
+const shareText = encodeURIComponent("篠ノ井乗務区 2周年特設サイトが運行中！ #篠ノ井乗務区");
+document.getElementById("sh-x").href = `https://twitter.com/intent/tweet?text=${shareText}&url=${siteUrl}`;
+document.getElementById("sh-line").href = `https://social-plugins.line.me/lineit/share?url=${siteUrl}`;
+document.getElementById("sh-fb").href = `https://www.facebook.com/sharer/sharer.php?u=${siteUrl}`;
+document.getElementById("sh-th").href = `https://www.threads.net/intent/post?text=${shareText}%20${siteUrl}`;
+
 function update() {
     const now = new Date().getTime();
-    
-    if (now >= targetExpiry) {
-        window.location.href = "memorial.html";
-        return;
-    }
-
+    if (now >= targetExpiry) { window.location.href = "memorial.html"; return; }
     if (now < targetNewYear) {
         const diff = targetNewYear - now;
         updateTimerDisplay(diff, "2026年 午年まで あと");
-        document.getElementById("msg-btn").href = "2025-2026.html";
     } else {
         const diff = targetExpiry - now;
         updateTimerDisplay(diff, "特設サイト 運行終了まで あと");
-        
         document.getElementById("rail-kuji").classList.remove("waiting");
         document.getElementById("rail-kuji").innerText = "鉄道おみくじ";
         document.getElementById("norm-kuji").classList.remove("waiting");
         document.getElementById("norm-kuji").innerText = "一般おみくじ";
-        
         document.getElementById("msg-label").innerText = "2026 New Year";
         document.getElementById("msg-text").innerText = "謹賀新年（新年のご挨拶）";
         document.getElementById("msg-btn").href = "newyearMessage.html";
@@ -94,7 +117,6 @@ function update() {
         document.getElementById("msg-btn").style.boxShadow = "0 4px 0 #b71c1c";
     }
 }
-
 function updateTimerDisplay(diff, label) {
     const d = Math.floor(diff / 864e5);
     const h = Math.floor((diff % 864e5) / 36e5);
@@ -103,14 +125,21 @@ function updateTimerDisplay(diff, label) {
     document.getElementById("timer-label").innerText = label;
     document.getElementById("timer").innerText = `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
 }
-
 function tryOpen(url) {
     if (new Date().getTime() >= targetNewYear) { location.href = url; } 
     else { alert("2026年の幕開けまでお待ちください！"); }
 }
-
 setInterval(update, 1000);
 update();
 </script>
+
+<footer>
+    <div class="footer-links">
+        <a href="terms.html">利用規約・権利規定</a>
+        <span>|</span>
+        <a href="ban_contact.html">車両修繕申請</a>
+    </div>
+    <p style="font-size: 0.8rem; font-weight: bold;">&copy; 2023-2026 篠ノ井乗務区</p>
+</footer>
 </body>
 </html>
