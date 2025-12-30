@@ -69,5 +69,17 @@ async function loadRanking() {
 }
 loadRanking();
 </script>
+    <script>
+// 2月1日以降の直接アクセスを禁止し、終着駅ページへ飛ばす
+(function() {
+    const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
+    if (new Date().getTime() >= expiry) {
+        window.location.href = "memorial.html";
+    }
+})();
+</script>
+
+</body>
+</html>
 </body>
 </html>
