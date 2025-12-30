@@ -32,5 +32,18 @@
 
     <a href="index.html" style="display:block; text-align:center; color:var(--red); font-weight:bold;">起点（ホーム）へ戻る</a>
 </div>
+    <script>
+// 2月1日以降の直接アクセスを禁止し、終着駅ページへ飛ばす
+(function() {
+    const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
+    if (new Date().getTime() >= expiry) {
+        window.location.href = "memorial.html";
+    }
+})();
+</script>
+
 </body>
+</html>
+</body>
+    
 </html>
