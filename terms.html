@@ -33,5 +33,14 @@ const overlay = document.getElementById('pop-overlay'); const loading = document
 // 演出 setTimeout(() => { loading.style.display = 'none'; const list = ["大吉", "中吉", "小吉", "吉", "末吉"]; luckRes.innerText = list[Math.floor(Math.random() * list.length)]; resultArea.style.display = 'block'; talkBox.innerText = "「結果が出たようですよ！」"; }, 1000); }
 
 // 閉じる function closeKuji() { document.getElementById('pop-overlay').style.display = 'none'; } </script>
+  <script>
+// 2月1日以降の直接アクセスを禁止し、終着駅ページへ飛ばす
+(function() {
+    const expiry = new Date("2026-02-01T00:00:00+09:00").getTime();
+    if (new Date().getTime() >= expiry) {
+        window.location.href = "memorial.html";
+    }
+})();
+</script>
 
 </body> </html>
