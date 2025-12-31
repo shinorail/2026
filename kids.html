@@ -50,7 +50,7 @@
             </div>
             
             <div class="btn-grid">
-                <button id="mode-normal" class="toggle-btn active" onclick="setMode('normal')">壁なし</button>
+                <button id="mode-normal" class="toggle-btn active" onclick="setMode('normal')">標準</button>
                 <button id="mode-obs" class="toggle-btn" onclick="setMode('obs')">障害物あり</button>
             </div>
             <button class="play-btn" onclick="startGame()">運転開始！</button>
@@ -64,14 +64,15 @@
 </div>
 
 <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzyxQTPesQAUh_wRKlJQEZREfezzowTRstACYj16yP4_ofPnGZ2rOsQB0tINZ3F6G2r/exec";
+    // 提供された最新のURL
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxAcwZ-_rzpQKgobf38GdWGfzQKv9nNnmENu52WzpZDhWeEe7U__zdpurFiRHULQEgW/exec";
+    
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     const grid = 20;
     let snake, apple, obstacles, direction, nextDirection, score, stage, isGameOver;
     let config = { mode: 'normal', speed: 120 };
 
-    // 起動時にランキングを取得
     window.onload = fetchRanking;
 
     function fetchRanking() {
@@ -140,7 +141,6 @@
         if (direction === 'LEFT') head.x -= grid;
         if (direction === 'RIGHT') head.x += grid;
 
-        // 衝突判定（壁・自分・障害物）
         if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || 
             snake.some(s => s.x === head.x && s.y === head.y) ||
             obstacles.some(o => o.x === head.x && o.y === head.y)) {
@@ -160,16 +160,15 @@
     }
 
     function draw() {
-        // 背景（市松模様）
         for(let i=0; i<20; i++) {
             for(let j=0; j<20; j++) {
                 ctx.fillStyle = (i+j)%2==0 ? "#aad751":"#a2d149";
                 ctx.fillRect(i*grid, j*grid, grid, grid);
             }
         }
-        ctx.fillStyle = "#e91e63"; ctx.beginPath(); ctx.arc(apple.x+10, apple.y+10, 8, 0, Math.PI*2); ctx.fill(); // リンゴ
-        ctx.fillStyle = "#573111"; obstacles.forEach(o => ctx.fillRect(o.x+2, o.y+2, 16, 16)); // 障害物
-        snake.forEach((p, i) => { ctx.fillStyle = i==0?"#4e7cf6":"#5285f4"; ctx.fillRect(p.x, p.y, 19, 19); }); // ヘビ
+        ctx.fillStyle = "#e91e63"; ctx.beginPath(); ctx.arc(apple.x+10, apple.y+10, 8, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#573111"; obstacles.forEach(o => ctx.fillRect(o.x+2, o.y+2, 16, 16));
+        snake.forEach((p, i) => { ctx.fillStyle = i==0?"#4e7cf6":"#5285f4"; ctx.fillRect(p.x, p.y, 19, 19); });
     }
 
     function endGame() {
