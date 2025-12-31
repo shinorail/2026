@@ -2,7 +2,6 @@
 
 <html lang="ja"> <head> <link rel="icon" href="favicon.ico"> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>超・スネーク 100Stages - 篠ノ井乗務区</title> <style> :root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; } body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow-x: hidden; padding-bottom: 180px; }
 
-    /* テーマ変更用 */
     body.theme-neon { --main: #7b1fa2; --bg: #f3e5f5; --accent: #00bcd4; }
     body.theme-cyber { --main: #2e7d32; --bg: #e8f5e9; --accent: #fbc02d; }
 
@@ -13,22 +12,20 @@
     .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 15px; box-sizing: border-box; }
     .btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; }
 
-    /* リスト・ボタン類 */
     .list-container { width: 100%; height: 100px; overflow-y: auto; background: #fff; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 10px; }
     .list-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
     .list-item.selected { background: var(--main); color: #fff; }
+    
     .theme-btns { display: flex; gap: 5px; margin-bottom: 10px; width: 100%; }
-    .theme-btns button { flex: 1; padding: 5px; font-size: 0.7rem; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; background: #fff; }
+    .theme-btns button { flex: 1; padding: 8px; font-size: 0.7rem; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; background: #fff; font-weight: bold; }
 
-    /* 下部ウィンドウ */
     .msg-window { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 600px; background: #000; border: 3px solid #fff; padding: 12px; z-index: 10000; display: flex; flex-direction: column; box-shadow: 0 0 0 4px #000; }
     .msg-text { color: #fff; font-size: 0.8rem; text-align: left; margin-bottom: 10px; min-height: 2.5em; }
     .btn-row { display: flex; gap: 8px; justify-content: flex-end; }
-    .mini-btn { color: #fff; border: 2px solid #fff; padding: 8px 12px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+    .mini-btn { color: #fff; border: 2px solid #fff; padding: 8px 12px; cursor: pointer; font-size: 0.7rem; font-weight: bold; background: #444; text-decoration: none; }
 
-    /* おみくじ */
-    #kuji-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20000; display: none; align-items: center; justify-content: center; }
-    #kuji-card { background: #fff; border: 6px solid #000; padding: 25px; width: 240px; text-align: center; }
+    #kuji-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; display: none; align-items: center; justify-content: center; }
+    #kuji-card { background: #fff; border: 6px solid #000; padding: 30px; width: 250px; text-align: center; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
 
     .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 5px auto; }
     .p-btn { height: 60px; background: #fff; border: 3px solid var(--main); border-radius: 15px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; }
@@ -41,9 +38,9 @@
 
 <div id="start-screen" class="overlay">
     <div class="theme-btns">
-        <button onclick="setTheme('classic')">標準</button>
-        <button onclick="setTheme('neon')">むらさき</button>
-        <button onclick="setTheme('cyber')">みどり</button>
+        <button onclick="setTheme('classic')" style="border-bottom: 4px solid #3f51b5;">標準</button>
+        <button onclick="setTheme('neon')" style="border-bottom: 4px solid #7b1fa2;">むらさき</button>
+        <button onclick="setTheme('cyber')" style="border-bottom: 4px solid #2e7d32;">みどり</button>
     </div>
     <div style="font-size:0.8rem; font-weight:bold; margin-bottom:5px;">なまえをえらんでね</div>
     <div class="list-container" id="name-selector"></div>
@@ -54,7 +51,7 @@
 <div id="result-popup" class="overlay" style="display:none;">
     <div style="font-size:3rem; color:var(--main); font-weight: bold;" id="final-score">0</div>
     <div style="margin-bottom:10px;">到達: STAGE <span id="final-st">1</span></div>
-    <button class="btn" id="send-btn" onclick="sendScore()" style="background:var(--accent); color:#fff;">ランキングにのせる</button>
+    <button class="btn" onclick="sendScore()" style="background:var(--accent); color:#fff;">ランキングにのせる</button>
     <a href="ranking.html" class="btn" style="background:var(--main); color:#fff;">ランキングをみる</a>
     <button class="btn" style="background:#eee; color:#666;" onclick="location.reload()">もういちど</button>
 </div>
@@ -62,13 +59,13 @@
 
 <div class="pad"> <div></div><div class="p-btn" onclick="setD('U')">↑</div><div></div> <div class="p-btn" onclick="setD('L')">←</div><div class="p-btn" onclick="setD('D')">↓</div><div class="p-btn" onclick="setD('R')">→</div> </div>
 
-<div class="msg-window"> <div class="msg-text" id="talk-box">「本日は12月31日。今年最後のおみくじは引きましたか？」</div> <div class="btn-row"> <button class="mini-btn" style="background:#ff4500;" onclick="runKuji()">おみくじ(1日1回)</button> <a href="index.html" class="mini-btn" style="background:#444; text-decoration:none; display:flex; align-items:center;">トップへ戻る</a> </div> </div>
+<div class="msg-window"> <div class="msg-text" id="talk-box">「本日は2025年最終日。1日1回のおみくじで運試しをどうぞ。」</div> <div class="btn-row"> <button class="mini-btn" style="background:#ff4500;" onclick="runKuji()">おみくじを引く</button> <a href="index.html" class="mini-btn">トップへ戻る</a> </div> </div>
 
-<div id="kuji-overlay" onclick="closeKuji()"> <div id="kuji-card"> <h2 id="luck-txt" style="color:#f00; font-size:3rem; margin:15px 0;"></h2> <div style="font-size:0.6rem;">[ 画面をタッチして閉じる ]</div> </div> </div>
+<div id="kuji-overlay" onclick="closeKuji()"> <div id="kuji-card"> <div style="font-size:0.8rem; color:#888;">篠ノ井神社 おみくじ</div> <h2 id="luck-txt" style="color:#f00; font-size:4rem; margin:20px 0;"></h2> <div style="font-size:0.7rem; color:#333; background:#eee; padding:10px;">[ タップして閉じる ]</div> </div> </div>
 
 <script> const cvs = document.getElementById("snakeGame"); const ctx = cvs.getContext("2d"); const box = 20; let snake, food, dir, gameInterval, score, stage, stageScore; let selectedName = "";
 
-const names = ["あかぎ","あさま","あずさ","しなの","かがやき","はくたか","こまち","はやぶさ","のぞみ"]; const nameBox = document.getElementById("name-selector"); names.forEach(n => { const div = document.createElement("div"); div.className = "list-item"; div.innerText = n; div.onclick = () => { document.querySelectorAll('.list-item').forEach(el => el.classList.remove('selected')); div.classList.add('selected'); selectedName = n; }; nameBox.appendChild(div); });
+const names = ["あかぎ","あさま","あずさ","しなの","かがやき","はくたか","こまち","はやぶさ","のぞみ","つばめ"]; const nameBox = document.getElementById("name-selector"); names.forEach(n => { const div = document.createElement("div"); div.className = "list-item"; div.innerText = n; div.onclick = () => { document.querySelectorAll('.list-item').forEach(el => el.classList.remove('selected')); div.classList.add('selected'); selectedName = n; }; nameBox.appendChild(div); });
 
 function setTheme(t) { document.body.className = "theme-" + t; }
 
@@ -84,8 +81,19 @@ function setD(d) { if(d=="L" && dir!="R") dir="L"; if(d=="U" && dir!="D") dir="U
 
 function gameLoop() { ctx.fillStyle = "#fafafa"; ctx.fillRect(0,0,400,400); ctx.fillStyle = "#ff5252"; ctx.fillRect(food.x, food.y, box-1, box-1); snake.forEach((s, i) => { ctx.fillStyle = (i===0) ? "var(--accent)" : "var(--main)"; ctx.fillRect(s.x, s.y, box-1, box-1); }); let hX = snake[0].x, hY = snake[0].y; if(dir=="L") hX -= box; if(dir=="U") hY -= box; if(dir=="R") hX += box; if(dir=="D") hY += box; if(hX == food.x && hY == food.y) { score += 10; stageScore += 10; updateUI(); food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box }; if (stageScore >= 50 && stage < 100) { stage++; stageScore = 0; resetSnake(); startGameLoop(); } } else { snake.pop(); } let nH = {x: hX, y: hY}; if(hX<0 || hX>=400 || hY<0 || hY>=400 || snake.some(s => s.x==nH.x && s.y==nH.y)) { clearInterval(gameInterval); document.getElementById("result-popup").style.display = "flex"; document.getElementById("final-score").innerText = score; document.getElementById("final-st").innerText = stage; return; } snake.unshift(nH); }
 
-// 1日1回おみくじ function runKuji() { const today = new Date().toLocaleDateString(); if (localStorage.getItem('last_kuji') === today) { alert("おみくじは1日1回までです。また明日引いてね！"); return; } const res = ["大吉", "中吉", "小吉", "吉", "末吉"]; document.getElementById('luck-txt').innerText = res[Math.floor(Math.random() * res.length)]; document.getElementById('kuji-overlay').style.display = 'flex'; localStorage.setItem('last_kuji', today); } function closeKuji() { document.getElementById('kuji-overlay').style.display = 'none'; }
+// おみくじ機能（確実にポップアップを出す） function runKuji() { const today = new Date().toLocaleDateString(); if (localStorage.getItem('last_kuji_shino') === today) { alert("本日のおみくじはすでに引いています。また明日お越しください。"); return; }
 
-function sendScore() { alert("運行記録(スコア:" + score + ")を送信しました！"); window.location.href = "ranking.html"; } </script>
+const results = [&quot;大吉&quot;, &quot;中吉&quot;, &quot;小吉&quot;, &quot;吉&quot;, &quot;末吉&quot;, &quot;凶&quot;];
+const win = results[Math.floor(Math.random() * results.length)];
+
+document.getElementById(&#39;luck-txt&#39;).innerText = win;
+document.getElementById(&#39;kuji-overlay&#39;).style.display = &#39;flex&#39;;
+
+localStorage.setItem(&#39;last_kuji_shino&#39;, today);
+}
+
+function closeKuji() { document.getElementById('kuji-overlay').style.display = 'none'; }
+
+function sendScore() { alert("運行記録を送信しました！"); window.location.href = "ranking.html"; } </script>
 
 </body> </html>
