@@ -4,82 +4,74 @@
     <link rel="icon" href="favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>超・スネーク - 篠ノ井乗務区</title>
+    <title>超・スネーク 100Stages - 篠ノ井乗務区</title>
     <style>
         :root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; --panel: #ffffff; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow-x: hidden; padding-bottom: 160px; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow-x: hidden; padding-bottom: 200px; }
         
-        #ban-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #ff0000; display: none; z-index: 100000; align-items: center; justify-content: center; flex-direction: column; font-weight: bold; }
-        .repair-link { margin-top: 30px; padding: 15px; border: 1px solid #444; border-radius: 8px; background: #111; }
-        .repair-link a { color: #ffd700; font-weight: bold; text-decoration: none; border-bottom: 1px solid #ffd700; }
-
         .score-area { display: flex; justify-content: space-between; padding: 10px 20px; background: #fff; border-bottom: 3px solid var(--main); }
-        .fps-counter { font-size: 0.8rem; color: #888; }
+        .st-info { font-weight: bold; color: var(--main); font-size: 1.1rem; }
 
         #game-area { position: relative; width: 90vw; height: 90vw; max-width: 400px; max-height: 400px; margin: 10px auto; background: #fafafa; border: 4px solid var(--main); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         canvas { width: 100%; height: 100%; display: block; }
 
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 15px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; box-sizing: border-box; font-size: 1rem; }
+        .btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
 
-        /* おみくじ演出用 */
+        /* ランキング表示 */
+        .rank-box { max-width: 400px; margin: 10px auto; padding: 10px; border: 2px dashed #000; background: #fff; text-align: left; }
+        .rank-item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; font-size: 0.75rem; padding: 4px 0; }
+
+        .list-container { width: 100%; height: 100px; overflow-y: auto; background: #fff; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 10px; }
+        .list-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
+        .list-item.selected { background: var(--main); color: #fff; font-weight: bold; }
+
+        #clear-notice { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,215,0,0.9); border: 4px solid #fff; padding: 20px; border-radius: 10px; z-index: 150; display: none; pointer-events: none; }
+
         #kuji-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        #kuji-card { background: #fff; border: 6px solid #000; padding: 25px; width: 240px; text-align: center; box-shadow: 15px 15px 0px #f00; animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        #kuji-card { background: #fff; border: 6px solid #000; padding: 25px; width: 240px; text-align: center; box-shadow: 15px 15px 0px #f00; }
 
-        /* 下部メッセージウィンドウ */
-        .msg-window { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 600px; background: #000; border: 3px solid #fff; padding: 12px; z-index: 10000; display: flex; flex-direction: column; box-shadow: 0 0 0 4px #000; }
-        .msg-text { color: #fff; font-size: 0.8rem; text-align: left; margin-bottom: 10px; min-height: 2.5em; }
+        .msg-window { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 650px; background: #000; border: 3px solid #fff; padding: 12px; z-index: 10000; display: flex; flex-direction: column; box-shadow: 0 0 0 4px #000; }
+        .msg-text { color: #fff; font-size: 0.8rem; text-align: left; margin-bottom: 10px; min-height: 2.5em; line-height: 1.4; }
         .btn-row { display: flex; gap: 8px; justify-content: flex-end; }
-        .mini-btn { background: #ff4500; color: #fff; border: 2px solid #fff; padding: 8px 12px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+        .mini-btn { color: #fff; border: 2px solid #fff; padding: 8px 12px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
 
         .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 5px auto; }
         .p-btn { height: 60px; background: #fff; border: 3px solid var(--main); border-radius: 15px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; cursor: pointer; }
-
-        .ver-tag { position: fixed; bottom: 140px; right: 10px; background: #000; color: #0f0; padding: 2px 6px; font-size: 9px; z-index: 9999; }
     </style>
 </head>
-<body class="theme-classic">
-
-<div id="ban-screen">
-    <h1>⚠️ 運行停止中</h1>
-    <p>不正なスコア操作が検知されました。</p>
-    <div class="repair-link">
-        <a href="https://shinorail.github.io/2026/ban_contact.html">🛠️ 車両修繕・復帰申請はこちら</a>
-    </div>
-</div>
-
-<div class="ver-tag">VER. 06.07</div>
-
-<div id="kuji-overlay" onclick="closeKuji()">
-    <div id="kuji-card">
-        <div id="kuji-load">ヒイテマス...</div>
-        <div id="kuji-res-area" style="display:none;">
-            <div style="font-size:0.7rem; color:#888;">篠ノ井おみくじ</div>
-            <h2 id="luck-txt" style="color:#f00; font-size:3rem; margin:15px 0;"></h2>
-            <div style="font-size:0.6rem; background:#eee; padding:5px;">[ 閉じてランキング登録 ]</div>
-        </div>
-    </div>
-</div>
+<body>
 
 <div class="score-area">
-    <div id="fps" class="fps-counter">FPS: 0</div>
-    <div style="font-weight:bold;">スコア: <span id="now-score" style="font-size:1.5rem; color:var(--main);">0</span></div>
+    <div class="st-info">STAGE <span id="st-num">1</span></div>
+    <div style="font-weight:bold;">スコア: <span id="now-score">0</span></div>
 </div>
 
 <div id="game-area">
     <canvas id="snakeGame" width="400" height="400"></canvas>
     
+    <div id="clear-notice">
+        <div style="font-size:1.5rem; font-weight:bold; color:#000;">STAGE CLEAR!</div>
+    </div>
+
     <div id="start-screen" class="overlay">
-        <div class="name-label">なまえをえらんでね</div>
-        <div class="list-container" id="name-selector" style="width:100%; height:120px; overflow-y:auto; border:2px solid #ddd; margin-bottom:10px;"></div>
+        <div style="font-size:0.8rem; font-weight:bold; margin-bottom:5px;">なまえをえらんでね</div>
+        <div class="list-container" id="name-selector"></div>
         <button class="btn" style="background:var(--main); color:#fff;" onclick="initGame()">あそぶ！</button>
     </div>
 
     <div id="result-popup" class="overlay" style="display:none;">
-        <div style="font-size:4rem; color:var(--main); font-weight: bold;" id="final-score">0</div>
-        <button class="btn" id="send-btn" onclick="sendScore()" style="background:var(--accent); color:#fff;">ランキングにのせる</button>
-        <button class="btn" style="background:#eee; color:#666;" onclick="location.reload()">もういちど</button>
+        <div style="font-size:1rem; color:#666;">GAMEOVER</div>
+        <div style="font-size:3rem; color:var(--main); font-weight: bold;" id="final-score">0</div>
+        <div style="margin-bottom:10px;">到達: STAGE <span id="final-st">1</span></div>
+        <button class="btn" onclick="location.reload()" style="background:#eee; color:#666;">もういちど</button>
+    </div>
+</div>
+
+<div class="rank-box">
+    <div style="font-weight:bold; border-bottom:2px solid #000; margin-bottom:5px; font-size:0.8rem;">TOP 10 RANKING</div>
+    <div id="rank-list">
+        <div class="rank-item"><span>1. 運営者</span><span>ST.100 / 大吉</span></div>
     </div>
 </div>
 
@@ -89,35 +81,42 @@
 </div>
 
 <div class="msg-window">
-    <div class="msg-text" id="talk-box">「2025年もあとわずか。12/31までおみくじが引けるようです。」</div>
+    <div class="msg-text" id="talk-box">「おみくじを引いてからゲームをすると、ランキングに運勢も載りますよ。」</div>
     <div class="btn-row">
-        <button id="kuji-main-btn" class="mini-btn" onclick="runKuji()">おみくじを引く</button>
-        <button id="rank-reg-btn" class="mini-btn" style="background:#0066cc; display:none;" onclick="regKujiRank()">結果を登録</button>
+        <button class="mini-btn" style="background:#ff4500;" onclick="runKuji()">おみくじ</button>
+        <button id="reg-btn" class="mini-btn" style="background:#0066cc; display:none;" onclick="registerRanking()">RANKING登録</button>
+    </div>
+</div>
+
+<div id="kuji-overlay" onclick="closeKuji()">
+    <div id="kuji-card">
+        <div id="kuji-load">ヒイテマス...</div>
+        <div id="kuji-res-area" style="display:none;">
+            <div style="font-size:0.7rem; color:#888;">篠ノ井おみくじ</div>
+            <h2 id="luck-txt" style="color:#f00; font-size:3rem; margin:15px 0;"></h2>
+            <div style="font-size:0.6rem;">[ 閉じて記録を有効化 ]</div>
+        </div>
     </div>
 </div>
 
 <script>
-// おみくじ変数
-let myLuck = "";
-
-// ゲーム変数
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
 const box = 20;
-let snake, food, dir, gameInterval, score;
+let snake, food, dir, gameInterval, score, stage, stageScore;
 let selectedName = "";
+let myLuck = "未抽選";
 
-const names = ["あかぎ","あさま","あずさ","しなの","かがやき","はくたか","こまち","はやぶさ","のぞみ","みずほ","つばめ","かいじ","ひたち","とき","いなほ"];
+const names = ["あかぎ","あさま","あずさ","しなの","かがやき","はくたか","こまち","はやぶさ","のぞみ"];
 const nameBox = document.getElementById("name-selector");
 
 names.forEach(n => {
     const div = document.createElement("div");
-    div.style.padding = "10px";
+    div.className = "list-item";
     div.innerText = n;
     div.onclick = () => {
-        Array.from(nameBox.children).forEach(c => c.style.background = "#fff");
-        div.style.background = "#3f51b5";
-        div.style.color = "#fff";
+        document.querySelectorAll('.list-item').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
         selectedName = n;
     };
     nameBox.appendChild(div);
@@ -126,11 +125,26 @@ names.forEach(n => {
 function initGame() {
     if (!selectedName) { alert("なまえをえらんでね！"); return; }
     document.getElementById("start-screen").style.display = "none";
-    score = 0;
+    score = 0; stage = 1; stageScore = 0;
+    updateUI();
+    resetSnake();
+    startGameLoop();
+}
+
+function resetSnake() {
     snake = [{x: 10 * box, y: 10 * box}];
-    food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box };
     dir = "R";
-    gameInterval = setInterval(gameLoop, 120);
+    food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box };
+}
+
+function startGameLoop() {
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, Math.max(40, 200 - (stage * 5)));
+}
+
+function updateUI() {
+    document.getElementById("st-num").innerText = stage;
+    document.getElementById("now-score").innerText = score;
 }
 
 function setD(d) {
@@ -143,20 +157,19 @@ function setD(d) {
 function gameLoop() {
     ctx.fillStyle = "#fafafa"; ctx.fillRect(0,0,400,400);
     ctx.fillStyle = "#ff5252"; ctx.fillRect(food.x, food.y, box-1, box-1);
-    
     snake.forEach((s, i) => {
-        ctx.fillStyle = (i==0) ? "#ff9800" : "#3f51b5";
+        ctx.fillStyle = (i===0) ? "#ff9800" : "#3f51b5";
         ctx.fillRect(s.x, s.y, box-1, box-1);
     });
-
     let hX = snake[0].x, hY = snake[0].y;
     if(dir=="L") hX -= box; if(dir=="U") hY -= box;
     if(dir=="R") hX += box; if(dir=="D") hY += box;
 
     if(hX == food.x && hY == food.y) {
-        score += 10;
-        document.getElementById("now-score").innerText = score;
+        score += 10; stageScore += 10;
+        updateUI();
         food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box };
+        if (stageScore >= 50 && stage < 100) nextStage();
     } else { snake.pop(); }
 
     let nH = {x: hX, y: hY};
@@ -164,46 +177,51 @@ function gameLoop() {
         clearInterval(gameInterval);
         document.getElementById("result-popup").style.display = "flex";
         document.getElementById("final-score").innerText = score;
+        document.getElementById("final-st").innerText = stage;
+        document.getElementById("reg-btn").style.display = "block"; // 終了後に登録ボタン出現
         return;
     }
     snake.unshift(nH);
 }
 
-// おみくじ処理
+function nextStage() {
+    clearInterval(gameInterval);
+    stage++; stageScore = 0;
+    document.getElementById("clear-notice").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("clear-notice").style.display = "none";
+        resetSnake(); updateUI(); startGameLoop();
+    }, 1200);
+}
+
 function runKuji() {
-    if (new Date() > new Date('2025/12/31 23:59:59')) {
-        alert("おみくじ期間は終了しました。"); return;
-    }
-    const ov = document.getElementById('kuji-overlay');
-    ov.style.display = 'flex';
+    document.getElementById('kuji-overlay').style.display = 'flex';
     document.getElementById('kuji-load').style.display = 'block';
     document.getElementById('kuji-res-area').style.display = 'none';
-
     setTimeout(() => {
         document.getElementById('kuji-load').style.display = 'none';
         const res = ["大吉", "中吉", "小吉", "吉", "末吉"];
         myLuck = res[Math.floor(Math.random() * res.length)];
         document.getElementById('luck-txt').innerText = myLuck;
         document.getElementById('kuji-res-area').style.display = 'block';
-    }, 1200);
+    }, 1000);
 }
 
-function closeKuji() {
-    document.getElementById('kuji-overlay').style.display = 'none';
-    document.getElementById('rank-reg-btn').style.display = 'block';
-    document.getElementById('talk-box').innerText = "「おみくじ結果をランキングに記録できます。」";
-}
+function closeKuji() { document.getElementById('kuji-overlay').style.display = 'none'; }
 
-function regKujiRank() {
-    if (!selectedName) { alert("ゲームの『なまえ』を先に選んでください。"); return; }
-    alert(`${selectedName}さんを「${myLuck}」で登録しました！`);
-    document.getElementById('rank-reg-btn').style.display = 'none';
-    document.getElementById('talk-box').innerText = "「登録完了。良い年になりますように！」";
-}
-
-function sendScore() {
-    alert("運行記録を送信しました！");
-    window.location.href = "ranking.html";
+function registerRanking() {
+    if (!selectedName) { alert("なまえをえらんでから遊んでね！"); return; }
+    const list = document.getElementById('rank-list');
+    const item = document.createElement('div');
+    item.className = 'rank-item';
+    item.style.color = 'blue';
+    item.style.fontWeight = 'bold';
+    item.innerHTML = `<span>NEW! ${selectedName}</span><span>ST.${stage} / ${myLuck}</span>`;
+    list.insertBefore(item, list.firstChild);
+    
+    alert("ランキングに反映しました！");
+    document.getElementById("reg-btn").style.display = "none";
+    document.getElementById("talk-box").innerText = "「お見事！あなたの記録を刻みましたよ。」";
 }
 </script>
 </body>
