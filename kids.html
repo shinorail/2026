@@ -7,15 +7,11 @@
     <title>超・スネーク - 篠ノ井乗務区</title>
     <style>
         :root { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; --text: #333; --panel: #ffffff; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; text-align: center; margin: 0; touch-action: none; overflow-x: hidden; padding-bottom: 160px; }
         
         #ban-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #ff0000; display: none; z-index: 100000; align-items: center; justify-content: center; flex-direction: column; font-weight: bold; }
         .repair-link { margin-top: 30px; padding: 15px; border: 1px solid #444; border-radius: 8px; background: #111; }
         .repair-link a { color: #ffd700; font-weight: bold; text-decoration: none; border-bottom: 1px solid #ffd700; }
-
-        body.theme-neon { --main: #7b1fa2; --bg: #f3e5f5; --accent: #00bcd4; }
-        body.theme-cyber { --main: #2e7d32; --bg: #e8f5e9; --accent: #fbc02d; }
-        body.theme-classic { --main: #3f51b5; --bg: #f5f5f5; --accent: #ff9800; }
 
         .score-area { display: flex; justify-content: space-between; padding: 10px 20px; background: #fff; border-bottom: 3px solid var(--main); }
         .fps-counter { font-size: 0.8rem; color: #888; }
@@ -25,22 +21,22 @@
 
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 15px; box-sizing: border-box; }
         .btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; box-sizing: border-box; font-size: 1rem; }
-        .btn-diff { background: #eee; color: #444; text-align: center; border: 2px solid transparent; cursor: pointer; }
-        .btn-diff.active { background: #fff; border-color: var(--main); color: var(--main); }
 
-        .name-label { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: var(--main); }
-        .list-container { width: 100%; height: 120px; overflow-y: auto; background: #fff; border: 2px solid #ddd; margin-bottom: 10px; border-radius: 8px; }
-        .list-item { padding: 12px; font-size: 1.1rem; border-bottom: 1px solid #eee; color: #333; text-align: center; background: #fff; cursor: pointer; }
-        .list-item.selected { background: var(--main) !important; color: #fff !important; font-weight: bold; }
+        /* おみくじ演出用 */
+        #kuji-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20000; display: none; align-items: center; justify-content: center; }
+        #kuji-card { background: #fff; border: 6px solid #000; padding: 25px; width: 240px; text-align: center; box-shadow: 15px 15px 0px #f00; animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+        /* 下部メッセージウィンドウ */
+        .msg-window { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 600px; background: #000; border: 3px solid #fff; padding: 12px; z-index: 10000; display: flex; flex-direction: column; box-shadow: 0 0 0 4px #000; }
+        .msg-text { color: #fff; font-size: 0.8rem; text-align: left; margin-bottom: 10px; min-height: 2.5em; }
+        .btn-row { display: flex; gap: 8px; justify-content: flex-end; }
+        .mini-btn { background: #ff4500; color: #fff; border: 2px solid #fff; padding: 8px 12px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
 
         .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 280px; margin: 5px auto; }
         .p-btn { height: 60px; background: #fff; border: 3px solid var(--main); border-radius: 15px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; color: var(--main); font-weight: bold; cursor: pointer; }
-        .p-btn:active { background: var(--main); color: #fff; }
 
-        .theme-btns { display: flex; gap: 8px; margin-bottom: 10px; width: 100%; }
-        .theme-btns button { flex: 1; padding: 5px; font-size: 0.7rem; border-radius: 5px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
-
-        .btn:disabled { background: #ccc !important; color: #666 !important; cursor: not-allowed !important; box-shadow: none !important; }
+        .ver-tag { position: fixed; bottom: 140px; right: 10px; background: #000; color: #0f0; padding: 2px 6px; font-size: 9px; z-index: 9999; }
     </style>
 </head>
 <body class="theme-classic">
@@ -53,6 +49,19 @@
     </div>
 </div>
 
+<div class="ver-tag">VER. 06.07</div>
+
+<div id="kuji-overlay" onclick="closeKuji()">
+    <div id="kuji-card">
+        <div id="kuji-load">ヒイテマス...</div>
+        <div id="kuji-res-area" style="display:none;">
+            <div style="font-size:0.7rem; color:#888;">篠ノ井おみくじ</div>
+            <h2 id="luck-txt" style="color:#f00; font-size:3rem; margin:15px 0;"></h2>
+            <div style="font-size:0.6rem; background:#eee; padding:5px;">[ 閉じてランキング登録 ]</div>
+        </div>
+    </div>
+</div>
+
 <div class="score-area">
     <div id="fps" class="fps-counter">FPS: 0</div>
     <div style="font-weight:bold;">スコア: <span id="now-score" style="font-size:1.5rem; color:var(--main);">0</span></div>
@@ -62,29 +71,14 @@
     <canvas id="snakeGame" width="400" height="400"></canvas>
     
     <div id="start-screen" class="overlay">
-        <div class="theme-btns">
-            <button onclick="setTheme('classic')">標準</button>
-            <button onclick="setTheme('neon')">むらさき</button>
-            <button onclick="setTheme('cyber')">みどり</button>
-        </div>
-        <div class="name-label">【1】なまえをえらんでね</div>
-        <div class="list-container" id="name-selector"></div>
-        <div class="name-label">【2】むずかしさをえらぶ</div>
-        <div id="diff-container" style="width:100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px;">
-            <button class="btn-diff active" onclick="setDiff(0)" style="padding: 5px;">☆<br><span style="font-size:0.6rem;">やさしい</span></button>
-            <button class="btn-diff" onclick="setDiff(2)" style="padding: 5px;">☆☆☆<br><span style="font-size:0.6rem;">ふつう</span></button>
-            <button class="btn-diff" onclick="setDiff(4)" style="padding: 5px;">☆☆☆☆☆<br><span style="font-size:0.6rem;">たつじん</span></button>
-        </div>
-        <button class="btn" style="background:var(--main); color:#fff; font-size:1.3rem; margin-top:5px;" onclick="initGame()">あそぶ！</button>
-        <a href="index.html" style="font-size:0.8rem; color:#888; margin-top:10px;">トップにもどる</a>
+        <div class="name-label">なまえをえらんでね</div>
+        <div class="list-container" id="name-selector" style="width:100%; height:120px; overflow-y:auto; border:2px solid #ddd; margin-bottom:10px;"></div>
+        <button class="btn" style="background:var(--main); color:#fff;" onclick="initGame()">あそぶ！</button>
     </div>
 
     <div id="result-popup" class="overlay" style="display:none;">
-        <div style="font-size:1.2rem; color:#666;">スコア</div>
         <div style="font-size:4rem; color:var(--main); font-weight: bold;" id="final-score">0</div>
-        <div id="rank-display" style="margin:10px 0; font-weight:bold; color:var(--accent);"></div>
         <button class="btn" id="send-btn" onclick="sendScore()" style="background:var(--accent); color:#fff;">ランキングにのせる</button>
-        <a href="ranking.html" class="btn" style="background:var(--main); color:#fff;">ベスト10をみる</a>
         <button class="btn" style="background:#eee; color:#666;" onclick="location.reload()">もういちど</button>
     </div>
 </div>
@@ -94,95 +88,49 @@
     <div class="p-btn" onclick="setD('L')">←</div><div class="p-btn" onclick="setD('D')">↓</div><div class="p-btn" onclick="setD('R')">→</div>
 </div>
 
+<div class="msg-window">
+    <div class="msg-text" id="talk-box">「2025年もあとわずか。12/31までおみくじが引けるようです。」</div>
+    <div class="btn-row">
+        <button id="kuji-main-btn" class="mini-btn" onclick="runKuji()">おみくじを引く</button>
+        <button id="rank-reg-btn" class="mini-btn" style="background:#0066cc; display:none;" onclick="regKujiRank()">結果を登録</button>
+    </div>
+</div>
+
 <script>
-const expiry = new Date("2026/02/01 00:00:00").getTime();
-if (new Date().getTime() >= expiry) window.location.href = "memorial.html";
+// おみくじ変数
+let myLuck = "";
 
-function applyBan() {
-    localStorage.setItem('banned_user', 'true');
-    sessionStorage.setItem('banned_session', 'true');
-    document.getElementById('ban-screen').style.display = 'flex';
-}
-
-if (localStorage.getItem('banned_user') === 'true' || sessionStorage.getItem('banned_session') === 'true') {
-    applyBan();
-}
-
-let tc = 0; let lt = 0;
-window.addEventListener('click', () => {
-    const n = Date.now();
-    if (n - lt < 400) tc++; else tc = 1;
-    lt = n;
-    if (tc === 3) {
-        const p = prompt("Auth Code");
-        if (btoa(p) === "c2hpbm8ybmQ=") {
-            localStorage.removeItem('banned_user');
-            sessionStorage.removeItem('banned_session');
-            location.reload();
-        }
-        tc = 0;
-    }
-});
-
+// ゲーム変数
 const cvs = document.getElementById("snakeGame");
 const ctx = cvs.getContext("2d");
 const box = 20;
-let snake, food, dir, gameInterval, score, isSending = false;
-let selectedName = "", selectedDiff = 0, lastTime = 0, lastScoreUpdate = Date.now();
-
-const diffSettings = [
-    {speed: 250, label: "やさしい"},
-    {speed: 180, label: "初級"},
-    {speed: 120, label: "ふつう"},
-    {speed: 80, label: "上級"},
-    {speed: 40, label: "たつじん"}
-];
+let snake, food, dir, gameInterval, score;
+let selectedName = "";
 
 const names = ["あかぎ","あさま","あずさ","しなの","かがやき","はくたか","こまち","はやぶさ","のぞみ","みずほ","つばめ","かいじ","ひたち","とき","いなほ"];
 const nameBox = document.getElementById("name-selector");
 
-function renderNames() {
-    nameBox.innerHTML = "";
-    names.forEach(n => {
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.innerText = n;
-        div.onclick = () => {
-            document.querySelectorAll('.list-item').forEach(el => el.classList.remove('selected'));
-            div.classList.add('selected');
-            selectedName = n;
-        };
-        nameBox.appendChild(div);
-    });
-}
-renderNames();
-
-function setTheme(t) { document.body.className = "theme-" + t; }
-
-function setDiff(idx) {
-    selectedDiff = idx;
-    const btns = document.querySelectorAll('.btn-diff');
-    btns[0].classList.toggle('active', idx === 0);
-    btns[1].classList.toggle('active', idx === 2);
-    btns[2].classList.toggle('active', idx === 4);
-}
+names.forEach(n => {
+    const div = document.createElement("div");
+    div.style.padding = "10px";
+    div.innerText = n;
+    div.onclick = () => {
+        Array.from(nameBox.children).forEach(c => c.style.background = "#fff");
+        div.style.background = "#3f51b5";
+        div.style.color = "#fff";
+        selectedName = n;
+    };
+    nameBox.appendChild(div);
+});
 
 function initGame() {
     if (!selectedName) { alert("なまえをえらんでね！"); return; }
     document.getElementById("start-screen").style.display = "none";
     score = 0;
-    document.getElementById("now-score").innerText = score;
     snake = [{x: 10 * box, y: 10 * box}];
     food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box };
     dir = "R";
-    gameInterval = setInterval(gameLoop, diffSettings[selectedDiff].speed);
-    requestAnimationFrame(updateFPS);
-}
-
-function updateFPS(t) {
-    if (lastTime) { document.getElementById("fps").innerText = "FPS: " + Math.round(1000/(t-lastTime)); }
-    lastTime = t;
-    if (gameInterval) requestAnimationFrame(updateFPS);
+    gameInterval = setInterval(gameLoop, 120);
 }
 
 function setD(d) {
@@ -195,11 +143,9 @@ function setD(d) {
 function gameLoop() {
     ctx.fillStyle = "#fafafa"; ctx.fillRect(0,0,400,400);
     ctx.fillStyle = "#ff5252"; ctx.fillRect(food.x, food.y, box-1, box-1);
-    const mainColor = getComputedStyle(document.body).getPropertyValue('--main');
-    const accentColor = getComputedStyle(document.body).getPropertyValue('--accent');
     
     snake.forEach((s, i) => {
-        ctx.fillStyle = (i==0) ? accentColor : mainColor;
+        ctx.fillStyle = (i==0) ? "#ff9800" : "#3f51b5";
         ctx.fillRect(s.x, s.y, box-1, box-1);
     });
 
@@ -208,17 +154,14 @@ function gameLoop() {
     if(dir=="R") hX += box; if(dir=="D") hY += box;
 
     if(hX == food.x && hY == food.y) {
-        const now = Date.now();
-        if (now - lastScoreUpdate < 50) applyBan();
-        lastScoreUpdate = now;
-        score += (selectedDiff + 1) * 10;
+        score += 10;
         document.getElementById("now-score").innerText = score;
         food = { x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box };
     } else { snake.pop(); }
 
     let nH = {x: hX, y: hY};
     if(hX<0 || hX>=400 || hY<0 || hY>=400 || snake.some(s => s.x==nH.x && s.y==nH.y)) {
-        clearInterval(gameInterval); gameInterval = null;
+        clearInterval(gameInterval);
         document.getElementById("result-popup").style.display = "flex";
         document.getElementById("final-score").innerText = score;
         return;
@@ -226,52 +169,41 @@ function gameLoop() {
     snake.unshift(nH);
 }
 
+// おみくじ処理
+function runKuji() {
+    if (new Date() > new Date('2025/12/31 23:59:59')) {
+        alert("おみくじ期間は終了しました。"); return;
+    }
+    const ov = document.getElementById('kuji-overlay');
+    ov.style.display = 'flex';
+    document.getElementById('kuji-load').style.display = 'block';
+    document.getElementById('kuji-res-area').style.display = 'none';
+
+    setTimeout(() => {
+        document.getElementById('kuji-load').style.display = 'none';
+        const res = ["大吉", "中吉", "小吉", "吉", "末吉"];
+        myLuck = res[Math.floor(Math.random() * res.length)];
+        document.getElementById('luck-txt').innerText = myLuck;
+        document.getElementById('kuji-res-area').style.display = 'block';
+    }, 1200);
+}
+
+function closeKuji() {
+    document.getElementById('kuji-overlay').style.display = 'none';
+    document.getElementById('rank-reg-btn').style.display = 'block';
+    document.getElementById('talk-box').innerText = "「おみくじ結果をランキングに記録できます。」";
+}
+
+function regKujiRank() {
+    if (!selectedName) { alert("ゲームの『なまえ』を先に選んでください。"); return; }
+    alert(`${selectedName}さんを「${myLuck}」で登録しました！`);
+    document.getElementById('rank-reg-btn').style.display = 'none';
+    document.getElementById('talk-box').innerText = "「登録完了。良い年になりますように！」";
+}
+
 function sendScore() {
-    if(isSending) return;
-    if (score <= 0) { alert("0点ではランキングにのせられません！"); return; }
-    
-    if (score > 4000) { 
-        alert("異常なスコアが検出されました。");
-        window.location.href = "https://shinorail.github.io/2026/ban_contact.html";
-        return; 
-    }
-
-    if (!confirm("このスコアで運行記録を送信しますか？\n（送信できない場合は「キャンセル」を押して不具合報告へ）")) {
-        if (confirm("登録をやめて不具合報告（お問い合わせ）へ移動しますか？")) {
-            window.location.href = "https://shinorail.github.io/2026/contact.html";
-        }
-        return;
-    }
-    
-    isSending = true;
-    const sendBtn = document.getElementById("send-btn");
-    sendBtn.disabled = true;
-    sendBtn.innerText = "記録を送信中...";
-    sendBtn.style.opacity = "0.7";
-
-    const gasUrl = "https://script.google.com/macros/s/AKfycbw1Wmit3zAGi1sYBr-F_a8JnEjepmtZL9CJATnOxSdNp0Uz4UTuKu1kgFK6WmdWQ1US/exec";
-
-    fetch(gasUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `nickname=${encodeURIComponent(selectedName)}&score=${score}&icon=${encodeURIComponent('🐍')}`
-    })
-    .then(() => {
-        alert("運行記録が登録されました！");
-        window.location.href = "ranking.html";
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        if (confirm("通信エラーが発生しました。不具合報告（お問い合わせ）へ移動しますか？")) {
-            window.location.href = "https://shinorail.github.io/2026/contact.html";
-        } else {
-            isSending = false;
-            sendBtn.disabled = false;
-            sendBtn.innerText = "ランキングにのせる";
-            sendBtn.style.opacity = "1";
-        }
-    });
+    alert("運行記録を送信しました！");
+    window.location.href = "ranking.html";
 }
 </script>
 </body>
