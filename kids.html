@@ -2,30 +2,24 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>篠ノ井乗務区スネーク - Googleスタイル</title>
+    <link rel="icon" href="data:,"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>篠ノ井乗務区スネーク - 正式版</title>
     <style>
         :root { --grass-light: #aad751; --grass-dark: #a2d149; --snake-head: #4e7cf6; --snake-body: #5285f4; }
-        body { background: #4a752c; color: #fff; font-family: sans-serif; text-align: center; margin: 0; overflow-x: hidden; }
+        body { background: #4a752c; color: #fff; font-family: sans-serif; text-align: center; margin: 0; overflow-x: hidden; touch-action: none; }
         .header { background: #4a752c; display: flex; justify-content: center; gap: 30px; padding: 10px; font-weight: bold; font-size: 1.2rem; }
         #game-container { position: relative; width: 400px; height: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         canvas { display: block; background: var(--grass-light); }
-        
-        /* メニュー画面 */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .menu-card { background: #fff; color: #333; padding: 15px; border-radius: 12px; width: 85%; max-width: 320px; max-height: 90%; overflow-y: auto; }
-        
-        /* ランキング表示用スタイル */
-        .rank-list { font-size: 0.8rem; text-align: left; margin: 10px 0; background: #f0f0f0; border-radius: 5px; padding: 5px; }
+        .menu-card { background: #fff; color: #333; padding: 15px; border-radius: 12px; width: 85%; max-width: 320px; }
+        .rank-list { font-size: 0.8rem; text-align: left; margin: 10px 0; background: #f0f0f0; border-radius: 5px; padding: 8px; max-height: 150px; overflow-y: auto; }
         .rank-item { display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; padding: 3px 0; }
-        
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 5px 0; }
         .toggle-btn { background: #eee; border: 2px solid #ddd; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
         .toggle-btn.active { background: #4a752c; color: #fff; border-color: #4a752c; }
         .play-btn { background: #4a752c; color: #fff; border: none; padding: 10px; border-radius: 20px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
-        
         .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 200px; margin: 10px auto; }
-        .dir-btn { height: 50px; background: rgba(255,255,255,0.2); border: 2px solid #fff; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .dir-btn { height: 50px; background: rgba(255,255,255,0.2); border: 2px solid #fff; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; -webkit-user-select: none; }
     </style>
 </head>
 <body>
@@ -37,23 +31,20 @@
 
 <div id="game-container">
     <canvas id="gameCanvas" width="400" height="400"></canvas>
-    
     <div id="start-menu" class="overlay">
         <div class="menu-card">
             <h3 style="margin:0 0 10px; color:#4a752c;">ランキング TOP10</h3>
             <div id="ranking-display" class="rank-list">読み込み中...</div>
-            
             <hr>
             <div style="font-size:0.8rem; margin-bottom:5px;">
                 名前: <input type="text" id="player-name" value="あさま" style="width:100px;">
                 アイコン: <select id="player-icon"><option>🚃</option><option>🐍</option><option>🍎</option></select>
             </div>
-            
             <div class="btn-grid">
                 <button id="mode-normal" class="toggle-btn active" onclick="setMode('normal')">標準</button>
                 <button id="mode-obs" class="toggle-btn" onclick="setMode('obs')">障害物あり</button>
             </div>
-            <button class="play-btn" onclick="startGame()">運転開始！</button>
+            <button id="start-btn" class="play-btn" onclick="startGame()">運転開始！</button>
         </div>
     </div>
 </div>
@@ -64,30 +55,21 @@
 </div>
 
 <script>
-    // 提供された最新のURL
+    // 指定された最新URLを適用
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxAcwZ-_rzpQKgobf38GdWGfzQKv9nNnmENu52WzpZDhWeEe7U__zdpurFiRHULQEgW/exec";
     
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
+    const canvas = document.getElementById("gameCanvas"), ctx = canvas.getContext("2d");
     const grid = 20;
-    let snake, apple, obstacles, direction, nextDirection, score, stage, isGameOver;
+    let snake, apple, obstacles, direction, nextDirection, score, stage, isGameOver, isSending = false;
     let config = { mode: 'normal', speed: 120 };
 
     window.onload = fetchRanking;
 
     function fetchRanking() {
-        fetch(GAS_URL)
-            .then(res => res.json())
-            .then(data => {
-                const html = data.map((r, i) => `
-                    <div class="rank-item">
-                        <span>${i+1}. ${r.icon} ${r.nickname}</span>
-                        <span>${r.score}点</span>
-                    </div>
-                `).join('');
-                document.getElementById('ranking-display').innerHTML = html || "まだ記録がありません";
-            })
-            .catch(() => { document.getElementById('ranking-display').innerText = "取得失敗"; });
+        fetch(GAS_URL).then(res => res.json()).then(data => {
+            const html = data.map((r, i) => `<div class="rank-item"><span>${i+1}. ${r.icon} ${r.nickname}</span><span>${r.score}点</span></div>`).join('');
+            document.getElementById('ranking-display').innerHTML = html || "記録なし";
+        }).catch(() => { document.getElementById('ranking-display').innerText = "取得失敗"; });
     }
 
     function setMode(m) {
@@ -97,15 +79,14 @@
     }
 
     function startGame() {
+        if(isSending) return;
         document.getElementById("start-menu").style.display = "none";
-        resetGame();
-        loop();
+        resetGame(); loop();
     }
 
     function resetGame() {
         snake = [{x: 160, y: 160}, {x: 140, y: 160}, {x: 120, y: 160}];
-        apple = {x: 240, y: 160};
-        obstacles = [];
+        apple = {x: 240, y: 160}; obstacles = [];
         direction = 'RIGHT'; nextDirection = 'RIGHT';
         score = 0; stage = 1; isGameOver = false;
         if(config.mode === 'obs') spawnObs();
@@ -114,9 +95,7 @@
 
     function spawnObs() {
         obstacles = [];
-        for(let i=0; i<stage; i++) {
-            obstacles.push({x: Math.floor(Math.random()*20)*grid, y: Math.floor(Math.random()*20)*grid});
-        }
+        for(let i=0; i<stage; i++) obstacles.push({x: Math.floor(Math.random()*20)*grid, y: Math.floor(Math.random()*20)*grid});
     }
 
     function updateUI() {
@@ -130,7 +109,13 @@
         if (key === 'LEFT' && direction !== 'RIGHT') nextDirection = 'LEFT';
         if (key === 'RIGHT' && direction !== 'LEFT') nextDirection = 'RIGHT';
     }
-    window.addEventListener("keydown", e => { if(e.key.includes("Arrow")) handleInput(e.key.replace("Arrow","").toUpperCase()); });
+    
+    window.addEventListener("keydown", e => { 
+        if(e.key.includes("Arrow")) { 
+            e.preventDefault(); 
+            handleInput(e.key.replace("Arrow","").toUpperCase()); 
+        }
+    });
 
     function loop() {
         if (isGameOver) return;
@@ -173,20 +158,29 @@
 
     function endGame() {
         isGameOver = true;
-        const name = document.getElementById("player-name").value;
-        const icon = document.getElementById("player-icon").value;
-        const diff = config.mode === 'obs' ? "障害物あり" : "標準";
-
-        const data = { nickname: name, icon: icon, score: score, difficulty: diff };
+        if(isSending) return;
+        isSending = true;
         
-        document.getElementById('ranking-display').innerText = "登録中...";
+        const data = { 
+            nickname: document.getElementById("player-name").value, 
+            icon: document.getElementById("player-icon").value, 
+            score: score, 
+            difficulty: config.mode === 'obs' ? "障害物あり" : "標準" 
+        };
+        
+        document.getElementById('ranking-display').innerText = "スコア送信中...";
+        document.getElementById("start-menu").style.display = "flex";
+        
         fetch(GAS_URL, { method: "POST", body: JSON.stringify(data) })
-        .then(res => res.json())
-        .then(res => {
-            alert(`登録完了！ あなたは ${res.rank}位 / ${res.total}人中 です！`);
+        .then(res => res.json()).then(res => {
+            alert(`登録完了！ ${res.rank}位 / ${res.total}人中`);
+            isSending = false;
             location.reload();
-        })
-        .catch(() => { alert("通信エラー"); location.reload(); });
+        }).catch(() => { 
+            alert("通信エラーが発生しました");
+            isSending = false;
+            location.reload();
+        });
     }
 </script>
 </body>
