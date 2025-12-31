@@ -3,89 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Googleスタイル・スネーク - 篠ノ井乗務区</title>
+    <title>篠ノ井乗務区スネーク - Googleスタイル</title>
     <style>
-        :root {
-            --grass-light: #aad751;
-            --grass-dark: #a2d149;
-            --snake-head: #4e7cf6;
-            --snake-body: #5285f4;
-            --apple: #e91e63;
-            --obs: #573111;
-        }
-        body { background: #4a752c; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; overflow: hidden; }
-        
-        /* ヘッダーエリア */
-        .header { background: #4a752c; display: flex; justify-content: center; align-items: center; gap: 40px; padding: 10px; font-weight: bold; font-size: 1.2rem; }
-        .info-item { display: flex; align-items: center; gap: 8px; }
-        
-        /* ゲームボード */
+        :root { --grass-light: #aad751; --grass-dark: #a2d149; --snake-head: #4e7cf6; --snake-body: #5285f4; }
+        body { background: #4a752c; color: #fff; font-family: sans-serif; text-align: center; margin: 0; overflow-x: hidden; }
+        .header { background: #4a752c; display: flex; justify-content: center; gap: 30px; padding: 10px; font-weight: bold; font-size: 1.2rem; }
         #game-container { position: relative; width: 400px; height: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         canvas { display: block; background: var(--grass-light); }
-
-        /* オーバーレイ（設定・結果） */
-        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
-        .menu-card { background: #fff; color: #333; padding: 20px; border-radius: 12px; width: 85%; max-width: 320px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        h2 { margin: 0 0 15px; color: #4a752c; font-size: 1.4rem; }
-
-        /* 設定ボタン群 */
-        .option-group { margin-bottom: 15px; text-align: left; }
-        .option-label { font-size: 0.8rem; font-weight: bold; color: #666; margin-bottom: 5px; }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .toggle-btn { background: #eee; border: 2px solid #ddd; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
-        .toggle-btn.active { background: #4a752c; color: #fff; border-color: #4a752c; }
-
-        /* 操作パネル */
-        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 210px; margin: 20px auto; }
-        .dir-btn { height: 60px; background: rgba(255,255,255,0.2); border: 2px solid #fff; border-radius: 50%; color: #fff; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .dir-btn:active { background: #fff; color: #4a752c; }
-
-        /* ランキング簡易表示 */
-        #rank-list { font-size: 0.8rem; text-align: left; margin: 10px 0; background: #f9f9f9; padding: 8px; border-radius: 5px; }
         
-        .play-btn { background: #4a752c; color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 10px; }
+        /* メニュー画面 */
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .menu-card { background: #fff; color: #333; padding: 15px; border-radius: 12px; width: 85%; max-width: 320px; max-height: 90%; overflow-y: auto; }
+        
+        /* ランキング表示用スタイル */
+        .rank-list { font-size: 0.8rem; text-align: left; margin: 10px 0; background: #f0f0f0; border-radius: 5px; padding: 5px; }
+        .rank-item { display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; padding: 3px 0; }
+        
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 5px 0; }
+        .toggle-btn { background: #eee; border: 2px solid #ddd; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+        .toggle-btn.active { background: #4a752c; color: #fff; border-color: #4a752c; }
+        .play-btn { background: #4a752c; color: #fff; border: none; padding: 10px; border-radius: 20px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
+        
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 200px; margin: 10px auto; }
+        .dir-btn { height: 50px; background: rgba(255,255,255,0.2); border: 2px solid #fff; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="info-item">🍎 <span id="score">0</span></div>
-    <div class="info-item">🏆 <span id="best">0</span></div>
-    <div class="info-item">🚩 STAGE <span id="stage">1</span></div>
+    <div>🍎 <span id="score">0</span></div>
+    <div>🚩 ST <span id="stage">1</span></div>
 </div>
 
 <div id="game-container">
     <canvas id="gameCanvas" width="400" height="400"></canvas>
-
+    
     <div id="start-menu" class="overlay">
         <div class="menu-card">
-            <h2>CUSTOMIZE</h2>
+            <h3 style="margin:0 0 10px; color:#4a752c;">ランキング TOP10</h3>
+            <div id="ranking-display" class="rank-list">読み込み中...</div>
             
-            <div class="option-group">
-                <div class="option-label">モード</div>
-                <div class="btn-grid">
-                    <button id="mode-normal" class="toggle-btn active" onclick="setMode('normal')">標準</button>
-                    <button id="mode-obs" class="toggle-btn" onclick="setMode('obs')">障害物</button>
-                </div>
+            <hr>
+            <div style="font-size:0.8rem; margin-bottom:5px;">
+                名前: <input type="text" id="player-name" value="あさま" style="width:100px;">
+                アイコン: <select id="player-icon"><option>🚃</option><option>🐍</option><option>🍎</option></select>
             </div>
-
-            <div class="option-group">
-                <div class="option-label">はやさ</div>
-                <div class="btn-grid">
-                    <button id="speed-1" class="toggle-btn active" onclick="setSpd(150, 1)">ふつう</button>
-                    <button id="speed-2" class="toggle-btn" onclick="setSpd(80, 2)">はやい</button>
-                </div>
+            
+            <div class="btn-grid">
+                <button id="mode-normal" class="toggle-btn active" onclick="setMode('normal')">壁なし</button>
+                <button id="mode-obs" class="toggle-btn" onclick="setMode('obs')">障害物あり</button>
             </div>
-
-            <button class="play-btn" onclick="startGame()">START</button>
-        </div>
-    </div>
-
-    <div id="result-menu" class="overlay" style="display:none;">
-        <div class="menu-card">
-            <h2 id="result-title">GAME OVER</h2>
-            <div id="rank-list"></div>
-            <button class="play-btn" onclick="location.reload()">RETRY</button>
+            <button class="play-btn" onclick="startGame()">運転開始！</button>
         </div>
     </div>
 </div>
@@ -96,26 +64,35 @@
 </div>
 
 <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzyxQTPesQAUh_wRKlJQEZREfezzowTRstACYj16yP4_ofPnGZ2rOsQB0tINZ3F6G2r/exec";
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     const grid = 20;
-    
-    let snake, apple, obstacles, direction, nextDirection, score, stage, gameLoop, isGameOver;
-    let config = { mode: 'normal', speed: 150 };
+    let snake, apple, obstacles, direction, nextDirection, score, stage, isGameOver;
+    let config = { mode: 'normal', speed: 120 };
 
-    // 最高スコア読み込み
-    document.getElementById("best").innerText = localStorage.getItem("snake_best") || 0;
+    // 起動時にランキングを取得
+    window.onload = fetchRanking;
+
+    function fetchRanking() {
+        fetch(GAS_URL)
+            .then(res => res.json())
+            .then(data => {
+                const html = data.map((r, i) => `
+                    <div class="rank-item">
+                        <span>${i+1}. ${r.icon} ${r.nickname}</span>
+                        <span>${r.score}点</span>
+                    </div>
+                `).join('');
+                document.getElementById('ranking-display').innerHTML = html || "まだ記録がありません";
+            })
+            .catch(() => { document.getElementById('ranking-display').innerText = "取得失敗"; });
+    }
 
     function setMode(m) {
         config.mode = m;
-        document.getElementById('mode-normal').classList.toggle('active', m === 'normal');
-        document.getElementById('mode-obs').classList.toggle('active', m === 'obs');
-    }
-
-    function setSpd(s, id) {
-        config.speed = s;
-        document.getElementById('speed-1').classList.toggle('active', id === 1);
-        document.getElementById('speed-2').classList.toggle('active', id === 2);
+        document.getElementById('mode-normal').className = m=='normal'?'toggle-btn active':'toggle-btn';
+        document.getElementById('mode-obs').className = m=='obs'?'toggle-btn active':'toggle-btn';
     }
 
     function startGame() {
@@ -128,39 +105,22 @@
         snake = [{x: 160, y: 160}, {x: 140, y: 160}, {x: 120, y: 160}];
         apple = {x: 240, y: 160};
         obstacles = [];
-        direction = 'RIGHT';
-        nextDirection = 'RIGHT';
-        score = 0;
-        stage = 1;
-        isGameOver = false;
+        direction = 'RIGHT'; nextDirection = 'RIGHT';
+        score = 0; stage = 1; isGameOver = false;
+        if(config.mode === 'obs') spawnObs();
         updateUI();
+    }
+
+    function spawnObs() {
+        obstacles = [];
+        for(let i=0; i<stage; i++) {
+            obstacles.push({x: Math.floor(Math.random()*20)*grid, y: Math.floor(Math.random()*20)*grid});
+        }
     }
 
     function updateUI() {
         document.getElementById("score").innerText = score;
         document.getElementById("stage").innerText = stage;
-    }
-
-    function spawnApple() {
-        apple = {
-            x: Math.floor(Math.random() * 20) * grid,
-            y: Math.floor(Math.random() * 20) * grid
-        };
-        // 重なりチェック
-        if (snake.some(s => s.x === apple.x && s.y === apple.y) || 
-            obstacles.some(o => o.x === apple.x && o.y === apple.y)) spawnApple();
-    }
-
-    function spawnObstacles() {
-        obstacles = [];
-        if (config.mode === 'obs') {
-            for (let i = 0; i < stage; i++) {
-                obstacles.push({
-                    x: Math.floor(Math.random() * 20) * grid,
-                    y: Math.floor(Math.random() * 20) * grid
-                });
-            }
-        }
     }
 
     function handleInput(key) {
@@ -169,111 +129,65 @@
         if (key === 'LEFT' && direction !== 'RIGHT') nextDirection = 'LEFT';
         if (key === 'RIGHT' && direction !== 'LEFT') nextDirection = 'RIGHT';
     }
-
-    // PCキーボード操作
-    window.addEventListener("keydown", e => {
-        if (e.key === "ArrowUp") handleInput('UP');
-        if (e.key === "ArrowDown") handleInput('DOWN');
-        if (e.key === "ArrowLeft") handleInput('LEFT');
-        if (e.key === "ArrowRight") handleInput('RIGHT');
-    });
+    window.addEventListener("keydown", e => { if(e.key.includes("Arrow")) handleInput(e.key.replace("Arrow","").toUpperCase()); });
 
     function loop() {
         if (isGameOver) return;
-        
         direction = nextDirection;
         let head = { ...snake[0] };
-
         if (direction === 'UP') head.y -= grid;
         if (direction === 'DOWN') head.y += grid;
         if (direction === 'LEFT') head.x -= grid;
         if (direction === 'RIGHT') head.x += grid;
 
-        // 壁・自分・障害物への衝突判定
+        // 衝突判定（壁・自分・障害物）
         if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || 
             snake.some(s => s.x === head.x && s.y === head.y) ||
             obstacles.some(o => o.x === head.x && o.y === head.y)) {
-            endGame();
-            return;
+            endGame(); return;
         }
 
         snake.unshift(head);
-
-        // リンゴを食べたか
         if (head.x === apple.x && head.y === apple.y) {
             score += 10;
-            if (score % 50 === 0 && stage < 100) {
-                stage++;
-                if (config.mode === 'obs') spawnObstacles();
-            }
+            if(score % 50 === 0 && stage < 100) { stage++; if(config.mode==='obs') spawnObs(); }
             updateUI();
-            spawnApple();
-        } else {
-            snake.pop();
-        }
+            apple = {x: Math.floor(Math.random()*20)*grid, y: Math.floor(Math.random()*20)*grid};
+        } else { snake.pop(); }
 
         draw();
-        setTimeout(loop, Math.max(30, config.speed - (stage * 2)));
+        setTimeout(loop, Math.max(40, config.speed - (stage * 3)));
     }
 
     function draw() {
         // 背景（市松模様）
-        for (let i = 0; i < 20; i++) {
-            for (let j = 0; j < 20; j++) {
-                ctx.fillStyle = (i + j) % 2 === 0 ? "#aad751" : "#a2d149";
-                ctx.fillRect(i * grid, j * grid, grid, grid);
+        for(let i=0; i<20; i++) {
+            for(let j=0; j<20; j++) {
+                ctx.fillStyle = (i+j)%2==0 ? "#aad751":"#a2d149";
+                ctx.fillRect(i*grid, j*grid, grid, grid);
             }
         }
-
-        // 障害物
-        ctx.fillStyle = "#573111";
-        obstacles.forEach(o => {
-            ctx.beginPath();
-            ctx.roundRect(o.x+2, o.y+2, grid-4, grid-4, 4);
-            ctx.fill();
-        });
-
-        // リンゴ
-        ctx.fillStyle = "#e91e63";
-        ctx.beginPath();
-        ctx.arc(apple.x + grid/2, apple.y + grid/2, grid/2 - 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#fff"; // 光沢
-        ctx.beginPath();
-        ctx.arc(apple.x + grid/3, apple.y + grid/3, 2, 0, Math.PI * 2);
-        ctx.fill();
-
-        // ヘビ
-        snake.forEach((part, i) => {
-            ctx.fillStyle = i === 0 ? "#4e7cf6" : "#5285f4";
-            ctx.beginPath();
-            ctx.roundRect(part.x, part.y, grid-1, grid-1, i === 0 ? 6 : 2);
-            ctx.fill();
-            
-            // 目
-            if (i === 0) {
-                ctx.fillStyle = "#fff";
-                ctx.fillRect(part.x + 4, part.y + 4, 4, 4);
-                ctx.fillRect(part.x + 12, part.y + 4, 4, 4);
-            }
-        });
+        ctx.fillStyle = "#e91e63"; ctx.beginPath(); ctx.arc(apple.x+10, apple.y+10, 8, 0, Math.PI*2); ctx.fill(); // リンゴ
+        ctx.fillStyle = "#573111"; obstacles.forEach(o => ctx.fillRect(o.x+2, o.y+2, 16, 16)); // 障害物
+        snake.forEach((p, i) => { ctx.fillStyle = i==0?"#4e7cf6":"#5285f4"; ctx.fillRect(p.x, p.y, 19, 19); }); // ヘビ
     }
 
     function endGame() {
         isGameOver = true;
-        const best = localStorage.getItem("snake_best") || 0;
-        if (score > best) localStorage.setItem("snake_best", score);
-        
-        // ランキング保存
-        let ranks = JSON.parse(localStorage.getItem("snake_ranks") || "[]");
-        ranks.push({score, stage, date: new Date().toLocaleDateString()});
-        ranks.sort((a,b) => b.score - a.score);
-        ranks = ranks.slice(0, 5);
-        localStorage.setItem("snake_ranks", JSON.stringify(ranks));
+        const name = document.getElementById("player-name").value;
+        const icon = document.getElementById("player-icon").value;
+        const diff = config.mode === 'obs' ? "障害物あり" : "標準";
 
-        const listHtml = ranks.map((r, i) => `<div>${i+1}位: ${r.score}点 (ST.${r.stage})</div>`).join('');
-        document.getElementById("rank-list").innerHTML = listHtml;
-        document.getElementById("result-menu").style.display = "flex";
+        const data = { nickname: name, icon: icon, score: score, difficulty: diff };
+        
+        document.getElementById('ranking-display').innerText = "登録中...";
+        fetch(GAS_URL, { method: "POST", body: JSON.stringify(data) })
+        .then(res => res.json())
+        .then(res => {
+            alert(`登録完了！ あなたは ${res.rank}位 / ${res.total}人中 です！`);
+            location.reload();
+        })
+        .catch(() => { alert("通信エラー"); location.reload(); });
     }
 </script>
 </body>
