@@ -59,8 +59,8 @@ footer { margin-top: 60px; padding: 30px 10px; border-top: 1px solid #ccc; backg
 
 <div class="btn-group">
     <a href="2025-2026.html" id="msg-btn" class="main-btn" style="background:#fff !important; color:#1a237e !important; border:2px solid #1a237e; box-shadow:0 4px 0 #1a237e !important;">
-        <span id="msg-label" style="font-size:0.7rem; display:block; opacity:0.7;">2025-2026</span>
-        <span id="msg-text">フォロワーの皆様へ（年末のご挨拶）</span>
+        <span id="msg-label" style="font-size:0.7rem; display:block; opacity:0.7; color:inherit;">2025-2026</span>
+        <span id="msg-text" style="color:inherit;">フォロワーの皆様へ（年末のご挨拶）</span>
     </a>
     <a href="kids.html" class="main-btn" style="background: #ff9800 !important; box-shadow: 0 6px 0 #e68a00 !important;">🚂 ゲームページ</a>
     <a href="zukan.html" class="main-btn" style="background:#4caf50 !important; box-shadow:0 6px 0 #2e7d32 !important;">📖 車両ずかん</a>
@@ -103,7 +103,6 @@ function update() {
         const diff = targetExpiry - now;
         updateTimerDisplay(diff, "特設サイト 運行終了まで あと");
         
-        // 年明け後の表示変更
         const railKuji = document.getElementById("rail-kuji");
         const normKuji = document.getElementById("norm-kuji");
         const msgBtn = document.getElementById("msg-btn");
@@ -122,8 +121,10 @@ function update() {
             msgLabel.innerText = "2026 New Year";
             msgText.innerText = "謹賀新年（新年のご挨拶）";
             msgBtn.href = "newyearMessage.html";
+            // 文字が消えないよう、背景白・文字赤の設定を固定
+            msgBtn.style.setProperty('background', '#fff', 'important');
+            msgBtn.style.setProperty('color', '#b71c1c', 'important');
             msgBtn.style.borderColor = "#b71c1c";
-            msgBtn.style.color = "#b71c1c";
             msgBtn.style.boxShadow = "0 4px 0 #b71c1c";
         }
     }
