@@ -1,126 +1,148 @@
 <!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>迷路チャレンジ - 篠ノ井乗務区</title>
+    <style>
+        body { text-align: center; font-family: sans-serif; background: #f4f4f2; margin: 0; padding: 10px; touch-action: manipulation; }
+        h1 { font-size: 1.5rem; color: #1a237e; margin: 10px 0; }
+        .menu { margin-bottom: 15px; display: flex; justify-content: center; gap: 8px; }
+        .level-btn { padding: 10px 15px; font-size: 14px; cursor: pointer; border: none; border-radius: 4px; background: #6c757d; color: white; transition: 0.2s; }
+        .active { background: #28a745 !important; font-weight: bold; }
+        #game-container { position: relative; width: 95vw; max-width: 500px; margin: 0 auto; background: white; border: 3px solid #1a237e; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; background: #fff; }
+        .d-pad { display: grid; grid-template-columns: repeat(3, 65px); gap: 10px; justify-content: center; margin-top: 20px; }
+        .d-pad button { width: 65px; height: 65px; font-size: 24px; background: #1a237e; color: white; border: none; border-radius: 8px; box-shadow: 0 4px 0 #0d123e; cursor: pointer; }
+        .d-pad button:active { transform: translateY(2px); box-shadow: 0 2px 0 #0d123e; }
+        .footer-btns { margin-top: 25px; display: flex; justify-content: center; gap: 15px; padding-bottom: 40px; }
+        .sub-btn { padding: 12px 20px; border-radius: 5px; text-decoration: none; color: white; font-weight: bold; border: none; cursor: pointer; font-size: 16px; }
+        .reset { background: #dc3545; }
+        .back { background: #444; }
+    </style>
+</head>
+<body>
 
-<html lang=ja> <head> <meta charset=UTF-8> <meta name=viewport content=width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no> <title>難易度別迷路ゲーム</title> <style> body { text-align: center; font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 10px; touch-action: manipulation; } h1 { font-size: 1.5rem; color: #333; margin: 10px 0; } .menu { margin-bottom: 15px; display: flex; justify-content: center; gap: 5px; } button { padding: 8px 12px; font-size: 14px; cursor: pointer; border: none; border-radius: 4px; background: #007bff; color: white; transition: 0.2s; } button:active { transform: scale(0.95); opacity: 0.8; } button.level-btn { background: #6c757d; } button.active { background: #28a745; font-weight: bold; } #game-container { position: relative; width: 100%; max-width: 500px; margin: 0 auto; background: white; border: 2px solid #333; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; } canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; } .d-pad { display: grid; grid-template-columns: repeat(3, 60px); gap: 10px; justify-content: center; margin-top: 15px; } .d-pad button { width: 60px; height: 60px; font-size: 24px; background: #444; } .reset-btn { margin-top: 15px; background: #dc3545; width: 120px; } </style> </head> <body>
+    <h1>迷路チャレンジ</h1>
 
-<h1>迷路チャレンジ</h1>
+    <div class="menu">
+        <button class="level-btn" onclick="changeLevel(0)" id="btn0">初級</button>
+        <button class="level-btn" onclick="changeLevel(1)" id="btn1">中級</button>
+        <button class="level-btn" onclick="changeLevel(2)" id="btn2">上級</button>
+    </div>
 
-<div class=menu id=level-selector>
-    <button class=level-btn onclick=changeLevel(0) id=btn0>初級</button>
-    <button class=level-btn onclick=changeLevel(1) id=btn1>中級</button>
-    <button class=level-btn onclick=changeLevel(2) id=btn2>上級</button>
-</div>
+    <div id="game-container">
+        <canvas id="mazeCanvas"></canvas>
+    </div>
 
-<div id=game-container>
-    <canvas id=mazeCanvas></canvas>
-</div>
+    <div class="d-pad">
+        <div></div><button onclick="movePlayer(0,-1)">↑</button><div></div>
+        <button onclick="movePlayer(-1,0)">←</button><button onclick="movePlayer(0,1)">↓</button><button onclick="movePlayer(1,0)">→</button>
+    </div>
 
-<div class=d-pad>
-    <div></div><button onclick=movePlayer(0,-1)>↑</button><div></div>
-    <button onclick=movePlayer(-1,0)>←</button><button onclick=movePlayer(0,1)>↓</button><button onclick=movePlayer(1,0)>→</button>
-</div>
+    <div class="footer-btns">
+        <a href="index.html" class="sub-btn back">戻る</a>
+        <button class="sub-btn reset" onclick="initGame()">リセット</button>
+    </div>
 
-<button class=reset-btn onclick=initGame()>リセット</button>
+    <script>
+        const canvas = document.getElementById("mazeCanvas");
+        const ctx = canvas.getContext("2d");
+        let currentLevel = 0;
+        let player = { x: 1, y: 1 };
+        let maze = [];
+        let rows, cols;
 
-<script>
-    const canvas = document.getElementById(mazeCanvas);
-    const ctx = canvas.getContext(2d);
-    
-    let currentLevel = 0;
-    let player = { x: 1, y: 1 };
-    let maze = [];
-    let rows, cols;
+        const levels = [
+            { size: 15 }, // 初級
+            { size: 25 }, // 中級
+            { size: 41 }  // 上級（激ムズ）
+        ];
 
-    // 難易度設定 (奇数にする必要があります)
-    const levels = [
-        { size: 11, label: 初級 },
-        { size: 21, label: 中級 },
-        { size: 35, label: 上級（激ムズ） }
-    ];
+        function generateMaze(size) {
+            rows = cols = size;
+            maze = Array.from({ length: rows }, () => Array(cols).fill(1));
+            function walk(x, y) {
+                maze[y][x] = 0;
+                const dirs = [[0,2],[0,-2],[2,0],[-2,0]].sort(()=>Math.random()-0.5);
+                for (let [dx,dy] of dirs) {
+                    let nx=x+dx, ny=y+dy;
+                    if(nx>0 && nx<cols-1 && ny>0 && ny<rows-1 && maze[ny][nx]===1){
+                        maze[y+dy/2][x+dx/2]=0; walk(nx,ny);
+                    }
+                }
+            }
+            walk(1,1);
+            maze[rows-2][cols-2]=3; // ゴール地点
+        }
 
-    // 迷路生成（穴掘り法）
-    function generateMaze(size) {
-        rows = size;
-        cols = size;
-        maze = Array.from({ length: rows }, () => Array(cols).fill(1));
+        function draw() {
+            const tileSize = 20;
+            canvas.width = cols * tileSize;
+            canvas.height = rows * tileSize;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        function walk(x, y) {
-            maze[y][x] = 0;
-            const dirs = [[0, 2], [0, -2], [2, 0], [-2, 0]].sort(() => Math.random() - 0.5);
-            for (let [dx, dy] of dirs) {
-                let nx = x + dx, ny = y + dy;
-                if (nx > 0 && nx < cols - 1 && ny > 0 && ny < rows - 1 && maze[ny][nx] === 1) {
-                    maze[y + dy / 2][x + dx / 2] = 0;
-                    walk(nx, ny);
+            for(let y=0; y<rows; y++){
+                for(let x=0; x<cols; x++){
+                    if(maze[y][x] === 1) {
+                        ctx.fillStyle = "#333"; // 壁
+                    } else if(maze[y][x] === 3) {
+                        ctx.fillStyle = "#ff4444"; // ゴール
+                    } else {
+                        ctx.fillStyle = "#fff"; // 道
+                    }
+                    ctx.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
+                }
+            }
+            // プレイヤー
+            ctx.fillStyle = "#007bff";
+            const pSize = tileSize * 0.8;
+            const offset = (tileSize - pSize) / 2;
+            ctx.fillRect(player.x*tileSize+offset, player.y*tileSize+offset, pSize, pSize);
+        }
+
+        function movePlayer(dx,dy){
+            let nx=player.x+dx, ny=player.y+dy;
+            if(ny >= 0 && ny < rows && nx >= 0 && nx < cols && maze[ny][nx] !== 1){
+                player.x=nx; player.y=ny; draw();
+                if(maze[ny][nx] === 3){
+                    setTimeout(()=>{ 
+                        alert("ゴール！おめでとうございます！"); 
+                        initGame(); 
+                    }, 50);
                 }
             }
         }
-        walk(1, 1);
-        maze[1][1] = 2; // スタート
-        maze[rows - 2][cols - 2] = 3; // ゴール
-    }
 
-    function draw() {
-        const tileSize = 20; // 内部解像度
-        canvas.width = cols * tileSize;
-        canvas.height = rows * tileSize;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        for (let y = 0; y < rows; y++) {
-            for (let x = 0; x < cols; x++) {
-                if (maze[y][x] === 1) ctx.fillStyle = #333; // 壁
-                else if (maze[y][x] === 3) ctx.fillStyle = #ff4444; // ゴール
-                else ctx.fillStyle = #fff; // 道
-                ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
-            }
+        function changeLevel(lv){
+            currentLevel = lv;
+            document.querySelectorAll('.level-btn').forEach((b,i)=> {
+                b.classList.toggle('active', i === lv);
+            });
+            initGame();
         }
 
-        // プレイヤー
-        ctx.fillStyle = #007bff;
-        const pSize = tileSize * 0.7;
-        const offset = (tileSize - pSize) / 2;
-        ctx.fillRect(player.x * tileSize + offset, player.y * tileSize + offset, pSize, pSize);
-    }
-
-    function movePlayer(dx, dy) {
-        let nx = player.x + dx;
-        let ny = player.y + dy;
-        if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && maze[ny][nx] !== 1) {
-            player.x = nx;
-            player.y = ny;
+        function initGame(){
+            player = {x:1, y:1};
+            generateMaze(levels[currentLevel].size);
             draw();
-            if (maze[ny][nx] === 3) {
-                setTimeout(() => {
-                    alert(クリア！次はもっと難しいのに挑戦しよう！);
-                    if(currentLevel < 2) changeLevel(currentLevel + 1);
-                    else initGame();
-                }, 100);
-            }
         }
-    }
 
-    function changeLevel(lv) {
-        currentLevel = lv;
-        document.querySelectorAll(.level-btn).forEach((btn, i) => {
-            btn.classList.toggle(active, i === lv);
+        // キーボード操作
+        window.addEventListener("keydown", (e)=>{
+            if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
+                e.preventDefault(); // スクロール防止
+            }
+            if(e.key==="ArrowUp") movePlayer(0,-1);
+            if(e.key==="ArrowDown") movePlayer(0,1);
+            if(e.key==="ArrowLeft") movePlayer(-1,0);
+            if(e.key==="ArrowRight") movePlayer(1,0);
         });
-        initGame();
-    }
 
-    function initGame() {
-        player = { x: 1, y: 1 };
-        generateMaze(levels[currentLevel].size);
-        draw();
-    }
-
-    // キーボード操作
-    window.addEventListener(keydown, (e) => {
-        if (e.key === ArrowUp) movePlayer(0, -1);
-        if (e.key === ArrowDown) movePlayer(0, 1);
-        if (e.key === ArrowLeft) movePlayer(-1, 0);
-        if (e.key === ArrowRight) movePlayer(1, 0);
-    });
-
-    // 初期化
-    changeLevel(0);
-</script>
-</body> </html>
+        // ページ読み込み時に開始
+        window.onload = () => {
+            changeLevel(0);
+        };
+    </script>
+</body>
+</html>
