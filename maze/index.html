@@ -16,7 +16,7 @@
         .d-pad button { width: 65px; height: 65px; font-size: 24px; background: #1a237e; color: white; border: none; border-radius: 8px; box-shadow: 0 4px 0 #0d123e; cursor: pointer; }
         .d-pad button:active { transform: translateY(2px); box-shadow: 0 2px 0 #0d123e; }
         .footer-btns { margin-top: 25px; display: flex; justify-content: center; gap: 15px; padding-bottom: 40px; }
-        .sub-btn { padding: 12px 20px; border-radius: 5px; text-decoration: none; color: white; font-weight: bold; border: none; cursor: pointer; font-size: 16px; }
+        .sub-btn { padding: 12px 20px; border-radius: 5px; text-decoration: none; color: white; font-weight: bold; border: none; cursor: pointer; font-size: 16px; display: inline-block; }
         .reset { background: #dc3545; }
         .back { background: #444; }
     </style>
@@ -41,7 +41,7 @@
     </div>
 
     <div class="footer-btns">
-        <a href="index.html" class="sub-btn back">戻る</a>
+        <a href="../index.html" class="sub-btn back">戻る</a>
         <button class="sub-btn reset" onclick="initGame()">リセット</button>
     </div>
 
@@ -53,11 +53,7 @@
         let maze = [];
         let rows, cols;
 
-        const levels = [
-            { size: 15 }, // 初級
-            { size: 25 }, // 中級
-            { size: 41 }  // 上級（激ムズ）
-        ];
+        const levels = [{ size: 15 }, { size: 25 }, { size: 41 }];
 
         function generateMaze(size) {
             rows = cols = size;
@@ -73,7 +69,7 @@
                 }
             }
             walk(1,1);
-            maze[rows-2][cols-2]=3; // ゴール地点
+            maze[rows-2][cols-2]=3;
         }
 
         function draw() {
@@ -81,20 +77,12 @@
             canvas.width = cols * tileSize;
             canvas.height = rows * tileSize;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             for(let y=0; y<rows; y++){
                 for(let x=0; x<cols; x++){
-                    if(maze[y][x] === 1) {
-                        ctx.fillStyle = "#333"; // 壁
-                    } else if(maze[y][x] === 3) {
-                        ctx.fillStyle = "#ff4444"; // ゴール
-                    } else {
-                        ctx.fillStyle = "#fff"; // 道
-                    }
+                    ctx.fillStyle = maze[y][x] === 1 ? "#333" : (maze[y][x] === 3 ? "#ff4444" : "#fff");
                     ctx.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
                 }
             }
-            // プレイヤー
             ctx.fillStyle = "#007bff";
             const pSize = tileSize * 0.8;
             const offset = (tileSize - pSize) / 2;
@@ -106,19 +94,14 @@
             if(ny >= 0 && ny < rows && nx >= 0 && nx < cols && maze[ny][nx] !== 1){
                 player.x=nx; player.y=ny; draw();
                 if(maze[ny][nx] === 3){
-                    setTimeout(()=>{ 
-                        alert("ゴール！おめでとうございます！"); 
-                        initGame(); 
-                    }, 50);
+                    setTimeout(()=>{ alert("ゴール！"); initGame(); }, 50);
                 }
             }
         }
 
         function changeLevel(lv){
             currentLevel = lv;
-            document.querySelectorAll('.level-btn').forEach((b,i)=> {
-                b.classList.toggle('active', i === lv);
-            });
+            document.querySelectorAll('.level-btn').forEach((b,i)=> b.classList.toggle('active', i === lv));
             initGame();
         }
 
@@ -128,21 +111,15 @@
             draw();
         }
 
-        // キーボード操作
         window.addEventListener("keydown", (e)=>{
-            if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
-                e.preventDefault(); // スクロール防止
-            }
+            if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) e.preventDefault();
             if(e.key==="ArrowUp") movePlayer(0,-1);
             if(e.key==="ArrowDown") movePlayer(0,1);
             if(e.key==="ArrowLeft") movePlayer(-1,0);
             if(e.key==="ArrowRight") movePlayer(1,0);
         });
 
-        // ページ読み込み時に開始
-        window.onload = () => {
-            changeLevel(0);
-        };
+        window.onload = () => { changeLevel(0); };
     </script>
 </body>
 </html>
